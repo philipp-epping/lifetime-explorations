@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KPI Source Config — Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+      --color-p0: oklch(0.982 0 0); --color-p1: oklch(1 0 0);
+      --color-g0: oklch(1 0 0); --color-g1: oklch(0.991 0 0); --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0); --color-g4: oklch(0.931 0 0); --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0); --color-g7: oklch(0.851 0 0); --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0); --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228); --color-g12: oklch(0.21 0.004 286.059);
+      --color-a1: oklch(0.994 0.001 286.376); --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09); --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198); --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675); --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643); --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713); --color-a12: oklch(0.312 0.107 271.681);
+      --color-y1: oklch(0.994 0.003 84.559); --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943); --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209); --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55); --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907); --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633); --color-y12: oklch(0.353 0.053 69.99);
+      --color-d1: oklch(0.993 0.003 17.212); --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81); --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206); --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189); --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103); --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228); --color-d12: oklch(0.34 0.115 26.406);
+      --color-s1: oklch(0.994 0.006 137.773); --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807); --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615); --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63); --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544); --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444); --color-s12: oklch(0.326 0.058 136.282);
+      --color-alpha-2: oklch(0 0 0 / 0.02); --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06); --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1); --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16); --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36); --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+      --text-micro: 10px; --text-micro--font-weight: 450; --text-micro--line-height: 14px;
+      --text-micro-medium: 10px; --text-micro-medium--font-weight: 500; --text-micro-medium--line-height: 14px;
+      --text-mini: 12px; --text-mini--font-weight: 450; --text-mini--line-height: 15px;
+      --text-mini-medium: 12px; --text-mini-medium--font-weight: 500; --text-mini-medium--line-height: 15px;
+      --text-sm: 13px; --text-sm--font-weight: 450; --text-sm--line-height: 18px; --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px; --text-sm-medium--font-weight: 500; --text-sm-medium--line-height: 18px; --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px; --text-regular--font-weight: 450; --text-regular--line-height: 20px; --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px; --text-regular-medium--font-weight: 500; --text-regular-medium--line-height: 20px; --text-regular-medium--letter-spacing: -0.13px;
+      --radius-0: 0px; --radius-2: 2px; --radius-4: 4px; --radius-6: 6px; --radius-8: 8px; --radius-10: 10px; --radius-12: 12px; --radius-full: 999px;
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0,0,0,.27), 0px 4px 6px -1px rgba(0,0,0,.1), 0px 2px 4px -2px rgba(0,0,0,.1);
+      --shadow-lg: 0px 0px 1px 0px rgba(0,0,0,.20), 0px 10px 15px -3px rgba(0,0,0,.1), 0px 4px 6px -4px rgba(0,0,0,.1);
+      --duration-fast: 120ms; --duration-normal: 200ms; --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak]{display:none!important}
+    .kg{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;border-left:1px solid var(--color-g11);border-top:1px solid var(--color-g11)}
+    .kg th,.kg td{border-right:1px solid var(--color-g11);border-bottom:1px solid var(--color-g11);padding:0 10px;text-align:center;vertical-align:middle;height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kg th{background:var(--color-g11);color:var(--color-g7);height:32px}
+    .kg td{background:var(--color-g12);color:var(--color-g3)}
+    .kg td:first-child,.kg th:first-child{text-align:left;overflow:visible}
+    .sc-g{background:var(--color-s7)!important;color:var(--color-s12)!important}
+    .sc-y{background:var(--color-y7)!important;color:var(--color-y12)!important}
+    .sc-r{background:var(--color-d8)!important;color:var(--color-p1)!important}
+    .source-badge{display:inline-flex;align-items:center;gap:4px;cursor:pointer;transition:all 120ms;border-radius:4px;padding:2px 6px;margin:-2px -6px}
+    .source-badge:hover{background:var(--color-g11)}
+    .editable-cell{cursor:pointer;position:relative}
+    .editable-cell:hover{background:var(--color-a2)}
+    .seg{display:flex;border-radius:var(--radius-6);background:var(--color-g2);padding:2px;gap:2px}
+    .seg button{flex:1;border-radius:var(--radius-4);padding:4px 8px;font-size:12px;line-height:15px;font-weight:450;transition:all 120ms;white-space:nowrap;color:var(--color-g9)}
+    .seg button:hover{color:var(--color-g11)}
+    .seg button.on{background:var(--color-p1);color:var(--color-g12);font-weight:500;box-shadow:var(--shadow-xs)}
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased" x-data="app()" x-cloak>
+
+  <header class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+    <div class="flex items-center gap-3">
+      <div class="flex h-7 w-7 items-center justify-center rounded-6 bg-a9 text-mini-medium text-white">D</div>
+      <span class="text-regular-medium text-g12">KPI Source Config — Prototype</span>
+    </div>
+    <span class="text-mini text-g9">Click any source label to open the config modal</span>
+  </header>
+
+  <main class="mx-auto px-6 py-5" style="max-width:1200px">
+    <div class="mb-4">
+      <h1 class="text-regular-medium text-g12">Paid Marketing</h1>
+      <p class="mt-0.5 text-mini text-g9">Mar 2026 — CW10</p>
+    </div>
+
+    <div class="overflow-x-auto rounded-8">
+      <table class="kg text-sm">
+        <thead><tr>
+          <th style="width:240px" class="text-mini-medium text-g7">Paid Marketing</th>
+          <th style="width:100px" class="text-mini-medium text-g7">Target</th>
+          <th style="width:100px" class="text-mini-medium text-g7">Actual</th>
+          <th style="width:140px" class="text-mini-medium text-g7">Status</th>
+          <th style="width:180px" class="text-mini-medium text-g7">Source</th>
+          <th style="width:140px" class="text-mini-medium text-g7">Owner</th>
+        </tr></thead>
+        <tbody>
+          <template x-for="kpi in kpis" :key="kpi.id">
+            <tr>
+              <td class="text-left"><span class="text-g3" x-text="kpi.name"></span><span class="text-micro text-g8 ml-1" x-text="({total:'Total',average:'Avg',max:'Max',manual:'Manual'})[kpi.agg]||'Total'"></span></td>
+              <td class="tabular-nums text-g5" x-text="fmt(kpi.target, kpi.fmt)"></td>
+              <td class="tabular-nums font-medium text-g2" x-text="fmt(kpi.actual, kpi.fmt)"></td>
+              <td :class="stC(kpi.status)"><span x-text="stL(kpi.status)"></span></td>
+              <td>
+                <div class="source-badge" @click.stop="openModal(kpi)">
+                  <svg x-show="kpi.sourceMode==='manual'" class="h-3 w-3 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  <svg x-show="kpi.sourceMode==='auto'" class="h-3 w-3 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                  <svg x-show="kpi.sourceMode==='review'" class="h-3 w-3 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                  <span class="text-mini" :class="kpi.source ? 'text-g3' : 'text-g8'" x-text="kpi.source || '+ add'"></span>
+                </div>
+              </td>
+              <td class="text-mini text-g8" x-text="kpi.owner"></td>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-6 rounded-8 bg-p1 p-4 shadow-xs">
+      <h2 class="text-sm-medium text-g11 mb-2">Source mode legend</h2>
+      <div class="flex gap-6 text-mini text-g9">
+        <div class="flex items-center gap-1.5">
+          <svg class="h-3 w-3 text-g8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          <span>Manual</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="h-3 w-3 text-a9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          <span>Connected — Review</span>
+        </div>
+        <div class="flex items-center gap-1.5">
+          <svg class="h-3 w-3 text-a9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          <span>Connected — Auto-fill</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- ═══ SOURCE CONFIG MODAL ═══ -->
+  <template x-teleport="body">
+    <div x-show="modal.open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-300" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed inset-0 z-50 bg-alpha-48" @click.self="closeModal()">
+      <div @click.stop x-show="modal.open" x-transition:enter="transition ease-out duration-300" x-transition:enter-start="translate-x-full" x-transition:enter-end="translate-x-0" x-transition:leave="transition ease-in duration-200" x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full" class="absolute top-0 right-0 h-full bg-p1 shadow-lg border-l border-g4 flex flex-col" style="width:500px" @keydown.escape.window="closeModal()">
+
+        <!-- Header -->
+        <div class="flex items-center justify-between border-b border-g4 px-5 py-3.5">
+          <h2 class="text-regular-medium text-g12" x-text="modal.kpi?.name || 'KPI Properties'"></h2>
+          <div class="flex items-center gap-2">
+            <template x-if="!modal.editing">
+              <button class="rounded-6 px-3 py-1.5 text-sm text-g10 hover:bg-g3 hover:text-g11 transition-colors" @click="modal.editing=true">Edit</button>
+            </template>
+            <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="closeModal()">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div class="overflow-y-auto flex-1 px-5 py-4 pb-5" style="min-height:0">
+
+          <!-- ── VIEW MODE ── -->
+          <template x-if="!modal.editing">
+            <div>
+              <!-- KPI Properties (read-only) -->
+              <div class="grid grid-cols-2 gap-x-6 gap-y-3 mb-5">
+                <div>
+                  <p class="text-micro text-g9 mb-0.5">Format</p>
+                  <p class="text-sm text-g12" x-text="({number:'Number',currency:'EUR (€)',percentage:'Percentage (%)'})[modal.kpi?.fmt] || 'Number'"></p>
+                </div>
+                <div>
+                  <p class="text-micro text-g9 mb-0.5">Aggregation</p>
+                  <p class="text-sm text-g12" x-text="({total:'Total',average:'Average',max:'Max',manual:'Manual'})[modal.kpi?.agg] || 'Total'"></p>
+                </div>
+                <div>
+                  <p class="text-micro text-g9 mb-0.5">Period</p>
+                  <p class="text-sm text-g12" x-text="modal.kpi?.period==='carries_over' ? 'Carries over' : 'Resets monthly'"></p>
+                </div>
+                <div>
+                  <p class="text-micro text-g9 mb-0.5">Owner</p>
+                  <p class="text-sm text-g12" x-text="modal.kpi?.owner || '—'"></p>
+                </div>
+              </div>
+
+              <!-- Source Configuration separator -->
+              <div class="border-t border-g4 pt-4 mb-4">
+                <p class="text-micro-medium text-g9 uppercase tracking-wide">Source Configuration</p>
+              </div>
+
+              <!-- Description box with mode pill integrated top-right -->
+              <div class="rounded-8 bg-g2 px-4 py-3 mb-4">
+                <div class="flex items-start justify-between gap-3 mb-1.5">
+                  <p class="text-micro-medium text-g9 uppercase tracking-wide pt-0.5">Description</p>
+                  <template x-if="modal.kpi?.sourceMode==='manual'">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-g4 px-2.5 py-0.5 text-micro-medium text-g11 shrink-0">
+                      <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      Manual
+                    </span>
+                  </template>
+                  <template x-if="modal.kpi?.sourceMode==='review'">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-a3 px-2.5 py-0.5 text-micro-medium text-a11 shrink-0">
+                      <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                      Connected — Review
+                    </span>
+                  </template>
+                  <template x-if="modal.kpi?.sourceMode==='auto'">
+                    <span class="inline-flex items-center gap-1.5 rounded-full bg-a3 px-2.5 py-0.5 text-micro-medium text-a11 shrink-0">
+                      <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                      Connected — Auto-fill
+                    </span>
+                  </template>
+                </div>
+                <p class="text-sm text-g11 leading-relaxed" x-html="modal.kpi?.description"></p>
+              </div>
+
+              <!-- Filter conditions (shared for all modes) -->
+              <template x-if="modal.kpi?.filters?.length > 0 || modal.kpi?.dateField">
+                <div class="mb-4">
+                  <p class="text-micro-medium text-g9 uppercase tracking-wide mb-2">Filter conditions</p>
+                  <div class="space-y-1.5">
+                    <template x-for="(f, fi) in (modal.kpi?.filters || [])" :key="fi">
+                      <div class="flex items-center gap-2 text-mini">
+                        <span class="text-g9 w-12 text-right shrink-0" x-text="fi === 0 ? 'Where' : 'AND'"></span>
+                        <span class="rounded-4 bg-g3 px-2 py-1 text-g12 font-medium" x-text="f.field"></span>
+                        <span class="text-g9" x-text="operatorLabel(f.operator || 'is')"></span>
+                        <template x-if="!isUnaryOp(f.operator || 'is')">
+                          <span class="rounded-4 bg-a3 px-2 py-1 text-a12 font-medium" x-text="f.value"></span>
+                        </template>
+                      </div>
+                    </template>
+                    <div class="flex items-center gap-2 text-mini" x-show="modal.kpi?.dateField">
+                      <span class="text-g9 w-12 text-right shrink-0" x-text="(modal.kpi?.filters?.length > 0) ? 'AND' : 'Where'"></span>
+                      <span class="rounded-4 bg-g3 px-2 py-1 text-g12 font-medium">Filled Day</span>
+                      <span class="text-g9">falls within</span>
+                      <span class="rounded-4 bg-a3 px-2 py-1 text-a12 font-medium" x-text="modal.kpi?.dateScope === 'week' ? 'Current week' : 'Current month'"></span>
+                    </div>
+                  </div>
+                </div>
+              </template>
+
+              <!-- Connected: data source + preview -->
+              <template x-if="modal.kpi?.sourceMode==='review' || modal.kpi?.sourceMode==='auto'">
+                <div>
+                  <!-- Data source row -->
+                  <div class="mb-4" x-show="modal.kpi?.db || modal.kpi?.source">
+                    <p class="text-micro-medium text-g9 uppercase tracking-wide mb-2">Data source</p>
+                    <div class="flex items-center gap-2 text-mini">
+                      <span class="text-g9 w-12 text-right shrink-0">From</span>
+                      <span class="rounded-4 bg-a3 px-2 py-1 text-a12 font-medium" x-text="modal.kpi?.db || modal.kpi?.source"></span>
+                    </div>
+                  </div>
+
+                  <!-- Preview with expand -->
+                  <div>
+                    <div class="flex items-center justify-between mb-2">
+                      <p class="text-mini-medium text-g10">Preview: Matching records</p>
+                      <div class="flex items-center gap-2">
+                        <div class="relative" x-data="{open:false}">
+                          <button class="flex items-center gap-1.5 rounded-6 bg-g2 px-2.5 py-1 text-micro-medium text-g11 hover:bg-g3 transition-colors" @click="open=!open">
+                            <span x-text="cwLabel(modal.viewCW)"></span>
+                            <svg class="h-3 w-3 text-g8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                          </button>
+                          <div x-show="open" @click.away="open=false" x-transition class="absolute right-0 top-full mt-1 rounded-8 bg-p1 shadow-md border border-g4 z-10 p-1" style="min-width:160px">
+                            <template x-for="w in weeks" :key="w.id">
+                              <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini transition-colors whitespace-nowrap" :class="modal.viewCW===w.id ? 'text-a11 bg-a3 font-medium' : 'text-g11 hover:bg-g3'" @click="modal.viewCW=w.id;modal.viewExpanded=false;open=false" x-text="cwLabel(w.id)"></button>
+                            </template>
+                          </div>
+                        </div>
+                        <p class="text-micro text-g9" x-text="(modal.viewExpanded ? viewAllRows.length : viewPreviewRows.length) + (viewTotalCount > 5 && !modal.viewExpanded ? ' of ' + viewTotalCount : '') + ' records'"></p>
+                      </div>
+                    </div>
+                    <div class="rounded-8 border border-g4 overflow-hidden" :class="modal.viewExpanded && viewTotalCount > 8 ? 'max-h-72 overflow-y-auto' : ''">
+                      <template x-if="viewPreviewRows.length > 0">
+                        <table class="w-full text-mini">
+                          <thead><tr class="bg-g2 border-b border-g4 sticky top-0 z-[1]">
+                            <template x-for="col in (modal.kpi?.previewCols || [])" :key="col">
+                              <th class="px-3 py-2 text-left text-mini-medium text-g10 font-medium" x-text="col"></th>
+                            </template>
+                          </tr></thead>
+                          <tbody>
+                            <template x-for="(row, ri) in (modal.viewExpanded ? viewAllRows : viewPreviewRows)" :key="ri">
+                              <tr class="border-b border-g4 last:border-0">
+                                <template x-for="col in (modal.kpi?.previewCols || [])" :key="col">
+                                  <td class="editable-cell px-3 py-1.5 text-g11" x-data="{ed:false,val:''}" @dblclick="ed=true;val=row[col];$nextTick(()=>{if($refs.ci && fieldType(col)!=='select')$refs.ci.focus()})">
+                                    <span x-show="!ed" x-text="row[col]"></span>
+                                    <input x-show="ed && fieldType(col)!=='select'" x-ref="ci" class="w-full bg-transparent text-g12 text-mini outline-none ring-1 ring-a9 rounded-4 px-1 py-0.5 -mx-1" x-model="val" @blur="row[col]=val;ed=false" @keydown.enter="row[col]=val;ed=false" @keydown.escape="ed=false">
+                                    <div x-show="ed && fieldType(col)==='select'" class="absolute left-0 top-full mt-0.5 z-20 min-w-32 rounded-8 bg-p1 shadow-md border border-g4 p-1" @click.away="ed=false">
+                                      <template x-for="opt in fieldOptions(col)" :key="opt">
+                                        <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini transition-colors" :class="opt===val ? 'text-a11 bg-a3 font-medium' : 'text-g11 hover:bg-g3'" @click="row[col]=opt;ed=false" x-text="opt"></button>
+                                      </template>
+                                    </div>
+                                  </td>
+                                </template>
+                              </tr>
+                            </template>
+                          </tbody>
+                        </table>
+                      </template>
+                      <template x-if="viewPreviewRows.length === 0">
+                        <div class="px-4 py-6 text-center">
+                          <p class="text-sm text-g9">No matching records for this week</p>
+                          <p class="text-mini text-g8 mt-1">Try selecting a different calendar week.</p>
+                        </div>
+                      </template>
+                    </div>
+                    <template x-if="viewTotalCount > 5">
+                      <button class="mt-2 text-mini text-a11 hover:text-a10 transition-colors" @click="modal.viewExpanded = !modal.viewExpanded" x-text="modal.viewExpanded ? 'Show less' : 'Show all ' + viewTotalCount + ' records'"></button>
+                    </template>
+                    <p class="mt-1.5 text-micro text-g8">Double-click a cell to edit</p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </template>
+
+          <!-- ── EDIT MODE ── -->
+          <template x-if="modal.editing">
+            <div>
+              <!-- Name -->
+              <div class="mb-5">
+                <label class="block text-mini-medium text-g10 mb-1.5">Name</label>
+                <input type="text" class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" x-model="modal.editName" placeholder="KPI name...">
+              </div>
+
+              <!-- Format -->
+              <div class="mb-5">
+                <label class="block text-mini-medium text-g10 mb-1.5">Format</label>
+                <div class="seg">
+                  <button :class="modal.editFmt==='number'?'on':''" @click="modal.editFmt='number'">Number</button>
+                  <button :class="modal.editFmt==='currency'?'on':''" @click="modal.editFmt='currency'">EUR (€)</button>
+                  <button :class="modal.editFmt==='percentage'?'on':''" @click="modal.editFmt='percentage'">Percentage (%)</button>
+                </div>
+              </div>
+
+              <!-- Aggregation -->
+              <div class="mb-5">
+                <label class="block text-mini-medium text-g10 mb-1.5">Aggregation</label>
+                <div class="seg">
+                  <button :class="modal.editAgg==='total'?'on':''" @click="modal.editAgg='total'">Total</button>
+                  <button :class="modal.editAgg==='average'?'on':''" @click="modal.editAgg='average'">Average</button>
+                  <button :class="modal.editAgg==='max'?'on':''" @click="modal.editAgg='max'">Max</button>
+                  <button :class="modal.editAgg==='manual'?'on':''" @click="modal.editAgg='manual'">Manual</button>
+                </div>
+              </div>
+
+              <!-- Period behavior -->
+              <div class="mb-5">
+                <label class="block text-mini-medium text-g10 mb-1.5">Period behavior</label>
+                <div class="seg">
+                  <button :class="modal.editPeriod==='resets'?'on':''" @click="modal.editPeriod='resets'">Resets monthly</button>
+                  <button :class="modal.editPeriod==='carries_over'?'on':''" @click="modal.editPeriod='carries_over'">Carries over</button>
+                </div>
+                <p class="text-micro text-g8 mt-1.5" x-text="modal.editPeriod==='resets'?'Starts at 0 each month (e.g. Bookings, Adspend)':'Starts from last month\'s end value (e.g. Followers, Cash Position)'"></p>
+              </div>
+
+              <!-- Owner -->
+              <div class="mb-5">
+                <label class="block text-mini-medium text-g10 mb-1.5">Owner</label>
+                <select class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none focus:ring-2 focus:ring-a9 appearance-none cursor-pointer" x-model="modal.editOwner">
+                  <option value="">No owner</option>
+                  <template x-for="u in users" :key="u.id">
+                    <option :value="u.name" x-text="u.name+' · '+u.role" :selected="modal.editOwner===u.name"></option>
+                  </template>
+                </select>
+              </div>
+
+              <!-- Source Configuration separator -->
+              <div class="border-t border-g4 pt-5 mb-5">
+                <p class="text-micro-medium text-g9 uppercase tracking-wide">Source Configuration</p>
+              </div>
+
+              <div class="mb-5">
+                <p class="text-mini-medium text-g10 mb-2">Source mode</p>
+                <div class="flex rounded-8 bg-g2 p-1 gap-1">
+                  <button class="flex-1 rounded-6 px-3 py-2 text-sm transition-colors" :class="modal.editMode==='manual' ? 'bg-p1 text-g12 shadow-xs font-medium' : 'text-g9 hover:text-g11'" @click="modal.editMode='manual'">
+                    <div class="flex items-center justify-center gap-1.5">
+                      <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                      Manual
+                    </div>
+                  </button>
+                  <button class="flex-1 rounded-6 px-3 py-2 text-sm transition-colors" :class="modal.editMode==='connected' ? 'bg-p1 text-g12 shadow-xs font-medium' : 'text-g9 hover:text-g11'" @click="modal.editMode='connected'">
+                    <div class="flex items-center justify-center gap-1.5">
+                      <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                      Connected
+                    </div>
+                  </button>
+                </div>
+              </div>
+
+              <!-- Manual info -->
+              <div x-show="modal.editMode==='manual'" class="rounded-8 bg-g2 px-4 py-3 mb-4">
+                <p class="text-sm text-g11">Value is entered manually each period. Define conditions below to describe what this KPI measures.</p>
+              </div>
+
+              <!-- Database (connected only) -->
+              <div x-show="modal.editMode==='connected'" class="mb-4">
+                <label class="block text-mini-medium text-g10 mb-1.5">Database</label>
+                    <div class="relative" x-data="{open:false}">
+                      <button class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm text-g12 shadow-xs transition-colors hover:bg-g2" @click="open=!open">
+                        <span x-text="modal.editDb || 'Select database...'"></span>
+                        <svg class="h-4 w-4 text-g8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                      </button>
+                      <div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-md border border-g4 z-10 p-1">
+                        <template x-for="db in databases" :key="db">
+                          <button class="w-full text-left rounded-6 px-3 py-2 text-sm text-g11 hover:bg-g3 transition-colors" @click="modal.editDb=db;open=false" x-text="db"></button>
+                        </template>
+                      </div>
+                    </div>
+              </div>
+
+              <!-- Hint: select DB first (connected without DB) -->
+              <div x-show="modal.editMode==='connected' && !modal.editDb" class="rounded-8 bg-g2 px-4 py-3 mb-4">
+                <p class="text-sm text-g9">Select a database above to configure filter conditions and preview data.</p>
+              </div>
+
+              <!-- Filter conditions (mode-aware) -->
+              <div class="mb-4" x-show="modal.editMode==='manual' || modal.editDb">
+                <label class="block text-mini-medium text-g10 mb-1.5">Filter conditions</label>
+                <div class="space-y-2">
+                  <template x-for="(f, fi) in modal.editFilters" :key="fi">
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-mini text-g9 w-10 text-right shrink-0" x-text="fi === 0 ? 'Where' : 'AND'"></span>
+
+                      <!-- Field: text input for manual -->
+                      <input x-show="modal.editMode==='manual'" type="text" class="w-32 shrink-0 rounded-6 bg-p1 px-2.5 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="f.field" @input="f.field=$event.target.value" placeholder="Field name...">
+                      <!-- Field: dropdown for connected -->
+                      <div x-show="modal.editMode==='connected'" class="relative w-32 shrink-0" x-data="{open:false}">
+                        <button class="w-full text-left rounded-6 bg-p1 px-2.5 py-1.5 text-sm shadow-xs hover:bg-g2 transition-colors truncate" :class="f.field ? 'text-g12' : 'text-g9'" @click="open=!open" x-text="f.field || 'Field...'"></button>
+                        <div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-48 rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1">
+                          <template x-for="field in availableFields" :key="field.name">
+                            <button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors flex items-center justify-between" @click="f.field=field.name;f.operator=field.type==='select'?'is':'contains';f.value='';open=false">
+                              <span x-text="field.name"></span>
+                              <span class="text-micro text-g8" x-text="field.type"></span>
+                            </button>
+                          </template>
+                        </div>
+                      </div>
+
+                      <!-- Operator: always dropdown -->
+                      <div class="relative shrink-0" x-data="{open:false}" style="width:120px">
+                        <button class="w-full text-left rounded-6 bg-p1 px-2.5 py-1.5 text-sm text-g11 shadow-xs hover:bg-g2 transition-colors truncate" @click="open=!open" x-text="operatorLabel(f.operator)"></button>
+                        <div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-44 rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1">
+                          <template x-for="op in operatorsFor(f.field)" :key="op.id">
+                            <button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors" @click="f.operator=op.id;open=false" x-text="op.label"></button>
+                          </template>
+                        </div>
+                      </div>
+
+                      <!-- Value -->
+                      <template x-if="!isUnaryOp(f.operator)">
+                        <div class="flex-1 min-w-0">
+                          <!-- Manual: always text input -->
+                          <input x-show="modal.editMode==='manual'" type="text" class="w-full rounded-6 bg-p1 px-2.5 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="f.value" @input="f.value=$event.target.value" placeholder="Value...">
+                          <!-- Connected: type-aware (dropdown for select fields, text for others) -->
+                          <div x-show="modal.editMode==='connected'">
+                            <template x-if="fieldType(f.field) === 'select'">
+                              <div class="relative" x-data="{open:false}">
+                                <button class="w-full text-left rounded-6 bg-p1 px-2.5 py-1.5 text-sm shadow-xs hover:bg-g2 transition-colors truncate" :class="f.value ? 'text-g12' : 'text-g9'" @click="open=!open" x-text="f.value || 'Select...'"></button>
+                                <div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1">
+                                  <template x-for="opt in fieldOptions(f.field)" :key="opt">
+                                    <button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors" @click="f.value=opt;open=false" x-text="opt"></button>
+                                  </template>
+                                </div>
+                              </div>
+                            </template>
+                            <template x-if="fieldType(f.field) !== 'select'">
+                              <input type="text" class="w-full rounded-6 bg-p1 px-2.5 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="f.value" @input="f.value=$event.target.value" :placeholder="fieldType(f.field)==='number' ? 'Amount...' : 'Value...'">
+                            </template>
+                          </div>
+                        </div>
+                      </template>
+                      <template x-if="isUnaryOp(f.operator)">
+                        <div class="flex-1"></div>
+                      </template>
+
+                      <button class="rounded-6 p-1 text-g8 hover:bg-g3 hover:text-g11 transition-colors shrink-0" @click="removeFilter(fi)">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                      </button>
+                    </div>
+                  </template>
+                </div>
+                <button class="mt-2 rounded-6 px-3 py-1.5 text-mini text-a11 hover:bg-a3 transition-colors" @click="modal.editFilters.push({field:'',operator:'is',value:''})">+ Add condition</button>
+              </div>
+
+              <!-- Date scope -->
+              <div class="mb-4" x-show="modal.editMode==='manual' || modal.editDb">
+                <label class="block text-mini-medium text-g10 mb-1.5">Date scope</label>
+                <div class="flex items-center gap-2">
+                  <span class="text-sm text-g11">Filled Day falls within</span>
+                  <div class="flex rounded-6 bg-g2 p-0.5 gap-0.5">
+                    <button class="rounded-4 px-2.5 py-1 text-mini transition-colors" :class="modal.editDateScope==='week' ? 'bg-p1 text-g12 shadow-xs font-medium' : 'text-g9 hover:text-g11'" @click="modal.editDateScope='week'">Current week</button>
+                    <button class="rounded-4 px-2.5 py-1 text-mini transition-colors" :class="modal.editDateScope==='month' ? 'bg-p1 text-g12 shadow-xs font-medium' : 'text-g9 hover:text-g11'" @click="modal.editDateScope='month'">Current month</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Data entry (connected, requires DB) -->
+              <div x-show="modal.editMode==='connected' && modal.editDb" class="mb-5">
+                <label class="block text-mini-medium text-g10 mb-2">Data entry</label>
+                    <div class="space-y-2">
+                      <label class="flex items-start gap-3 rounded-8 border px-4 py-3 cursor-pointer transition-colors" :class="modal.editConfidence==='review' ? 'bg-a3 border-a5' : 'border-g4 hover:bg-g2'" @click="modal.editConfidence='review'">
+                        <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors" :class="modal.editConfidence==='review' ? 'border-a9' : 'border-g6'">
+                          <div class="h-2 w-2 rounded-full transition-colors" :class="modal.editConfidence==='review' ? 'bg-a9' : ''"></div>
+                        </div>
+                        <div class="flex-1">
+                          <div class="flex items-center gap-2">
+                            <svg class="h-4 w-4 shrink-0" :class="modal.editConfidence==='review' ? 'text-a9' : 'text-g8'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <p class="text-sm-medium text-g12">Prefill for review</p>
+                          </div>
+                          <p class="text-mini text-g9 mt-0.5 ml-6">Value is prefilled from the database. A person reviews and confirms each period.</p>
+                        </div>
+                      </label>
+                      <label class="flex items-start gap-3 rounded-8 border px-4 py-3 cursor-pointer transition-colors" :class="modal.editConfidence==='auto' ? 'bg-a3 border-a5' : 'border-g4 hover:bg-g2'" @click="modal.editConfidence='auto'">
+                        <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors" :class="modal.editConfidence==='auto' ? 'border-a9' : 'border-g6'">
+                          <div class="h-2 w-2 rounded-full transition-colors" :class="modal.editConfidence==='auto' ? 'bg-a9' : ''"></div>
+                        </div>
+                        <div class="flex-1">
+                          <div class="flex items-center gap-2">
+                            <svg class="h-4 w-4 shrink-0" :class="modal.editConfidence==='auto' ? 'text-a9' : 'text-g8'" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                            <p class="text-sm-medium text-g12">Auto-fill</p>
+                          </div>
+                          <p class="text-mini text-g9 mt-0.5 ml-6">Value is written automatically. No human review needed. Use for high-trust data.</p>
+                        </div>
+                      </label>
+                    </div>
+              </div>
+
+              <!-- Preview (connected, requires DB) -->
+              <div x-show="modal.editMode==='connected' && modal.editDb" class="border-t border-g4 pt-4">
+                    <div class="flex items-center justify-between mb-2">
+                      <p class="text-mini-medium text-g10">Preview: Matching records</p>
+                      <div class="flex items-center gap-2">
+                        <div class="relative" x-data="{open:false}">
+                          <button class="flex items-center gap-1.5 rounded-6 bg-g2 px-2.5 py-1 text-micro-medium text-g11 hover:bg-g3 transition-colors" @click="open=!open">
+                            <span x-text="cwLabel(modal.editCW)"></span>
+                            <svg class="h-3 w-3 text-g8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+                          </button>
+                          <div x-show="open" @click.away="open=false" x-transition class="absolute right-0 top-full mt-1 rounded-8 bg-p1 shadow-md border border-g4 z-10 p-1" style="min-width:160px">
+                            <template x-for="w in weeks" :key="w.id">
+                              <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini transition-colors whitespace-nowrap" :class="modal.editCW===w.id ? 'text-a11 bg-a3 font-medium' : 'text-g11 hover:bg-g3'" @click="modal.editCW=w.id;modal.editExpanded=false;open=false" x-text="cwLabel(w.id)"></button>
+                            </template>
+                          </div>
+                        </div>
+                        <p class="text-micro text-g9" x-text="(modal.editExpanded ? editPreviewAll.length : editPreviewSlice.length) + (editPreviewAll.length > 5 && !modal.editExpanded ? ' of ' + editPreviewAll.length : '') + ' records'"></p>
+                      </div>
+                    </div>
+                    <div class="rounded-8 border border-g4 overflow-hidden" :class="modal.editExpanded && editPreviewAll.length > 8 ? 'max-h-72 overflow-y-auto' : ''">
+                      <template x-if="editPreviewSlice.length > 0">
+                        <table class="w-full text-mini">
+                          <thead><tr class="bg-g2 border-b border-g4 sticky top-0 z-[1]">
+                            <template x-for="col in editPreviewCols" :key="col">
+                              <th class="px-3 py-2 text-left text-mini-medium text-g10 font-medium" x-text="col"></th>
+                            </template>
+                          </tr></thead>
+                          <tbody>
+                            <template x-for="(row, ri) in (modal.editExpanded ? editPreviewAll : editPreviewSlice)" :key="ri">
+                              <tr class="border-b border-g4 last:border-0">
+                                <template x-for="col in editPreviewCols" :key="col">
+                                  <td class="editable-cell px-3 py-1.5 text-g11" x-data="{ed:false,val:''}" @dblclick="ed=true;val=row[col];$nextTick(()=>{if($refs.ci && fieldType(col)!=='select')$refs.ci.focus()})">
+                                    <span x-show="!ed" x-text="row[col]"></span>
+                                    <input x-show="ed && fieldType(col)!=='select'" x-ref="ci" class="w-full bg-transparent text-g12 text-mini outline-none ring-1 ring-a9 rounded-4 px-1 py-0.5 -mx-1" x-model="val" @blur="row[col]=val;ed=false" @keydown.enter="row[col]=val;ed=false" @keydown.escape="ed=false">
+                                    <div x-show="ed && fieldType(col)==='select'" class="absolute left-0 top-full mt-0.5 z-20 min-w-32 rounded-8 bg-p1 shadow-md border border-g4 p-1" @click.away="ed=false">
+                                      <template x-for="opt in fieldOptions(col)" :key="opt">
+                                        <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini transition-colors" :class="opt===val ? 'text-a11 bg-a3 font-medium' : 'text-g11 hover:bg-g3'" @click="row[col]=opt;ed=false" x-text="opt"></button>
+                                      </template>
+                                    </div>
+                                  </td>
+                                </template>
+                              </tr>
+                            </template>
+                          </tbody>
+                        </table>
+                      </template>
+                      <template x-if="editPreviewSlice.length === 0">
+                        <div class="px-4 py-6 text-center">
+                          <p class="text-sm text-g9">No matching records</p>
+                          <p class="text-mini text-g8 mt-1">Adjust your filter conditions or select a different week.</p>
+                        </div>
+                      </template>
+                    </div>
+                    <div class="flex items-center justify-between mt-2">
+                      <template x-if="editPreviewAll.length > 5">
+                        <button class="text-mini text-a11 hover:text-a10 transition-colors" @click="modal.editExpanded = !modal.editExpanded" x-text="modal.editExpanded ? 'Show less' : 'Show all ' + editPreviewAll.length + ' records'"></button>
+                      </template>
+                      <p class="text-micro text-g8">Double-click a cell to edit</p>
+                    </div>
+              </div>
+            </div>
+          </template>
+        </div>
+
+        <template x-if="modal.editing">
+          <div class="flex items-center justify-end gap-2 border-t border-g4 px-5 py-3">
+            <button class="rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors" @click="cancelEdit()">Cancel</button>
+            <button class="rounded-6 bg-a9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="saveEdit()">Save</button>
+          </div>
+        </template>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  function app() {
+    const users = [
+      { id:'u1', name:'Philipp Epping', role:'CEO' },
+      { id:'u2', name:'Anton Wieprecht', role:'Marketing Lead' },
+      { id:'u3', name:'Robert Meier', role:'Sales Rep' },
+      { id:'u4', name:'Lisa König', role:'Sales Rep' },
+      { id:'u5', name:'Mira Schuster', role:'People & Culture' },
+      { id:'u6', name:'Klara Engel', role:'Finance' },
+    ];
+
+    const allRecords = [
+      { Name:'Schmidt GmbH','Booking Date':'07/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€4.800',_cw:10 },
+      { Name:'Hartmann AG','Booking Date':'08/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€12.500',_cw:10 },
+      { Name:'Weber & Partner','Booking Date':'09/03/2026','UTM Source':'Paid Ads',Status:'No Show',Revenue:'—',_cw:10 },
+      { Name:'Fischer Consulting','Booking Date':'10/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€8.200',_cw:10 },
+      { Name:'Müller Solutions','Booking Date':'11/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€6.900',_cw:10 },
+      { Name:'Koch Industries','Booking Date':'12/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€15.300',_cw:10 },
+      { Name:'Bauer Holding','Booking Date':'06/03/2026','UTM Source':'Outbound Mail',Status:'Show',Revenue:'€9.100',_cw:10 },
+      { Name:'Krüger GmbH','Booking Date':'10/03/2026','UTM Source':'Outbound Mail',Status:'No Show',Revenue:'—',_cw:10 },
+      { Name:'Reiter Coaching','Booking Date':'07/03/2026','UTM Source':'Outbound Mail',Status:'Show',Revenue:'€7.300',_cw:10 },
+      { Name:'Wagner Corp','Booking Date':'01/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€7.200',_cw:9 },
+      { Name:'Braun Holding','Booking Date':'02/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€5.400',_cw:9 },
+      { Name:'Klein GmbH','Booking Date':'03/03/2026','UTM Source':'Paid Ads',Status:'No Show',Revenue:'—',_cw:9 },
+      { Name:'Lange & Söhne','Booking Date':'04/03/2026','UTM Source':'Outbound Mail',Status:'Show',Revenue:'€11.800',_cw:9 },
+      { Name:'Huber AG','Booking Date':'14/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€9.300',_cw:11 },
+      { Name:'Richter Consulting','Booking Date':'15/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€6.100',_cw:11 },
+      { Name:'Wolf Industries','Booking Date':'16/03/2026','UTM Source':'Paid Ads',Status:'No Show',Revenue:'—',_cw:11 },
+      { Name:'Schuster GmbH','Booking Date':'17/03/2026','UTM Source':'Outbound Mail',Status:'Show',Revenue:'€8.500',_cw:11 },
+      { Name:'Neumann Partners','Booking Date':'18/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€14.200',_cw:11 },
+      { Name:'Schwarz AG','Booking Date':'19/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€3.900',_cw:11 },
+      { Name:'Berger Immobilien','Booking Date':'13/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€18.500',_cw:11 },
+      { Name:'Lorenz Digital','Booking Date':'14/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€4.700',_cw:11 },
+      { Name:'Baumann Finanz','Booking Date':'15/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€11.200',_cw:11 },
+      { Name:'Krämer & Co','Booking Date':'16/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€7.600',_cw:11 },
+      { Name:'Dietrich Solutions','Booking Date':'18/03/2026','UTM Source':'Paid Ads',Status:'No Show',Revenue:'—',_cw:11 },
+      { Name:'Zimmermann GmbH','Booking Date':'21/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€10.700',_cw:12 },
+      { Name:'Krause Holding','Booking Date':'22/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€7.800',_cw:12 },
+      { Name:'Peters & Co','Booking Date':'24/03/2026','UTM Source':'Outbound Mail',Status:'No Show',Revenue:'—',_cw:12 },
+      { Name:'Maier Digital','Booking Date':'25/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€5.600',_cw:12 },
+      { Name:'Böhm GmbH','Booking Date':'28/03/2026','UTM Source':'Paid Ads',Status:'Show',Revenue:'€8.900',_cw:13 },
+      { Name:'Engel Consulting','Booking Date':'29/03/2026','UTM Source':'Paid Ads',Status:'No Show',Revenue:'—',_cw:13 },
+      { Name:'Keller AG','Booking Date':'30/03/2026','UTM Source':'Outbound Mail',Status:'Show',Revenue:'€12.100',_cw:13 },
+    ];
+
+    const weeks = [
+      { id:9, label:'1–5 Mar' },
+      { id:10, label:'6–12 Mar' },
+      { id:11, label:'13–19 Mar' },
+      { id:12, label:'20–27 Mar' },
+      { id:13, label:'28–31 Mar' },
+    ];
+
+    const fieldDefs = [
+      { name:'UTM Source',type:'select',options:['Paid Ads','Outbound Mail','Organic','Referral','Direct'] },
+      { name:'Status',type:'select',options:['Show','No Show','Pending','Cancelled'] },
+      { name:'Lead Source',type:'select',options:['Website','LinkedIn','Cold Call','Partner'] },
+      { name:'Campaign',type:'text',options:[] },
+      { name:'Channel',type:'select',options:['Meta','Google','LinkedIn','TikTok'] },
+      { name:'Name',type:'text',options:[] },
+      { name:'Revenue',type:'number',options:[] },
+    ];
+
+    const operators = {
+      select:[
+        {id:'is',label:'is'},{id:'is_not',label:'is not'},
+        {id:'is_empty',label:'is empty'},{id:'is_not_empty',label:'is not empty'},
+      ],
+      text:[
+        {id:'is',label:'is'},{id:'is_not',label:'is not'},
+        {id:'contains',label:'contains'},{id:'does_not_contain',label:'does not contain'},
+        {id:'is_empty',label:'is empty'},{id:'is_not_empty',label:'is not empty'},
+      ],
+      number:[
+        {id:'is',label:'is'},{id:'is_not',label:'is not'},
+        {id:'gt',label:'greater than'},{id:'lt',label:'less than'},
+        {id:'gte',label:'greater or equal'},{id:'lte',label:'less or equal'},
+        {id:'contains',label:'contains'},
+        {id:'is_empty',label:'is empty'},{id:'is_not_empty',label:'is not empty'},
+      ],
+    };
+
+    function parseNum(s) {
+      if (!s || s === '—') return null;
+      const c = String(s).replace(/[€\s]/g,'').replace(/\./g,'').replace(',','.');
+      const n = parseFloat(c);
+      return isNaN(n) ? null : n;
+    }
+
+    function filterRows(rows, filters, cw) {
+      let result = rows.filter(r => r._cw === cw);
+      for (const f of filters) {
+        if (!f.field) continue;
+        if (f.operator === 'is_empty') { result = result.filter(r => !r[f.field]); continue; }
+        if (f.operator === 'is_not_empty') { result = result.filter(r => !!r[f.field]); continue; }
+        if (!f.value) continue;
+        result = result.filter(r => {
+          const raw = r[f.field] || '';
+          const val = raw.toLowerCase();
+          const v = f.value.toLowerCase();
+          if (f.operator === 'is') return val === v;
+          if (f.operator === 'is_not') return val !== v;
+          if (f.operator === 'contains') return val.includes(v);
+          if (f.operator === 'does_not_contain') return !val.includes(v);
+          if (['gt','lt','gte','lte'].includes(f.operator)) {
+            const nv = parseNum(raw), nf = parseNum(f.value);
+            if (nv === null || nf === null) return false;
+            if (f.operator === 'gt') return nv > nf;
+            if (f.operator === 'lt') return nv < nf;
+            if (f.operator === 'gte') return nv >= nf;
+            if (f.operator === 'lte') return nv <= nf;
+          }
+          return true;
+        });
+      }
+      return result;
+    }
+
+    function buildDescription(kpi) {
+      const filters = kpi.filters || [];
+      const opLabels = {is:'is',is_not:'is not',contains:'contains',does_not_contain:'does not contain',gt:'greater than',lt:'less than',gte:'≥',lte:'≤'};
+      let parts = [];
+      for (const f of filters) {
+        if (f.operator === 'is_empty' || f.operator === 'is_not_empty') {
+          parts.push(`${f.field} ${f.operator.replace(/_/g, ' ')}`);
+        } else if (f.value) {
+          const op = opLabels[f.operator] || 'is';
+          parts.push(`<strong>${f.field}</strong> ${op} <strong>${f.value}</strong>`);
+        }
+      }
+      const scope = kpi.dateScope === 'week' ? 'where Filled Day falls within the current week' : 'where Filled Day falls within the current month';
+      if (kpi.sourceMode === 'manual') {
+        if (!parts.length && !kpi.dateField) return `Manually tracked by <strong>${kpi.owner || 'the KPI owner'}</strong> each period.`;
+        let desc = 'Manually tracked';
+        if (parts.length) desc += ` where ${parts.join(' and ')}`;
+        if (kpi.dateField) desc += (parts.length ? ', and ' : ', ') + scope;
+        return desc + '.';
+      }
+      const src = kpi.db || kpi.source;
+      if (!src) return '';
+      if (!parts.length && !kpi.dateField) return `All records from <strong>${src}</strong>.`;
+      let desc = `All records from <strong>${src}</strong>`;
+      if (parts.length) desc += ` where ${parts.join(' and ')}`;
+      if (kpi.dateField) desc += (parts.length ? ', and ' : ' ') + scope;
+      return desc + '.';
+    }
+
+    return {
+      databases:['Marketing Tracking','CRM Pipeline','Finance Tracker'],
+      availableFields:fieldDefs,
+      dateFields:['Booking Date','Lead Date','Created Date'],
+      weeks,
+
+      cwLabel(id) {
+        const w = weeks.find(x => x.id === id);
+        return w ? `CW${id} · ${w.label}` : `CW${id}`;
+      },
+
+      isUnaryOp(op) { return op === 'is_empty' || op === 'is_not_empty'; },
+
+      users,
+
+      kpis: [
+        { id:'pm1',name:'Creatives (# Winning C. Live)',fmt:'number',agg:'average',period:'resets',target:5,actual:4,status:'green',owner:'Anton Wieprecht',source:'Adsmanager',sourceMode:'auto',
+          description:'Count of active winning creatives from <strong>Adsmanager</strong> where performance score exceeds threshold, averaged per week.',
+          previewCols:['Creative','Status','Performance','Since'],
+          allPreview:{9:[{Creative:'UGC Testimonial v3',Status:'Active',Performance:'2.1x ROAS',Since:'24/02'},{Creative:'Pain Point Hook',Status:'Active',Performance:'1.8x ROAS',Since:'03/03'}],10:[{Creative:'UGC Testimonial v3',Status:'Active',Performance:'2.1x ROAS',Since:'24/02'},{Creative:'Pain Point Hook',Status:'Active',Performance:'1.8x ROAS',Since:'03/03'},{Creative:'Case Study Carousel',Status:'Active',Performance:'1.6x ROAS',Since:'10/03'},{Creative:'Before/After Split',Status:'Active',Performance:'2.4x ROAS',Since:'01/03'}],11:[{Creative:'UGC Testimonial v3',Status:'Active',Performance:'2.1x ROAS',Since:'24/02'},{Creative:'Case Study Carousel',Status:'Active',Performance:'1.6x ROAS',Since:'10/03'},{Creative:'Before/After Split',Status:'Active',Performance:'2.4x ROAS',Since:'01/03'},{Creative:'New VSL Hook',Status:'Active',Performance:'1.9x ROAS',Since:'15/03'}],12:[{Creative:'Case Study Carousel',Status:'Active',Performance:'1.6x ROAS',Since:'10/03'},{Creative:'Before/After Split',Status:'Active',Performance:'2.4x ROAS',Since:'01/03'},{Creative:'New VSL Hook',Status:'Active',Performance:'1.9x ROAS',Since:'15/03'},{Creative:'Social Proof Reel',Status:'Active',Performance:'2.0x ROAS',Since:'20/03'}],13:[{Creative:'Before/After Split',Status:'Active',Performance:'2.4x ROAS',Since:'01/03'},{Creative:'New VSL Hook',Status:'Active',Performance:'1.9x ROAS',Since:'15/03'},{Creative:'Social Proof Reel',Status:'Active',Performance:'2.0x ROAS',Since:'20/03'},{Creative:'Founder Story v2',Status:'Active',Performance:'1.7x ROAS',Since:'28/03'},{Creative:'Objection Handler',Status:'Active',Performance:'2.2x ROAS',Since:'28/03'}]},
+          filters:[],db:'',dateField:'',dateScope:''},
+        { id:'pm2',name:'Adspend',fmt:'currency',agg:'total',period:'resets',target:25000,actual:18222,status:'green',owner:'Anton Wieprecht',source:'Adsmanager',sourceMode:'auto',
+          description:'Total ad spend from <strong>Adsmanager</strong> across all active campaigns, and where Filled Day falls within the current week.',
+          previewCols:['Campaign','Spend','Impressions','CPM'],
+          allPreview:{9:[{Campaign:'DACH — Acquisition',Spend:'€2.650',Impressions:'44.100',CPM:'€60,10'},{Campaign:'DACH — Retargeting',Spend:'€1.100',Impressions:'19.800',CPM:'€55,50'},{Campaign:'AT — Lookalike',Spend:'€1.280',Impressions:'28.900',CPM:'€44,30'}],10:[{Campaign:'DACH — Acquisition',Spend:'€2.890',Impressions:'48.200',CPM:'€59,90'},{Campaign:'DACH — Retargeting',Spend:'€1.240',Impressions:'22.100',CPM:'€56,10'},{Campaign:'AT — Lookalike',Spend:'€1.410',Impressions:'31.500',CPM:'€44,80'}],11:[{Campaign:'DACH — Acquisition',Spend:'€2.710',Impressions:'45.800',CPM:'€59,20'},{Campaign:'DACH — Retargeting',Spend:'€1.180',Impressions:'20.500',CPM:'€57,60'},{Campaign:'AT — Lookalike',Spend:'€1.387',Impressions:'30.200',CPM:'€45,90'}],12:[{Campaign:'DACH — Acquisition',Spend:'€2.400',Impressions:'41.300',CPM:'€58,10'},{Campaign:'DACH — Retargeting',Spend:'€1.050',Impressions:'18.200',CPM:'€57,70'},{Campaign:'AT — Lookalike',Spend:'€1.266',Impressions:'27.800',CPM:'€45,50'}],13:[{Campaign:'DACH — Acquisition',Spend:'€1.380',Impressions:'23.500',CPM:'€58,70'},{Campaign:'DACH — Retargeting',Spend:'€620',Impressions:'10.900',CPM:'€56,90'},{Campaign:'AT — Lookalike',Spend:'€689',Impressions:'15.100',CPM:'€45,60'}]},
+          filters:[],db:'',dateField:'',dateScope:''},
+        { id:'pm3',name:'Bookings',fmt:'number',agg:'total',period:'resets',target:50,actual:43,status:'green',owner:'Anton Wieprecht',source:'Marketing Tracking',sourceMode:'review',
+          db:'Marketing Tracking',dateField:'Booking Date',dateScope:'week',
+          filters:[{field:'UTM Source',operator:'is',value:'Paid Ads'},{field:'Status',operator:'is',value:'Show'}],
+          description:'All records from <strong>Marketing Tracking</strong> where <strong>UTM Source</strong> is <strong>Paid Ads</strong> and <strong>Status</strong> is <strong>Show</strong>, and where Filled Day falls within the current week.',
+          previewCols:['Name','Booking Date','UTM Source','Status','Revenue'],allPreview:{}},
+        { id:'pm4',name:'Bookings from Mails',fmt:'number',agg:'total',period:'resets',target:12,actual:1,status:'red',owner:'Philipp Epping',source:'Marketing Tracking',sourceMode:'review',
+          db:'Marketing Tracking',dateField:'Booking Date',dateScope:'week',
+          filters:[{field:'UTM Source',operator:'is',value:'Outbound Mail'}],
+          description:'All records from <strong>Marketing Tracking</strong> where <strong>UTM Source</strong> is <strong>Outbound Mail</strong>, and where Filled Day falls within the current week.',
+          previewCols:['Name','Booking Date','UTM Source','Status','Revenue'],allPreview:{}},
+        { id:'pm5',name:'Avg. Dealsize',fmt:'currency',agg:'manual',period:'resets',target:12000,actual:13700,status:'green',owner:'Philipp Epping',source:'',sourceMode:'manual',
+          description:'Manually tracked where <strong>UTM Source</strong> is <strong>Paid Ads</strong> and <strong>Status</strong> is <strong>Show</strong>, and where Filled Day falls within the current week.',
+          previewCols:[],allPreview:{},filters:[{field:'UTM Source',operator:'is',value:'Paid Ads'},{field:'Status',operator:'is',value:'Show'}],db:'',dateField:'Booking Date',dateScope:'week'},
+        { id:'pm6',name:'Dials',fmt:'number',agg:'total',period:'resets',target:3500,actual:2800,status:'yellow',owner:'Philipp Epping',source:'Aircall',sourceMode:'auto',
+          description:'All records from <strong>Aircall</strong> for all team members, and where Filled Day falls within the current week.',
+          previewCols:['Agent','Dials','Connected','Avg Duration'],
+          allPreview:{9:[{Agent:'Robert Meier',Dials:'170',Connected:'30','Avg Duration':'2:35'},{Agent:'Lisa König',Dials:'195',Connected:'37','Avg Duration':'3:05'},{Agent:'Max Hoffmann',Dials:'215',Connected:'35','Avg Duration':'2:50'}],10:[{Agent:'Robert Meier',Dials:'185',Connected:'34','Avg Duration':'2:40'},{Agent:'Lisa König',Dials:'210',Connected:'41','Avg Duration':'3:10'},{Agent:'Max Hoffmann',Dials:'225',Connected:'38','Avg Duration':'2:55'}],11:[{Agent:'Robert Meier',Dials:'160',Connected:'28','Avg Duration':'2:30'},{Agent:'Lisa König',Dials:'200',Connected:'39','Avg Duration':'3:00'},{Agent:'Max Hoffmann',Dials:'200',Connected:'33','Avg Duration':'2:45'}],12:[{Agent:'Robert Meier',Dials:'190',Connected:'36','Avg Duration':'2:45'},{Agent:'Lisa König',Dials:'215',Connected:'42','Avg Duration':'3:15'},{Agent:'Max Hoffmann',Dials:'195',Connected:'34','Avg Duration':'2:50'}],13:[{Agent:'Robert Meier',Dials:'140',Connected:'25','Avg Duration':'2:35'},{Agent:'Lisa König',Dials:'160',Connected:'32','Avg Duration':'3:00'},{Agent:'Max Hoffmann',Dials:'140',Connected:'26','Avg Duration':'2:40'}]},
+          filters:[],db:'',dateField:'',dateScope:''},
+      ],
+
+      modal:{open:false,kpi:null,editing:false,editName:'',editFmt:'number',editAgg:'total',editPeriod:'resets',editOwner:'',editMode:'manual',editDb:'',editFilters:[],editDateField:'',editDateScope:'week',editConfidence:'review',viewCW:10,editCW:10,viewExpanded:false,editExpanded:false},
+
+      operatorLabel(op) { return {is:'is',is_not:'is not',contains:'contains',does_not_contain:'does not contain',gt:'greater than',lt:'less than',gte:'greater or equal',lte:'less or equal',is_empty:'is empty',is_not_empty:'is not empty'}[op]||'is'; },
+      operatorsFor(fn) { const d=fieldDefs.find(f=>f.name===fn); return operators[d?.type||'text']; },
+      fieldType(fn) { const d=fieldDefs.find(f=>f.name===fn); return d?.type||'text'; },
+      fieldOptions(fn) { const d=fieldDefs.find(f=>f.name===fn); return d?.options||[]; },
+
+      get viewTotalCount() { return this.getViewPreview(false).length; },
+      get viewAllRows() { return this.getViewPreview(false); },
+      get viewPreviewRows() { return this.getViewPreview(true); },
+      getViewPreview(limited) {
+        const k=this.modal.kpi; if(!k) return [];
+        if(k.db==='Marketing Tracking') { const r=filterRows(allRecords,k.filters||[],this.modal.viewCW); return limited?r.slice(0,5):r; }
+        const a=k.allPreview?.[this.modal.viewCW]||[]; return limited?a.slice(0,5):a;
+      },
+
+      get editPreviewCols() {
+        if(this.modal.editDb==='Marketing Tracking') return ['Name','Booking Date','UTM Source','Status','Revenue'];
+        if(this.modal.editDb==='CRM Pipeline') return ['Deal','Stage','Value','Owner'];
+        return ['Name','Date','Value'];
+      },
+      get editPreviewAll() { if(this.modal.editDb!=='Marketing Tracking') return []; return filterRows(allRecords,this.modal.editFilters,this.modal.editCW); },
+      get editPreviewSlice() { return this.editPreviewAll.slice(0,5); },
+
+      openModal(kpi) { this.modal.kpi=kpi; this.modal.editing=false; this.modal.viewCW=10; this.modal.editCW=10; this.modal.viewExpanded=false; this.modal.editExpanded=false; this.modal.open=true; this.prepareEdit(kpi); },
+      prepareEdit(kpi) {
+        this.modal.editName=kpi.name||'';
+        this.modal.editFmt=kpi.fmt||'number';
+        this.modal.editAgg=kpi.agg||'total';
+        this.modal.editPeriod=kpi.period||'resets';
+        this.modal.editOwner=kpi.owner||'';
+        this.modal.editMode=kpi.sourceMode==='manual'?'manual':'connected';
+        this.modal.editDb=kpi.db||''; this.modal.editFilters=kpi.filters?.length?kpi.filters.map(f=>({...f})):[{field:'',operator:'is',value:''}];
+        this.modal.editDateField=kpi.dateField||'Booking Date'; this.modal.editDateScope=kpi.dateScope||'week';
+        this.modal.editConfidence=kpi.sourceMode==='auto'?'auto':'review';
+      },
+      closeModal() { this.modal.open=false; },
+      cancelEdit() { this.modal.editing=false; this.prepareEdit(this.modal.kpi); },
+      saveEdit() {
+        const k=this.modal.kpi;
+        k.name=this.modal.editName;
+        k.fmt=this.modal.editFmt;
+        k.agg=this.modal.editAgg;
+        k.period=this.modal.editPeriod;
+        k.owner=this.modal.editOwner;
+        if(this.modal.editMode==='manual') {
+          k.sourceMode='manual';k.source='';k.db='';k.allPreview={};k.previewCols=[];
+          k.dateField=this.modal.editDateField;k.dateScope=this.modal.editDateScope;
+          k.filters=this.modal.editFilters.filter(f=>f.field&&(f.value||this.isUnaryOp(f.operator))).map(f=>({...f}));
+          k.description=buildDescription(k);
+        }
+        else {
+          k.sourceMode=this.modal.editConfidence; k.source=this.modal.editDb; k.db=this.modal.editDb;
+          k.dateField=this.modal.editDateField; k.dateScope=this.modal.editDateScope;
+          k.filters=this.modal.editFilters.filter(f=>f.field&&(f.value||this.isUnaryOp(f.operator))).map(f=>({...f}));
+          k.description=buildDescription(k); k.previewCols=[...this.editPreviewCols]; k.allPreview={};
+        }
+        this.modal.editing=false;
+      },
+      removeFilter(i) { this.modal.editFilters.splice(i,1); if(!this.modal.editFilters.length) this.modal.editFilters.push({field:'',operator:'is',value:''}); },
+
+      fmt(v,f) {
+        if(v==null) return '—';
+        if(f==='currency'||f==='eur') return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);
+        if(f==='percentage'||f==='pct') return Math.round(v)+'%';
+        if(typeof v==='number'&&v>=1000) return new Intl.NumberFormat('de-DE').format(v);
+        return String(v);
+      },
+      stC(s) { return {green:'sc-g',yellow:'sc-y',red:'sc-r'}[s]||''; },
+      stL(s) { return {green:'On-Track',yellow:'Behind',red:'Off Track'}[s]||'—'; },
+    };
+  }
+  </script>
+</body>
+</html>

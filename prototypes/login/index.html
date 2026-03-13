@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aren</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+
+      --color-p0: oklch(0.982 0 0);
+      --color-p1: oklch(1 0 0);
+
+      --color-g0: oklch(1 0 0);
+      --color-g1: oklch(0.991 0 0);
+      --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0);
+      --color-g4: oklch(0.931 0 0);
+      --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0);
+      --color-g7: oklch(0.851 0 0);
+      --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0);
+      --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228);
+      --color-g12: oklch(0.21 0.004 286.059);
+
+      --color-a1: oklch(0.994 0.001 286.376);
+      --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09);
+      --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198);
+      --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675);
+      --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643);
+      --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713);
+      --color-a12: oklch(0.312 0.107 271.681);
+
+      --color-y1: oklch(0.994 0.003 84.559);
+      --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943);
+      --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209);
+      --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55);
+      --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907);
+      --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633);
+      --color-y12: oklch(0.353 0.053 69.99);
+
+      --color-d1: oklch(0.993 0.003 17.212);
+      --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81);
+      --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206);
+      --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189);
+      --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103);
+      --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228);
+      --color-d12: oklch(0.34 0.115 26.406);
+
+      --color-s1: oklch(0.994 0.006 137.773);
+      --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807);
+      --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615);
+      --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63);
+      --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544);
+      --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444);
+      --color-s12: oklch(0.326 0.058 136.282);
+
+      --color-alpha-2: oklch(0 0 0 / 0.02);
+      --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06);
+      --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1);
+      --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16);
+      --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36);
+      --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+
+      --text-micro: 10px;
+      --text-micro--font-weight: 450;
+      --text-micro--line-height: 14px;
+      --text-micro-medium: 10px;
+      --text-micro-medium--font-weight: 500;
+      --text-micro-medium--line-height: 14px;
+      --text-mini: 12px;
+      --text-mini--font-weight: 450;
+      --text-mini--line-height: 15px;
+      --text-mini-medium: 12px;
+      --text-mini-medium--font-weight: 500;
+      --text-mini-medium--line-height: 15px;
+      --text-sm: 13px;
+      --text-sm--font-weight: 450;
+      --text-sm--line-height: 18px;
+      --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px;
+      --text-sm-medium--font-weight: 500;
+      --text-sm-medium--line-height: 18px;
+      --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px;
+      --text-regular--font-weight: 450;
+      --text-regular--line-height: 20px;
+      --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px;
+      --text-regular-medium--font-weight: 500;
+      --text-regular-medium--line-height: 20px;
+      --text-regular-medium--letter-spacing: -0.13px;
+      --text-title: 20px;
+      --text-title--font-weight: 600;
+      --text-title--line-height: 28px;
+      --text-title--letter-spacing: -0.4px;
+
+      --radius-0: 0px;
+      --radius-2: 2px;
+      --radius-4: 4px;
+      --radius-6: 6px;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --radius-12: 12px;
+      --radius-full: 999px;
+
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0, 0, 0, 0.27), 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+      --duration-fast: 120ms;
+      --duration-normal: 200ms;
+      --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak] { display: none !important; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .animate-spin { animation: spin 0.7s linear infinite; }
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased">
+
+  <div
+    x-cloak
+    x-data="authApp()"
+    @scenario.window="setScenario($event.detail.type)"
+    class="min-h-screen flex flex-col items-center justify-center px-4 pb-16"
+  >
+
+    <!-- ============================================================ -->
+    <!-- CARD VIEWS (narrow container)                                -->
+    <!-- ============================================================ -->
+    <div
+      x-show="!view.startsWith('email-')"
+      class="w-full max-w-sm"
+    >
+      <!-- Wordmark -->
+      <div class="text-center mb-10">
+        <span class="text-title text-g12">Aren</span>
+      </div>
+
+      <!-- Card -->
+      <div class="rounded-12 bg-p1 shadow-xs">
+        <div class="px-8 py-10">
+
+          <!-- ===== LOGIN: ENTRY ===== -->
+          <div
+            x-show="view === 'entry'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div x-show="notice" x-transition class="mb-6 rounded-8 bg-y3 px-4 py-3">
+              <p class="text-sm text-y11" x-text="notice"></p>
+            </div>
+
+            <div class="mb-6">
+              <h1 class="text-title text-g12" x-text="isReturning ? 'Welcome back' : 'Sign in'"></h1>
+              <p class="text-sm text-g9 mt-1.5" x-show="!isReturning">
+                Enter your email and we'll send you a login link.
+              </p>
+              <p class="text-sm text-g9 mt-1.5" x-show="isReturning">
+                Ready to pick up where you left off.
+              </p>
+            </div>
+
+            <form @submit.prevent="submitLogin" class="space-y-4">
+              <div>
+                <label for="email" class="block text-sm-medium text-g11 mb-1.5">Email address</label>
+                <input
+                  id="email"
+                  type="email"
+                  x-model="email"
+                  x-ref="emailInput"
+                  required
+                  class="w-full rounded-6 bg-p0 px-3.5 py-2.5 text-regular text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9 transition-shadow duration-fast"
+                  placeholder="you@company.com"
+                >
+              </div>
+
+              <button
+                type="submit"
+                :disabled="loading"
+                class="w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast disabled:opacity-60 cursor-pointer disabled:cursor-wait flex items-center justify-center gap-2"
+              >
+                <svg x-show="loading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span x-text="loading ? 'Sending...' : 'Send login link'"></span>
+              </button>
+            </form>
+
+            <div x-show="isReturning" x-transition class="mt-5 text-center">
+              <p class="text-mini text-g9">
+                Not <span class="text-mini-medium text-g10" x-text="email"></span>?
+                <button @click="clearReturning" class="text-a11 hover:underline cursor-pointer">Use a different email</button>
+              </p>
+            </div>
+          </div>
+
+          <!-- ===== LOGIN: CHECK INBOX ===== -->
+          <div
+            x-show="view === 'inbox'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-a3">
+                <svg class="h-5 w-5 text-a11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12">Check your inbox</h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                We sent a login link to
+                <span class="text-sm-medium text-g11" x-text="email"></span>.
+                <br>Click the link in the email to sign in.
+              </p>
+
+              <div class="mt-8 flex items-center justify-center gap-3 text-sm">
+                <button
+                  @click="resend"
+                  :disabled="resending"
+                  class="text-a11 hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-wait"
+                  x-text="resent ? 'Link sent!' : (resending ? 'Sending...' : 'Resend link')"
+                ></button>
+                <span class="text-g5">&middot;</span>
+                <button @click="changeEmail" class="text-a11 hover:underline cursor-pointer">Use a different email</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== LOGIN: NO ACCOUNT FOUND (smart redirect) ===== -->
+          <div
+            x-show="view === 'not-found'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-y3">
+                <svg class="h-5 w-5 text-y11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12">No account found</h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                There's no account for
+                <span class="text-sm-medium text-g11" x-text="email"></span> yet.
+              </p>
+
+              <div class="mt-8 space-y-3">
+                <button
+                  @click="startRegister"
+                  class="w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast cursor-pointer"
+                >
+                  Create an account
+                </button>
+                <button @click="changeEmail" class="w-full text-sm text-a11 hover:underline cursor-pointer py-1">Try a different email</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== LOGIN: WELCOME (invited user, first time) ===== -->
+          <div
+            x-show="view === 'welcome'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-s3">
+                <svg class="h-5 w-5 text-s11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12">Welcome to Aren</h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                You've joined <span class="text-sm-medium text-g11">Greenfield Co</span>.
+                <br>Your company's real numbers, always up to date.
+              </p>
+
+              <button
+                @click="setScenario('returning')"
+                class="mt-8 w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast cursor-pointer"
+              >
+                Go to Greenfield Co
+              </button>
+            </div>
+          </div>
+
+          <!-- ============================================================ -->
+          <!-- REGISTRATION FLOW                                            -->
+          <!-- ============================================================ -->
+
+          <!-- ===== REGISTER: EMAIL ===== -->
+          <div
+            x-show="view === 'reg-email'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="mb-6">
+              <h1 class="text-title text-g12">Get started</h1>
+              <p class="text-sm text-g9 mt-1.5">
+                Create your company on Aren.
+              </p>
+            </div>
+
+            <form @submit.prevent="submitRegEmail" class="space-y-4">
+              <div>
+                <label for="reg-email" class="block text-sm-medium text-g11 mb-1.5">Work email</label>
+                <input
+                  id="reg-email"
+                  type="email"
+                  x-model="email"
+                  x-ref="regEmailInput"
+                  required
+                  class="w-full rounded-6 bg-p0 px-3.5 py-2.5 text-regular text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9 transition-shadow duration-fast"
+                  placeholder="you@company.com"
+                >
+              </div>
+
+              <button
+                type="submit"
+                :disabled="loading"
+                class="w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast disabled:opacity-60 cursor-pointer disabled:cursor-wait flex items-center justify-center gap-2"
+              >
+                <svg x-show="loading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span x-text="loading ? 'Checking...' : 'Continue'"></span>
+              </button>
+            </form>
+          </div>
+
+          <!-- ===== REGISTER: COMPANY EXISTS ===== -->
+          <div
+            x-show="view === 'reg-company-exists'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-a3">
+                <svg class="h-5 w-5 text-a11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.25 21h19.5m-18-18v18m10.5-18v18m6-13.5V21M6.75 6.75h.75m-.75 3h.75m-.75 3h.75m3-6h.75m-.75 3h.75m-.75 3h.75M6.75 21v-3.375c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21M3 3h12m-.75 4.5H21m-3.75 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008zm0 3h.008v.008h-.008v-.008z" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12" x-text="matchedCompany + ' is already on Aren'"></h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                Someone with a <span class="text-sm-medium text-g10" x-text="'@' + emailDomain"></span> email
+                already set up this company.
+              </p>
+            </div>
+
+            <div class="mt-8 space-y-3">
+              <button
+                @click="view = 'reg-join-name'"
+                class="w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast cursor-pointer"
+                x-text="'Request to join ' + matchedCompany"
+              ></button>
+              <button
+                @click="view = 'reg-details'"
+                class="w-full rounded-6 bg-p1 px-3.5 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors duration-fast cursor-pointer"
+              >
+                Start a new company instead
+              </button>
+            </div>
+          </div>
+
+          <!-- ===== REGISTER: JOIN — ENTER NAME ===== -->
+          <div
+            x-show="view === 'reg-join-name'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="mb-6">
+              <h1 class="text-title text-g12" x-text="'Join ' + matchedCompany"></h1>
+              <p class="text-sm text-g9 mt-1.5">
+                We'll let the admin know you'd like to join.
+              </p>
+            </div>
+
+            <form @submit.prevent="submitJoinRequest" class="space-y-4">
+              <div>
+                <label for="join-name" class="block text-sm-medium text-g11 mb-1.5">Your name</label>
+                <input
+                  id="join-name"
+                  type="text"
+                  x-model="name"
+                  x-ref="joinNameInput"
+                  required
+                  class="w-full rounded-6 bg-p0 px-3.5 py-2.5 text-regular text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9 transition-shadow duration-fast"
+                  placeholder="Sarah Chen"
+                >
+              </div>
+
+              <button
+                type="submit"
+                :disabled="loading"
+                class="w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast disabled:opacity-60 cursor-pointer disabled:cursor-wait flex items-center justify-center gap-2"
+              >
+                <svg x-show="loading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span x-text="loading ? 'Sending...' : 'Send request'"></span>
+              </button>
+            </form>
+
+            <div class="mt-5 text-center">
+              <button @click="view = 'reg-company-exists'" class="text-mini text-a11 hover:underline cursor-pointer">Back</button>
+            </div>
+          </div>
+
+          <!-- ===== REGISTER: REQUEST SENT ===== -->
+          <div
+            x-show="view === 'reg-request-sent'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-s3">
+                <svg class="h-5 w-5 text-s11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12">Request sent</h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                We've notified the team at <span class="text-sm-medium text-g11" x-text="matchedCompany"></span>.
+                <br>You'll get an email at <span class="text-sm-medium text-g11" x-text="email"></span> when you're approved.
+              </p>
+
+              <div class="mt-8">
+                <button @click="setScenario('new')" class="text-sm text-a11 hover:underline cursor-pointer">Back to sign in</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== REGISTER: YOUR DETAILS ===== -->
+          <div
+            x-show="view === 'reg-details'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="mb-6">
+              <h1 class="text-title text-g12">Create your company</h1>
+              <p class="text-sm text-g9 mt-1.5">
+                Just a name for you and your company — that's it.
+              </p>
+            </div>
+
+            <form @submit.prevent="submitRegDetails" class="space-y-4">
+              <div>
+                <label for="reg-name" class="block text-sm-medium text-g11 mb-1.5">Your name</label>
+                <input
+                  id="reg-name"
+                  type="text"
+                  x-model="name"
+                  x-ref="regNameInput"
+                  required
+                  class="w-full rounded-6 bg-p0 px-3.5 py-2.5 text-regular text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9 transition-shadow duration-fast"
+                  placeholder="Sarah Chen"
+                >
+              </div>
+
+              <div>
+                <label for="reg-company" class="block text-sm-medium text-g11 mb-1.5">Company name</label>
+                <input
+                  id="reg-company"
+                  type="text"
+                  x-model="companyName"
+                  x-ref="regCompanyInput"
+                  required
+                  class="w-full rounded-6 bg-p0 px-3.5 py-2.5 text-regular text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9 transition-shadow duration-fast"
+                  placeholder="Greenfield Co"
+                >
+              </div>
+
+              <button
+                type="submit"
+                :disabled="loading"
+                class="w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast disabled:opacity-60 cursor-pointer disabled:cursor-wait flex items-center justify-center gap-2"
+              >
+                <svg x-show="loading" class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="3"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                </svg>
+                <span x-text="loading ? 'Creating...' : 'Create company'"></span>
+              </button>
+            </form>
+
+            <div class="mt-5 text-center">
+              <button @click="view = 'reg-email'" class="text-mini text-a11 hover:underline cursor-pointer">Back</button>
+            </div>
+          </div>
+
+          <!-- ===== REGISTER: CHECK INBOX ===== -->
+          <div
+            x-show="view === 'reg-inbox'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-a3">
+                <svg class="h-5 w-5 text-a11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12">Check your inbox</h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                We sent a link to
+                <span class="text-sm-medium text-g11" x-text="email"></span>
+                <br>to finish setting up <span class="text-sm-medium text-g11" x-text="companyName || 'your company'"></span>.
+              </p>
+
+              <div class="mt-8 flex items-center justify-center gap-3 text-sm">
+                <button
+                  @click="resend"
+                  :disabled="resending"
+                  class="text-a11 hover:underline cursor-pointer disabled:opacity-50 disabled:cursor-wait"
+                  x-text="resent ? 'Link sent!' : (resending ? 'Sending...' : 'Resend link')"
+                ></button>
+                <span class="text-g5">&middot;</span>
+                <button @click="view = 'reg-details'" class="text-a11 hover:underline cursor-pointer">Back</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- ===== REGISTER: WELCOME (founder, new company) ===== -->
+          <div
+            x-show="view === 'reg-welcome'"
+            x-transition:enter="transition ease-out duration-slow"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+          >
+            <div class="text-center">
+              <div class="mx-auto mb-5 flex h-12 w-12 items-center justify-center rounded-12 bg-s3">
+                <svg class="h-5 w-5 text-s11" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+
+              <h1 class="text-title text-g12">Welcome to Aren</h1>
+              <p class="text-sm text-g9 mt-2.5 leading-relaxed">
+                <span class="text-sm-medium text-g11" x-text="companyName || 'Your company'"></span> is ready.
+                <br>Start by connecting your real numbers.
+              </p>
+
+              <button
+                @click="setScenario('returning')"
+                class="mt-8 w-full rounded-6 bg-a9 px-3.5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors duration-fast cursor-pointer"
+                x-text="'Go to ' + (companyName || 'your company')"
+              >
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer hints -->
+      <div class="text-center text-mini text-g8 mt-8">
+        <p x-show="view === 'entry' && !isReturning">
+          No password needed — we'll email you a secure login link.
+          <br>
+          <button @click="startRegister" class="text-a11 hover:underline cursor-pointer mt-1">Don't have an account? Get started</button>
+        </p>
+        <p x-show="view === 'reg-email'">
+          <button @click="setScenario('new')" class="text-a11 hover:underline cursor-pointer">Already have an account? Sign in</button>
+        </p>
+      </div>
+
+      <!-- Prototype simulation helper (outside the UI) -->
+      <div
+        x-show="view === 'inbox' || view === 'reg-inbox'"
+        x-transition
+        class="mt-6 border border-dashed border-g5 rounded-8 px-4 py-3 text-center"
+      >
+        <p class="text-micro text-g9 mb-2">Prototype: simulate opening the email</p>
+        <button
+          @click="view = (view === 'inbox') ? 'email-login' : 'email-register'"
+          class="rounded-6 bg-g3 px-4 py-1.5 text-mini-medium text-g11 hover:bg-g4 transition-colors cursor-pointer"
+        >
+          Open email
+        </button>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- EMAIL PREVIEWS (wider container)                             -->
+    <!-- ============================================================ -->
+    <div
+      x-show="view.startsWith('email-')"
+      x-transition:enter="transition ease-out duration-slow"
+      x-transition:enter-start="opacity-0 translate-y-1"
+      x-transition:enter-end="opacity-100 translate-y-0"
+      class="w-full max-w-lg"
+    >
+      <div class="rounded-12 bg-p1 shadow-xs overflow-hidden">
+
+        <!-- ===== INVITE EMAIL ===== -->
+        <template x-if="view === 'email-invite'">
+          <div>
+            <div class="border-b border-g4 px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 rounded-full bg-a9 flex items-center justify-center shrink-0">
+                  <span class="text-mini-medium text-white">A</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm-medium text-g12">Aren</span>
+                    <span class="text-mini text-g8">&lt;hello@aren.app&gt;</span>
+                  </div>
+                  <p class="text-mini text-g9">to lisa@randomstartup.io</p>
+                </div>
+              </div>
+              <p class="text-regular-medium text-g12 mt-4">Sarah invited you to Greenfield Co</p>
+            </div>
+
+            <div class="px-6 py-8">
+              <div class="space-y-5 text-sm text-g11 leading-relaxed">
+                <p>Hi Lisa,</p>
+
+                <p>
+                  <span class="text-sm-medium text-g12">Sarah Chen</span> invited you to join
+                  <span class="text-sm-medium text-g12">Greenfield Co</span> on Aren —
+                  where your team tracks the real financial numbers behind the business.
+                </p>
+
+                <div class="py-2">
+                  <button @click="setScenario('welcome')" class="inline-block rounded-6 bg-a9 px-5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors cursor-pointer">
+                    Sign in to Aren
+                  </button>
+                </div>
+
+                <p class="text-mini text-g9">
+                  This link expires in 24 hours. If it expires, go to
+                  <span class="text-a11">aren.app</span>
+                  and enter your email to get a new one.
+                </p>
+              </div>
+
+              <div class="border-t border-g4 mt-8 pt-5">
+                <p class="text-micro text-g8">
+                  You received this email because Sarah Chen invited you to Aren.
+                  <br>If you didn't expect this, you can safely ignore it.
+                </p>
+                <p class="text-micro text-g8 mt-3">
+                  Aren &middot; Dorfstrasse 60, 8835 Feusisberg, Switzerland
+                </p>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- ===== LOGIN EMAIL ===== -->
+        <template x-if="view === 'email-login'">
+          <div>
+            <div class="border-b border-g4 px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 rounded-full bg-a9 flex items-center justify-center shrink-0">
+                  <span class="text-mini-medium text-white">A</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm-medium text-g12">Aren</span>
+                    <span class="text-mini text-g8">&lt;login@aren.app&gt;</span>
+                  </div>
+                  <p class="text-mini text-g9">to sarah@greenfield.co</p>
+                </div>
+              </div>
+              <p class="text-regular-medium text-g12 mt-4">Your login link for Aren</p>
+            </div>
+
+            <div class="px-6 py-8">
+              <div class="space-y-5 text-sm text-g11 leading-relaxed">
+                <p>Hi Sarah,</p>
+
+                <p>Here's your login link for Aren. It expires in 15 minutes.</p>
+
+                <div class="py-2">
+                  <button @click="setScenario('returning')" class="inline-block rounded-6 bg-a9 px-5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors cursor-pointer">
+                    Sign in to Aren
+                  </button>
+                </div>
+
+                <p class="text-mini text-g9">
+                  If you didn't request this link, you can safely ignore this email.
+                  No one can access your account without clicking the link above.
+                </p>
+              </div>
+
+              <div class="border-t border-g4 mt-8 pt-5">
+                <p class="text-micro text-g8">
+                  Aren &middot; Your company's real numbers
+                </p>
+                <p class="text-micro text-g8 mt-3">
+                  Aren &middot; Dorfstrasse 60, 8835 Feusisberg, Switzerland
+                </p>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- ===== REGISTRATION EMAIL ===== -->
+        <template x-if="view === 'email-register'">
+          <div>
+            <div class="border-b border-g4 px-6 py-5">
+              <div class="flex items-center gap-3">
+                <div class="h-8 w-8 rounded-full bg-a9 flex items-center justify-center shrink-0">
+                  <span class="text-mini-medium text-white">A</span>
+                </div>
+                <div class="min-w-0">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm-medium text-g12">Aren</span>
+                    <span class="text-mini text-g8">&lt;hello@aren.app&gt;</span>
+                  </div>
+                  <p class="text-mini text-g9">to sarah@greenfield.co</p>
+                </div>
+              </div>
+              <p class="text-regular-medium text-g12 mt-4">Finish setting up Greenfield Co</p>
+            </div>
+
+            <div class="px-6 py-8">
+              <div class="space-y-5 text-sm text-g11 leading-relaxed">
+                <p>Hi Sarah,</p>
+
+                <p>
+                  You're one click away from getting
+                  <span class="text-sm-medium text-g12">Greenfield Co</span> set up on Aren.
+                  Click the link below to finish creating your account.
+                </p>
+
+                <div class="py-2">
+                  <button @click="setScenario('reg-welcome')" class="inline-block rounded-6 bg-a9 px-5 py-2.5 text-sm-medium text-white shadow-xs hover:bg-a10 transition-colors cursor-pointer">
+                    Finish setup
+                  </button>
+                </div>
+
+                <p class="text-mini text-g9">
+                  This link expires in 24 hours. If it expires, go to
+                  <span class="text-a11">aren.app</span>
+                  and register again to get a new one.
+                </p>
+              </div>
+
+              <div class="border-t border-g4 mt-8 pt-5">
+                <p class="text-micro text-g8">
+                  Aren &middot; Your company's real numbers
+                </p>
+                <p class="text-micro text-g8 mt-3">
+                  Aren &middot; Dorfstrasse 60, 8835 Feusisberg, Switzerland
+                </p>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+
+      <p class="text-center text-mini text-g8 mt-6">
+        <span x-show="view === 'email-invite'">Email received by a first-time user after being invited</span>
+        <span x-show="view === 'email-login'">Email received by a returning user after requesting a login link</span>
+        <span x-show="view === 'email-register'">Email received by a founder after registering a new company</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- ===== DEBUG PANEL ===== -->
+  <div
+    x-data="{ open: true }"
+    class="fixed bottom-0 left-0 right-0 z-50 bg-g12"
+  >
+    <div class="px-4 py-2 flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
+      <div class="flex items-center gap-2.5 mr-2">
+        <span class="text-micro-medium uppercase tracking-wider text-g8">Prototype</span>
+        <button @click="open = !open" class="text-micro text-g9 hover:text-g6 cursor-pointer" x-text="open ? 'Hide' : 'Show'"></button>
+      </div>
+      <template x-if="open">
+        <div class="flex flex-wrap items-center gap-x-1.5 gap-y-1.5">
+          <span class="text-micro text-g9">Login:</span>
+          <button @click="$dispatch('scenario', { type: 'new' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">New visitor</button>
+          <button @click="$dispatch('scenario', { type: 'returning' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Returning</button>
+          <button @click="$dispatch('scenario', { type: 'expired' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Expired</button>
+          <button @click="$dispatch('scenario', { type: 'used' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Used</button>
+          <button @click="$dispatch('scenario', { type: 'inbox' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Inbox</button>
+          <button @click="$dispatch('scenario', { type: 'not-found' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">No account</button>
+
+          <span class="text-g9 mx-0.5">|</span>
+          <span class="text-micro text-g9">Register:</span>
+          <button @click="$dispatch('scenario', { type: 'reg-email' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Email</button>
+          <button @click="$dispatch('scenario', { type: 'reg-company-exists' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Company exists</button>
+          <button @click="$dispatch('scenario', { type: 'reg-join-name' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Join name</button>
+          <button @click="$dispatch('scenario', { type: 'reg-request-sent' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Request sent</button>
+          <button @click="$dispatch('scenario', { type: 'reg-details' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Details</button>
+          <button @click="$dispatch('scenario', { type: 'reg-inbox' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Reg inbox</button>
+          <button @click="$dispatch('scenario', { type: 'reg-welcome' })" class="rounded-4 bg-a12 px-2.5 py-1 text-micro-medium text-a5 hover:bg-a11 transition-colors cursor-pointer">Reg welcome</button>
+
+          <span class="text-g9 mx-0.5">|</span>
+          <span class="text-micro text-g9">Emails:</span>
+          <button @click="$dispatch('scenario', { type: 'email-invite' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Invite</button>
+          <button @click="$dispatch('scenario', { type: 'email-login' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Login</button>
+          <button @click="$dispatch('scenario', { type: 'email-register' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Register</button>
+          <button @click="$dispatch('scenario', { type: 'welcome' })" class="rounded-4 bg-g11 px-2.5 py-1 text-micro-medium text-g4 hover:bg-g10 transition-colors cursor-pointer">Invite welcome</button>
+        </div>
+      </template>
+    </div>
+  </div>
+
+  <script>
+    function authApp() {
+      return {
+        view: 'entry',
+        email: '',
+        name: '',
+        companyName: '',
+        loading: false,
+        resending: false,
+        resent: false,
+        isReturning: false,
+        notice: null,
+        matchedCompany: 'Greenfield Co',
+
+        get emailDomain() {
+          const parts = this.email.split('@');
+          return parts.length > 1 ? parts[1] : '';
+        },
+
+        guessNameFromEmail() {
+          const local = this.email.split('@')[0] || '';
+          const separators = /[._\-]/;
+          if (!separators.test(local)) return '';
+          const parts = local.split(separators).filter(Boolean);
+          if (parts.length < 2) return '';
+          if (parts.some(p => /\d/.test(p) || p.length < 2)) return '';
+          return parts
+            .map(p => p.charAt(0).toUpperCase() + p.slice(1).toLowerCase())
+            .join(' ');
+        },
+
+        init() {
+          const saved = localStorage.getItem('aren_login_email');
+          if (saved) {
+            this.email = saved;
+            this.isReturning = true;
+          }
+        },
+
+        submitLogin() {
+          if (!this.email || this.loading) return;
+          this.loading = true;
+          this.notice = null;
+
+          setTimeout(() => {
+            this.loading = false;
+            localStorage.setItem('aren_login_email', this.email);
+            this.view = 'inbox';
+          }, 1200);
+        },
+
+        startRegister() {
+          this.notice = null;
+          this.view = 'reg-email';
+          this.$nextTick(() => this.$refs.regEmailInput?.focus());
+        },
+
+        submitRegEmail() {
+          if (!this.email || this.loading) return;
+          this.loading = true;
+
+          setTimeout(() => {
+            this.loading = false;
+            const domain = this.emailDomain;
+            const guessed = this.guessNameFromEmail();
+            if (guessed && !this.name) this.name = guessed;
+
+            if (domain === 'greenfield.co' || domain === 'acme.com') {
+              this.matchedCompany = domain === 'greenfield.co' ? 'Greenfield Co' : 'Acme Inc';
+              this.view = 'reg-company-exists';
+            } else {
+              this.view = 'reg-details';
+              this.$nextTick(() => {
+                const target = this.name ? this.$refs.regCompanyInput : this.$refs.regNameInput;
+                target?.focus();
+              });
+            }
+          }, 800);
+        },
+
+        submitJoinRequest() {
+          if (!this.name || this.loading) return;
+          this.loading = true;
+
+          setTimeout(() => {
+            this.loading = false;
+            this.view = 'reg-request-sent';
+          }, 1000);
+        },
+
+        submitRegDetails() {
+          if (!this.name || !this.companyName || this.loading) return;
+          this.loading = true;
+
+          setTimeout(() => {
+            this.loading = false;
+            localStorage.setItem('aren_login_email', this.email);
+            this.view = 'reg-inbox';
+          }, 1200);
+        },
+
+        resend() {
+          if (this.resending || this.resent) return;
+          this.resending = true;
+
+          setTimeout(() => {
+            this.resending = false;
+            this.resent = true;
+            setTimeout(() => { this.resent = false; }, 3000);
+          }, 1000);
+        },
+
+        changeEmail() {
+          this.view = 'entry';
+          this.email = '';
+          this.isReturning = false;
+          this.notice = null;
+          this.$nextTick(() => this.$refs.emailInput?.focus());
+        },
+
+        clearReturning() {
+          localStorage.removeItem('aren_login_email');
+          this.email = '';
+          this.isReturning = false;
+          this.$nextTick(() => this.$refs.emailInput?.focus());
+        },
+
+        setScenario(type) {
+          this.loading = false;
+          this.resending = false;
+          this.resent = false;
+
+          switch (type) {
+            case 'new':
+              localStorage.removeItem('aren_login_email');
+              this.email = '';
+              this.name = '';
+              this.companyName = '';
+              this.isReturning = false;
+              this.notice = null;
+              this.view = 'entry';
+              break;
+
+            case 'returning':
+              this.email = 'sarah@greenfield.co';
+              this.isReturning = true;
+              this.notice = null;
+              this.view = 'entry';
+              localStorage.setItem('aren_login_email', this.email);
+              break;
+
+            case 'expired':
+              this.email = localStorage.getItem('aren_login_email') || 'sarah@greenfield.co';
+              this.isReturning = true;
+              this.notice = 'That link has expired. Enter your email to get a new one.';
+              this.view = 'entry';
+              break;
+
+            case 'used':
+              this.email = localStorage.getItem('aren_login_email') || 'sarah@greenfield.co';
+              this.isReturning = true;
+              this.notice = 'That link has already been used. Enter your email to get a new one.';
+              this.view = 'entry';
+              break;
+
+            case 'inbox':
+              if (!this.email) this.email = 'sarah@greenfield.co';
+              this.notice = null;
+              this.view = 'inbox';
+              break;
+
+            case 'not-found':
+              this.email = 'lisa@randomstartup.io';
+              this.isReturning = false;
+              this.notice = null;
+              this.view = 'not-found';
+              break;
+
+            case 'welcome':
+              this.notice = null;
+              this.view = 'welcome';
+              break;
+
+            case 'reg-email':
+              this.email = '';
+              this.name = '';
+              this.companyName = '';
+              this.notice = null;
+              this.view = 'reg-email';
+              break;
+
+            case 'reg-company-exists':
+              this.email = 'mark@greenfield.co';
+              this.matchedCompany = 'Greenfield Co';
+              this.view = 'reg-company-exists';
+              break;
+
+            case 'reg-join-name':
+              this.email = 'mark@greenfield.co';
+              this.matchedCompany = 'Greenfield Co';
+              this.name = '';
+              this.view = 'reg-join-name';
+              break;
+
+            case 'reg-request-sent':
+              this.email = 'mark@greenfield.co';
+              this.matchedCompany = 'Greenfield Co';
+              this.name = 'Mark Weber';
+              this.view = 'reg-request-sent';
+              break;
+
+            case 'reg-details':
+              this.email = 'sarah@newventure.io';
+              this.name = '';
+              this.companyName = '';
+              this.view = 'reg-details';
+              break;
+
+            case 'reg-inbox':
+              this.email = 'sarah@greenfield.co';
+              this.companyName = 'Greenfield Co';
+              this.view = 'reg-inbox';
+              break;
+
+            case 'reg-welcome':
+              this.companyName = 'Greenfield Co';
+              this.view = 'reg-welcome';
+              break;
+
+            case 'email-invite':
+              this.view = 'email-invite';
+              break;
+
+            case 'email-login':
+              this.view = 'email-login';
+              break;
+
+            case 'email-register':
+              this.view = 'email-register';
+              break;
+          }
+        }
+      };
+    }
+  </script>
+
+</body>
+</html>

@@ -14,7 +14,7 @@ Each prototype is a single HTML file using:
 - **Design tokens** from the Lifetime design system (embedded in each file)
 - **Inter** font from Google Fonts
 
-Use the boilerplate from `workflow/03_SKETCH_IN_CLAUDE.md` as the starting point for every prototype.
+Use the boilerplate from `workflow/03_SKETCH_IN_CLAUDE.md` as the starting point for every prototype. See `DESIGN_TOKENS.md` for the full token reference and common UI patterns.
 
 ## File structure
 
@@ -44,3 +44,7 @@ See `workflow/WORKFLOW.md` for the full process. The short version:
 - Real-feeling data (names, amounts, dates) — never "Lorem ipsum" or "Item 1"
 - Build complete flows, not just single screens
 - Include empty states
+- After creating or updating a prototype, serve it locally and open in the browser (requires `required_permissions: ["all"]`):
+  1. Kill any previous server on port 8080: `lsof -ti:8080 | xargs kill 2>/dev/null`
+  2. Start server (background): `python3 -m http.server 8080 -d prototypes/<feature-name>`
+  3. Open in browser: `open http://localhost:8080`

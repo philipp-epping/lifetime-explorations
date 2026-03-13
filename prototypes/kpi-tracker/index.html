@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KPI Tracker — DXR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+      --color-p0: oklch(0.982 0 0); --color-p1: oklch(1 0 0);
+      --color-g0: oklch(1 0 0); --color-g1: oklch(0.991 0 0); --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0); --color-g4: oklch(0.931 0 0); --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0); --color-g7: oklch(0.851 0 0); --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0); --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228); --color-g12: oklch(0.21 0.004 286.059);
+      --color-a1: oklch(0.994 0.001 286.376); --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09); --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198); --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675); --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643); --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713); --color-a12: oklch(0.312 0.107 271.681);
+      --color-y1: oklch(0.994 0.003 84.559); --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943); --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209); --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55); --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907); --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633); --color-y12: oklch(0.353 0.053 69.99);
+      --color-d1: oklch(0.993 0.003 17.212); --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81); --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206); --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189); --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103); --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228); --color-d12: oklch(0.34 0.115 26.406);
+      --color-s1: oklch(0.994 0.006 137.773); --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807); --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615); --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63); --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544); --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444); --color-s12: oklch(0.326 0.058 136.282);
+      --color-alpha-2: oklch(0 0 0 / 0.02); --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06); --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1); --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16); --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36); --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+      --text-micro: 10px; --text-micro--font-weight: 450; --text-micro--line-height: 14px;
+      --text-micro-medium: 10px; --text-micro-medium--font-weight: 500; --text-micro-medium--line-height: 14px;
+      --text-mini: 12px; --text-mini--font-weight: 450; --text-mini--line-height: 15px;
+      --text-mini-medium: 12px; --text-mini-medium--font-weight: 500; --text-mini-medium--line-height: 15px;
+      --text-sm: 13px; --text-sm--font-weight: 450; --text-sm--line-height: 18px; --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px; --text-sm-medium--font-weight: 500; --text-sm-medium--line-height: 18px; --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px; --text-regular--font-weight: 450; --text-regular--line-height: 20px; --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px; --text-regular-medium--font-weight: 500; --text-regular-medium--line-height: 20px; --text-regular-medium--letter-spacing: -0.13px;
+      --radius-0: 0px; --radius-2: 2px; --radius-4: 4px; --radius-6: 6px; --radius-8: 8px; --radius-10: 10px; --radius-12: 12px; --radius-full: 999px;
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0,0,0,.27), 0px 4px 6px -1px rgba(0,0,0,.1), 0px 2px 4px -2px rgba(0,0,0,.1);
+      --duration-fast: 120ms; --duration-normal: 200ms; --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak]{display:none!important}
+    input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    input[type=number]{-moz-appearance:textfield}
+
+    /* ── Dark spreadsheet — border-separate for sticky support ── */
+    .kg{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;border-left:1px solid var(--color-g11);border-top:1px solid var(--color-g11)}
+    .kg th,.kg td{border-right:1px solid var(--color-g11);border-bottom:1px solid var(--color-g11);padding:0 10px;text-align:center;vertical-align:middle;height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kg th{background:var(--color-g11);color:var(--color-g7);height:32px}
+    .kg td{background:var(--color-g12);color:var(--color-g3)}
+    .kg td:first-child,.kg th:first-child{text-align:left;overflow:visible}
+    .kg td.st-cell{overflow:visible}
+
+    /* Sticky first column */
+    .kg .sc{position:sticky;left:0;z-index:10}
+
+    /* Dept header */
+    .kg .dh td{background:var(--color-a9);color:white;font-weight:600;border-color:var(--color-a10);letter-spacing:.3px}
+    /* Channel header */
+    .kg .ch td{background:var(--color-a11);color:var(--color-a5);font-weight:500;border-color:var(--color-a12)}
+
+    /* Pace cells */
+    .pc-g{background:var(--color-s6)!important;color:var(--color-s12)!important;font-weight:500}
+    .pc-y{background:var(--color-y6)!important;color:var(--color-y12)!important;font-weight:500}
+    .pc-r{background:var(--color-d6)!important;color:var(--color-d12)!important;font-weight:500}
+    /* Status cells */
+    .sc-g{background:var(--color-s7)!important;color:var(--color-s12)!important}
+    .sc-y{background:var(--color-y7)!important;color:var(--color-y12)!important}
+    .sc-r{background:var(--color-d8)!important;color:var(--color-d12)!important}
+
+    .wk{color:var(--color-g6)}
+    .kpi-name{cursor:pointer;transition:background 120ms}
+    .kpi-name:hover{background:var(--color-g11)!important}
+    .sl{color:var(--color-a7);cursor:pointer}.sl:hover{text-decoration:underline}
+
+    /* Toggle button */
+    .cg-btn{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border:1px solid var(--color-g9);border-radius:2px;background:var(--color-g11);cursor:pointer;font-size:12px;line-height:1;color:var(--color-g6);transition:all 120ms;flex-shrink:0}
+    .cg-btn:hover{background:var(--color-g10);border-color:var(--color-g8)}
+
+    /* Pace tooltip */
+    .pace-cell{position:relative;cursor:default}
+    .pace-tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--color-g11);color:var(--color-g3);padding:5px 10px;border-radius:var(--radius-4);font-size:11px;font-weight:400;white-space:nowrap;z-index:30;pointer-events:none;box-shadow:var(--shadow-md)}
+    .pace-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--color-g11)}
+    .pace-cell:hover .pace-tip{display:block}
+
+    /* Status dropdown */
+    .st-drop{background:var(--color-g12);border:1px solid var(--color-g10)}
+    .st-drop button:hover{background:var(--color-g11)}
+
+    /* Inline-editable inputs inside table */
+    .kg input.ei{border:none;padding:0;margin:0;height:100%;background:transparent;font:inherit;color:inherit;text-align:center;outline:none;width:100%;cursor:default}
+    .kg input.ei:focus{cursor:text;background:var(--color-g11);border-radius:2px}
+
+    /* Channel table spacing handled via margin-top on separate tables */
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased" x-data="app()" x-cloak>
+
+  <header class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+    <div class="flex items-center gap-3">
+      <div class="flex h-7 w-7 items-center justify-center rounded-6 bg-a9 text-mini-medium text-white">D</div>
+      <span class="text-regular-medium text-g12">DXR KPIs</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="flex rounded-6 bg-g2 p-0.5">
+        <template x-for="r in ['ceo','lead','ic']" :key="r">
+          <button class="rounded-4 px-3 py-1 text-mini-medium transition-colors" :class="role===r?'bg-p1 text-g12 shadow-xs':'text-g9 hover:text-g11'" @click="switchRole(r)" x-text="r==='ceo'?'CEO':r==='lead'?'Dept Lead':'IC'"></button>
+        </template>
+      </div>
+      <div class="flex items-center gap-1">
+        <button class="rounded-4 p-1 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="cM===0?(cM=11,cY--):cM--"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+        <span class="min-w-24 text-center text-sm-medium text-g11" x-text="MN[cM]+' '+cY"></span>
+        <button class="rounded-4 p-1 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="cM===11?(cM=0,cY++):cM++"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto px-6 py-5" style="max-width:1500px" @click="openSt=null">
+
+    <nav class="mb-3 flex items-center gap-1.5 text-sm text-g9" x-show="bc.length>1">
+      <template x-for="(c,i) in bc" :key="i"><div class="flex items-center gap-1.5">
+        <span x-show="i>0" class="text-g7">/</span>
+        <button class="rounded-4 px-1.5 py-0.5 transition-colors" :class="i===bc.length-1?'text-g12 font-medium':'text-g9 hover:text-a11 hover:bg-a3'" @click="navTo(i)" x-text="c.l"></button>
+      </div></template>
+    </nav>
+
+    <div x-show="role==='ceo'||role==='lead'">
+
+      <!-- ═══ LEVEL 1 ═══ -->
+      <template x-if="bc.length===1">
+        <div>
+          <div class="mb-4">
+            <h1 class="text-regular-medium text-g12" x-text="role==='ceo'?'Company KPIs':'CSM Department'"></h1>
+            <p class="mt-0.5 text-mini text-g9" x-text="MN[cM]+' '+cY+' — CW'+CW"></p>
+          </div>
+          <div class="overflow-x-auto rounded-8">
+            <div :style="'min-width:'+(sw?'1560':'1060')+'px'">
+            <table class="kg text-sm">
+              <thead><tr>
+                <th style="width:260px" class="sc"><span class="text-mini-medium text-g7" x-text="MN[cM]+' '+cY"></span></th>
+                <th style="width:120px" class="text-mini-medium text-g7">Target</th>
+                <th style="width:120px" class="text-mini-medium text-g7">Actual</th>
+                <th style="width:130px" class="text-mini-medium text-g7">Pace</th>
+                <th style="width:160px" class="text-mini-medium text-g7"><div class="flex items-center pr-1"><span class="flex-1 text-center">Status</span><button class="cg-btn" @click.stop="toggleW($event)"><span x-text="sw?'‹':'›'"></span></button></div></th>
+                <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                  <th style="width:100px" class="text-mini-medium" :class="w===CW?'text-a7':'text-g7'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')"><div x-text="'W'+(wi+1)"></div><div class="text-micro font-normal" :class="w===CW?'text-a7':'text-g8'" x-text="WR[w]"></div></th>
+                </template></template>
+                <th style="width:130px" class="text-mini-medium text-g7" :style="sw?'border-left:2px solid var(--color-a8)':''">Owner</th>
+                <th style="width:130px" class="text-mini-medium text-g7">Source</th>
+              </tr></thead>
+              <tbody>
+                <template x-for="dept in (role==='lead'?[D.csm]:depts)" :key="dept.id">
+                  <template x-for="(row,ri) in topRows(dept)" :key="row._k">
+                    <tr :class="row._tr">
+                      <td class="sc" :class="row._t==='kpi'?'kpi-name':''" :style="row._t==='kpi'?'background:var(--color-g12)':''" @click="row._click?.()">
+                        <template x-if="row._t==='dept'"><div class="flex items-center gap-1.5"><span x-text="row.name"></span><svg class="h-3 w-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></template>
+                        <template x-if="row._t==='kpi'"><div><span class="text-g3" x-text="row.name"></span><span class="text-micro text-g8 ml-1" x-text="row.type"></span></div></template>
+                      </td>
+                      <!-- Target -->
+                      <td class="tabular-nums text-g5">
+                        <template x-if="row._t==='kpi'"><input class="ei" type="text" :value="F(row.target,row.fmt)" :readonly="!canEdit(row.owner)" @focus="if(canEdit(row.owner)){$el.value=row.target||''}" @blur="row.target=+$el.value||row.target;reCalc(row);$el.value=F(row.target,row.fmt)" @keydown.enter="$el.blur()"></template>
+                      </td>
+                      <!-- Actual -->
+                      <td class="tabular-nums font-medium text-g2">
+                        <template x-if="row._t==='kpi'"><input class="ei font-medium" type="text" :value="F(row.actual,row.fmt)" :readonly="!canEdit(row.owner)" @focus="if(canEdit(row.owner)){$el.value=row.actual||''}" @blur="row.actual=+$el.value||row.actual;reCalc(row);$el.value=F(row.actual,row.fmt)" @keydown.enter="$el.blur()"></template>
+                      </td>
+                      <!-- Pace -->
+                      <td class="tabular-nums font-medium" :class="(row._t==='kpi'?pcC(row.pr):'')+' '+(row._t==='kpi'&&row.pv!==null?'pace-cell':'')">
+                        <span x-text="row._t==='kpi'&&row.pv!==null?F(row.pv,row.fmt):''"></span>
+                        <template x-if="row._t==='kpi'&&row.pv!==null"><span class="pace-tip">Projected end-of-month value at current pace</span></template>
+                      </td>
+                      <!-- Status -->
+                      <td :class="row._t==='kpi'?scC(row.status)+' st-cell':''" class="relative">
+                        <template x-if="row._t==='kpi'"><div>
+                          <button class="w-full flex items-center justify-center gap-1" @click.stop="openSt=openSt===row.id?null:row.id"><span x-text="scL(row.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+                          <div x-show="openSt===row.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md">
+                            <template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="row.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template>
+                          </div>
+                        </div></template>
+                      </td>
+                      <!-- Weeks -->
+                      <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                        <td class="tabular-nums text-mini" :class="row._t==='kpi'?(w===CW?'font-medium text-g2':'wk'):''" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(row._t==='kpi'&&w===CW?';background:var(--color-a12)':'')">
+                          <template x-if="row._t==='kpi'"><input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="row.weekly?.[w]!==undefined?F(row.weekly[w],row.fmt):''" :readonly="!canEdit(row.owner)" @focus="if(canEdit(row.owner)){$el.value=row.weekly?.[w]??''}" @blur="if(row.weekly){row.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=row.weekly?.[w]!==undefined?F(row.weekly[w],row.fmt):''" @keydown.enter="$el.blur()"></template>
+                        </td>
+                      </template></template>
+                      <td class="text-mini text-g8" :style="sw?'border-left:2px solid var(--color-a8)':''"><span x-text="row._t==='kpi'?row.owner:''"></span></td>
+                      <td x-data="{ed:false}">
+                        <template x-if="row._t==='kpi'"><div>
+                          <button x-show="!ed" class="sl text-mini w-full text-center" @click.stop="ed=true" x-text="row.source||'+ add'"></button>
+                          <input x-show="ed" x-ref="si" type="text" class="w-full rounded-4 bg-g11 px-1.5 py-0.5 text-mini text-g2 outline-none ring-1 ring-a8 focus:ring-a9 text-center" :value="row.source" @blur="row.source=$event.target.value;ed=false" @keydown.enter="row.source=$event.target.value;ed=false" @keydown.escape="ed=false" x-effect="if(ed)$nextTick(()=>$refs.si?.focus())">
+                        </div></template>
+                      </td>
+                    </tr>
+                  </template>
+                </template>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ═══ LEVEL 2: separate tables in single scroll container ═══ -->
+      <template x-if="bc.length===2&&activeDept">
+        <div>
+          <div class="mb-4">
+            <h1 class="text-regular-medium text-g12" x-text="activeDept.name"></h1>
+            <p class="mt-0.5 text-mini text-g9" x-text="MN[cM]+' '+cY+' — CW'+CW"></p>
+          </div>
+          <div class="overflow-x-auto rounded-8">
+            <div :style="'min-width:'+(sw?'1560':'1060')+'px'">
+              <!-- Overview table -->
+              <table class="kg text-sm">
+                <thead><tr>
+                  <th style="width:260px" class="sc"><span class="text-mini-medium text-g7" x-text="activeDept.name + ' — Overview'"></span></th>
+                  <th style="width:120px" class="text-mini-medium text-g7">Target</th>
+                  <th style="width:120px" class="text-mini-medium text-g7">Actual</th>
+                  <th style="width:130px" class="text-mini-medium text-g7">Pace</th>
+                  <th style="width:160px" class="text-mini-medium text-g7"><div class="flex items-center pr-1"><span class="flex-1 text-center">Status</span><button class="cg-btn" @click.stop="toggleW($event)"><span x-text="sw?'‹':'›'"></span></button></div></th>
+                  <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                    <th style="width:100px" class="text-mini-medium" :class="w===CW?'text-a7':'text-g7'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')"><div x-text="'W'+(wi+1)"></div><div class="text-micro font-normal" :class="w===CW?'text-a7':'text-g8'" x-text="WR[w]"></div></th>
+                  </template></template>
+                  <th style="width:130px" class="text-mini-medium text-g7" :style="sw?'border-left:2px solid var(--color-a8)':''">Owner</th>
+                  <th style="width:130px" class="text-mini-medium text-g7">Source</th>
+                </tr></thead>
+                <tbody>
+                  <template x-for="k in activeDept.kpis" :key="k.id">
+                    <tr>
+                      <td class="sc" style="background:var(--color-g12)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="k.type"></span></td>
+                      <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
+                      <td class="tabular-nums font-medium text-g2"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.actual||''" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
+                      <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
+                      <td :class="scC(k.status)+' st-cell'" class="relative">
+                        <button class="w-full flex items-center justify-center gap-1" @click.stop="openSt=openSt===k.id?null:k.id"><span x-text="scL(k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+                        <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
+                      </td>
+                      <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                        <td class="tabular-nums text-mini" :class="w===CW?'font-medium text-g2':'wk'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')">
+                          <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.weekly?.[w]??''" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
+                        </td>
+                      </template></template>
+                      <td class="text-mini text-g8" :style="sw?'border-left:2px solid var(--color-a8)':''"><span x-text="k.owner"></span></td>
+                      <td x-data="{ed:false}"><div><button x-show="!ed" class="sl text-mini w-full text-center" @click.stop="ed=true" x-text="k.source||'+ add'"></button><input x-show="ed" x-ref="si" type="text" class="w-full rounded-4 bg-g11 px-1.5 py-0.5 text-mini text-g2 outline-none ring-1 ring-a8 focus:ring-a9 text-center" :value="k.source" @blur="k.source=$event.target.value;ed=false" @keydown.enter="k.source=$event.target.value;ed=false" @keydown.escape="ed=false" x-effect="if(ed)$nextTick(()=>$refs.si?.focus())"></div></td>
+                    </tr>
+                  </template>
+                </tbody>
+              </table>
+              <!-- Channel tables — each as separate table for Alpine compatibility -->
+              <template x-for="ch in (activeDept.channels||[])" :key="ch.id">
+                <table class="kg text-sm" style="margin-top:12px">
+                  <tbody>
+                    <tr class="ch">
+                      <td style="width:260px" class="sc cursor-pointer" @click="drillCh(ch)"><div class="flex items-center gap-1.5"><span x-text="ch.name"></span><svg class="h-3 w-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></td>
+                      <td style="width:120px"></td><td style="width:120px"></td><td style="width:130px"></td><td style="width:160px"></td>
+                      <template x-if="sw"><template x-for="(w,wi) in WK" :key="w"><td style="width:100px" :style="wi===0?'border-left:2px solid var(--color-a8)':''"></td></template></template>
+                      <td style="width:130px" :style="sw?'border-left:2px solid var(--color-a8)':''"></td><td style="width:130px"></td>
+                    </tr>
+                    <template x-for="k in ch.kpis.slice(0,3)" :key="k.id">
+                      <tr>
+                        <td class="sc kpi-name" style="background:var(--color-g12)" @click="drillCh(ch)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="k.type"></span></td>
+                        <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
+                        <td class="tabular-nums font-medium text-g2"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.actual||''" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
+                        <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
+                        <td :class="scC(k.status)+' st-cell'" class="relative">
+                          <button class="w-full flex items-center justify-center gap-1" @click.stop="openSt=openSt===k.id?null:k.id"><span x-text="scL(k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+                          <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
+                        </td>
+                        <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                          <td class="tabular-nums text-mini" :class="w===CW?'font-medium text-g2':'wk'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')">
+                            <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.weekly?.[w]??''" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
+                          </td>
+                        </template></template>
+                        <td class="text-mini text-g8" :style="sw?'border-left:2px solid var(--color-a8)':''"><span x-text="k.owner"></span></td>
+                        <td x-data="{ed:false}"><div><button x-show="!ed" class="sl text-mini w-full text-center" @click.stop="ed=true" x-text="k.source||'+ add'"></button><input x-show="ed" x-ref="si" type="text" class="w-full rounded-4 bg-g11 px-1.5 py-0.5 text-mini text-g2 outline-none ring-1 ring-a8 focus:ring-a9 text-center" :value="k.source" @blur="k.source=$event.target.value;ed=false" @keydown.enter="k.source=$event.target.value;ed=false" @keydown.escape="ed=false" x-effect="if(ed)$nextTick(()=>$refs.si?.focus())"></div></td>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </template>
+            </div>
+          </div>
+        </div>
+      </template>
+
+      <!-- ═══ LEVEL 3 ═══ -->
+      <template x-if="bc.length===3&&activeCh">
+        <div>
+          <div class="mb-4">
+            <h1 class="text-regular-medium text-g12" x-text="activeCh.name + ' — Full Funnel'"></h1>
+            <p class="mt-0.5 text-mini text-g9" x-text="activeDept.name + ' · ' + MN[cM]+' '+cY"></p>
+          </div>
+          <div class="overflow-x-auto rounded-8">
+            <div :style="'min-width:'+(sw?'1560':'1060')+'px'">
+            <table class="kg text-sm">
+              <thead><tr>
+                <th style="width:260px" class="sc"><span class="text-mini-medium text-g7" x-text="activeCh.name"></span></th>
+                <th style="width:120px" class="text-mini-medium text-g7">Target</th>
+                <th style="width:120px" class="text-mini-medium text-g7">Actual</th>
+                <th style="width:130px" class="text-mini-medium text-g7">Pace</th>
+                <th style="width:160px" class="text-mini-medium text-g7"><div class="flex items-center pr-1"><span class="flex-1 text-center">Status</span><button class="cg-btn" @click.stop="toggleW($event)"><span x-text="sw?'‹':'›'"></span></button></div></th>
+                <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                  <th style="width:100px" class="text-mini-medium" :class="w===CW?'text-a7':'text-g7'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')"><div x-text="'W'+(wi+1)"></div><div class="text-micro font-normal" :class="w===CW?'text-a7':'text-g8'" x-text="WR[w]"></div></th>
+                </template></template>
+                <th style="width:130px" class="text-mini-medium text-g7" :style="sw?'border-left:2px solid var(--color-a8)':''">Owner</th>
+                <th style="width:130px" class="text-mini-medium text-g7">Source</th>
+              </tr></thead>
+              <tbody>
+                <template x-for="k in activeCh.kpis" :key="k.id">
+                  <tr>
+                    <td class="sc" style="background:var(--color-g12)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="k.type"></span></td>
+                    <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
+                    <td class="tabular-nums font-medium text-g2"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.actual||''" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
+                    <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
+                    <td :class="scC(k.status)+' st-cell'" class="relative">
+                      <button class="w-full flex items-center justify-center gap-1" @click.stop="openSt=openSt===k.id?null:k.id"><span x-text="scL(k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+                      <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
+                    </td>
+                    <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
+                      <td class="tabular-nums text-mini" :class="w===CW?'font-medium text-g2':'wk'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')">
+                        <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit(k.owner)" @focus="if(canEdit(k.owner))$el.value=k.weekly?.[w]??''" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
+                      </td>
+                    </template></template>
+                    <td class="text-mini text-g8" :style="sw?'border-left:2px solid var(--color-a8)':''"><span x-text="k.owner"></span></td>
+                    <td x-data="{ed:false}"><div><button x-show="!ed" class="sl text-mini w-full text-center" @click.stop="ed=true" x-text="k.source||'+ add'"></button><input x-show="ed" x-ref="si" type="text" class="w-full rounded-4 bg-g11 px-1.5 py-0.5 text-mini text-g2 outline-none ring-1 ring-a8 focus:ring-a9 text-center" :value="k.source" @blur="k.source=$event.target.value;ed=false" @keydown.enter="k.source=$event.target.value;ed=false" @keydown.escape="ed=false" x-effect="if(ed)$nextTick(()=>$refs.si?.focus())"></div></td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+            </div>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <!-- ═══ IC VIEW ═══ -->
+    <div x-show="role==='ic'">
+      <div class="mb-4 flex items-end justify-between">
+        <div>
+          <h1 class="text-regular-medium text-g12">Robert Meier — My KPIs</h1>
+          <p class="mt-0.5 text-mini text-g9">Fill in CW<span x-text="CW"></span> · <span x-text="MN[cM]+' '+cY"></span></p>
+        </div>
+        <button class="rounded-6 px-4 py-1.5 text-sm text-white shadow-xs transition-colors" :class="icS?'bg-s9 hover:bg-s10':'bg-a9 hover:bg-a10'" @click="icS=true;setTimeout(()=>icS=false,2000)" x-text="icS?'Saved!':'Save'"></button>
+      </div>
+      <div class="overflow-x-auto rounded-8">
+        <div style="min-width:1130px">
+        <table class="kg text-sm">
+          <thead><tr>
+            <th style="width:200px" class="text-mini-medium text-g7 text-left">KPI</th>
+            <th style="width:110px" class="text-mini-medium text-g7">Target</th>
+            <th style="width:110px" class="text-mini-medium text-g7">Actual</th>
+            <th style="width:110px" class="text-mini-medium text-g7">Pace</th>
+            <th style="width:150px" class="text-mini-medium text-g7">Status</th>
+            <template x-for="w in WK" :key="w"><th style="width:90px" class="text-mini-medium" :class="w===CW?'text-a7':'text-g7'" :style="w===CW?'background:var(--color-a12)':''" x-text="'CW'+w"></th></template>
+          </tr></thead>
+          <tbody>
+            <template x-for="(k,i) in icD" :key="k.id">
+              <tr>
+                <td class="text-left"><div class="text-g3"><span x-text="k.name"></span> <span class="text-micro text-g8" x-text="k.type"></span></div><div x-show="k.actual!==null" class="mt-1"><input type="text" class="w-full rounded-4 bg-g11 px-2 py-0.5 text-micro text-g7 outline-none placeholder:text-g9 focus:bg-g10 focus:text-g3" :value="k.context||''" @input="k.context=$event.target.value" placeholder="Add context..."></div></td>
+                <td class="tabular-nums text-g5"><span x-text="F(k.target,k.fmt)"></span></td>
+                <td class="tabular-nums font-medium text-g2"><span x-text="k.actual!==null?F(k.actual,k.fmt):'—'"></span></td>
+                <td class="tabular-nums font-medium" :class="(k.pv!==null?pcC(k.pr):'')+' '+(k.pv!==null?'pace-cell':'')"><span x-text="k.pv!==null?F(k.pv,k.fmt):'-'"></span><template x-if="k.pv!==null"><span class="pace-tip">Projected EOM at current pace</span></template></td>
+                <td :class="scC(k.so||k.as)+' st-cell'" class="relative">
+                  <template x-if="k.actual!==null"><div>
+                    <button class="w-full flex items-center justify-center gap-1" @click.stop="openSt=openSt===k.id?null:k.id"><span x-text="scL(k.so||k.as)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+                    <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.so=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
+                  </div></template>
+                  <template x-if="k.actual===null"><span class="text-g9">—</span></template>
+                </td>
+                <template x-for="w in WK" :key="w">
+                  <td :style="w===CW?'background:var(--color-a12)':''">
+                    <template x-if="w===CW"><input type="number" class="w-full bg-transparent text-center text-sm tabular-nums text-g2 outline-none font-medium" :value="k.weekly[w]??''" @input="uIc(i,w,$event.target.value)" placeholder="—"></template>
+                    <template x-if="w!==CW"><span class="tabular-nums text-mini" :class="k.weekly[w]!==undefined?'wk':'text-g9'" x-text="k.weekly[w]!==undefined?F(k.weekly[w],k.fmt):''"></span></template>
+                  </td>
+                </template>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+  function app(){
+    const WK=[9,10,11,12,13],CW=10,DE=10,DM=31;
+    const WR={9:'1–5 Mar',10:'6–12 Mar',11:'13–19 Mar',12:'20–27 Mar',13:'28–31 Mar'};
+    const STS=['green','yellow','red'];
+    function E(k){if(!k.actual||!k.target){k.pv=null;k.pr=0;return k}const p=k.actual/DE*DM;k.pv=k.fmt==='pct'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;return k}
+
+    const D={
+      paid_mkt:{id:'paid_mkt',name:'PAID MARKETING',status:'green',
+        kpis:[
+          {id:'pm1',name:'Creatives (# Winning C. Live)',actual:5,target:5,status:'green',type:'Avg',fmt:'num',owner:'Anton Wieprecht',source:'Adsmanager',weekly:{9:3,10:4,11:4,12:4,13:5}},
+          {id:'pm2',name:'Adspend',actual:23711,target:25000,status:'green',type:'Total',fmt:'eur',owner:'Anton Wieprecht',source:'Marketing Tracker',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689}},
+          {id:'pm3',name:'Bookings',actual:55,target:50,status:'green',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'Marketing Tracker',weekly:{9:12,10:6,11:13,12:15,13:9}},
+        ].map(E),
+        channels:[
+          {id:'ads',name:'Ads',kpis:[
+            {id:'a1',name:'Impressions',actual:245000,target:300000,status:'yellow',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'Meta Ads',weekly:{9:52000,10:61000,11:48000,12:50000,13:34000}},
+            {id:'a2',name:'CTR',actual:2.8,target:3.0,status:'yellow',type:'Avg',fmt:'pct',owner:'Anton Wieprecht',source:'Meta Ads',weekly:{9:2.5,10:3.1,11:2.8,12:2.9,13:2.7}},
+            {id:'a3',name:'Adspend',actual:23711,target:25000,status:'green',type:'Total',fmt:'eur',owner:'Anton Wieprecht',source:'Marketing Tracker',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689}},
+            {id:'a4',name:'CPC',actual:1.82,target:2.00,status:'green',type:'Avg',fmt:'eur',owner:'Anton Wieprecht',source:'Meta Ads',weekly:{9:1.95,10:1.78,11:1.85,12:1.72,13:1.80}},
+            {id:'a5',name:'Leads from Ads',actual:189,target:200,status:'green',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'Meta Ads',weekly:{9:38,10:42,11:40,12:41,13:28}},
+            {id:'a6',name:'Bookings from Ads',actual:42,target:40,status:'green',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'Marketing Tracker',weekly:{9:9,10:5,11:10,12:12,13:6}},
+          ].map(E)},
+          {id:'outbound_mail',name:'Outbound Mails',kpis:[
+            {id:'om1',name:'Emails Sent',actual:4200,target:5000,status:'yellow',type:'Total',fmt:'num',owner:'Philipp Epping',source:'Instantly',weekly:{9:900,10:850,11:820,12:880,13:750}},
+            {id:'om2',name:'Reply Rate',actual:3.2,target:4.0,status:'yellow',type:'Avg',fmt:'pct',owner:'Philipp Epping',source:'Instantly',weekly:{9:2.8,10:3.5,11:3.1,12:3.4,13:3.2}},
+            {id:'om3',name:'Bookings from Mails',actual:8,target:12,status:'red',type:'Total',fmt:'num',owner:'Philipp Epping',source:'Instantly',weekly:{9:2,10:1,11:2,12:2,13:1}},
+          ].map(E)},
+          {id:'ai_setting',name:'AI Setting',kpis:[
+            {id:'ai1',name:'AI Conversations',actual:1200,target:1500,status:'yellow',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'AI Tool',weekly:{9:250,10:280,11:240,12:260,13:170}},
+            {id:'ai2',name:'Qualified Leads',actual:45,target:60,status:'yellow',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'AI Tool',weekly:{9:10,10:12,11:9,12:8,13:6}},
+            {id:'ai3',name:'Bookings from AI',actual:5,target:8,status:'red',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'AI Tool',weekly:{9:1,10:0,11:1,12:1,13:2}},
+          ].map(E)},
+          {id:'outbound_call',name:'Outbound Calling',kpis:[
+            {id:'oc1',name:'Dials',actual:2800,target:3500,status:'yellow',type:'Total',fmt:'num',owner:'Philipp Epping',source:'Aircall',weekly:{9:580,10:620,11:560,12:600,13:440}},
+            {id:'oc2',name:'Connect Rate',actual:18,target:20,status:'yellow',type:'Avg',fmt:'pct',owner:'Philipp Epping',source:'Aircall',weekly:{9:16,10:19,11:17,12:20,13:18}},
+            {id:'oc3',name:'Sets from Calls',actual:22,target:35,status:'red',type:'Total',fmt:'num',owner:'Philipp Epping',source:'Plecto',weekly:{9:6,10:2,11:4,12:10,13:0}},
+          ].map(E)},
+        ]},
+      org_mkt:{id:'org_mkt',name:'ORGANIC MARKETING',status:'yellow',
+        kpis:[
+          {id:'omk1',name:'YouTube Watchtime AW',actual:80,target:200,status:'green',type:'Total',fmt:'num',owner:'Anton',source:'YouTube',weekly:{9:33,10:47}},
+          {id:'omk2',name:'YouTube Watchtime PEA',actual:85,target:50,status:'green',type:'Total',fmt:'num',owner:'Philipp',source:'YouTube',weekly:{9:12,10:23,11:50}},
+          {id:'omk3',name:'IG Impressions',actual:93000,target:300000,status:'red',type:'Total',fmt:'num',owner:'Philipp',source:'IG Analytics',weekly:{9:30000,10:42000,11:21000}},
+        ].map(E),channels:[]},
+      setting:{id:'setting',name:'SETTING',status:'red',
+        kpis:[
+          {id:'st1',name:'Leads',actual:253,target:750,status:'yellow',type:'Total',fmt:'num',owner:'Anton Wieprecht',source:'Airtable',weekly:{9:98,10:155}},
+          {id:'st2',name:'Sets',actual:22,target:35,status:'red',type:'Total',fmt:'num',owner:'Philipp Epping',source:'Plecto',weekly:{9:6,10:2,11:4,12:10}},
+          {id:'st3',name:'Dial-Set Ratio',actual:0.6,target:2,status:'red',type:'Manual',fmt:'pct',owner:'Philipp Epping',source:'Plecto',weekly:{9:1.0,10:0.5,11:0.5,12:0.8}},
+        ].map(E),channels:[]},
+      closing:{id:'closing',name:'CLOSING',status:'red',
+        kpis:[
+          {id:'cl1',name:'FE-Deals',actual:5,target:10,status:'red',type:'Total',fmt:'num',owner:'Philipp Epping',source:'Plecto',weekly:{9:0,10:1,11:0,12:1,13:3}},
+          {id:'cl2',name:'Avg. Dealsize',actual:13700,target:12000,status:'green',type:'Manual',fmt:'eur',owner:'Philipp Epping',source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:10600}},
+          {id:'cl3',name:'Call-Close Rate',actual:14,target:35,status:'red',type:'Manual',fmt:'pct',owner:'Philipp Epping',source:'Plecto',weekly:{9:0,10:10,11:0,12:20,13:33}},
+          {id:'cl4',name:'FE-Dealvolumen',actual:68500,target:120000,status:'red',type:'Total',fmt:'eur',owner:'Philipp Epping',source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:37900}},
+        ].map(E),channels:[]},
+      csm:{id:'csm',name:'CSM',status:'green',
+        kpis:[
+          {id:'csm1',name:'BE-Dealvolumen',actual:171900,target:150000,status:'green',type:'Total',fmt:'eur',owner:'Philipp Epping',source:'Plecto',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}},
+          {id:'csm2',name:'Retention Rate',actual:33,target:45,status:'yellow',type:'Manual',fmt:'pct',owner:'Philipp Epping',source:'Plecto',weekly:{11:50}},
+          {id:'csm3',name:'KPI-Collection Rate',actual:58,target:80,status:'red',type:'Max',fmt:'pct',owner:'Philipp Epping',source:'',weekly:{10:0,11:58}},
+        ].map(E),channels:[]},
+      people:{id:'people',name:'PEOPLE & CULTURE',status:'yellow',
+        kpis:[
+          {id:'pc1',name:'eNPS',actual:42,target:50,status:'yellow',type:'Avg',fmt:'num',owner:'Mira Schuster',source:'Personio',weekly:{9:40,10:44}},
+          {id:'pc2',name:'Open Positions Filled',actual:2,target:4,status:'red',type:'Total',fmt:'num',owner:'Mira Schuster',source:'Personio',weekly:{9:1,10:1}},
+        ].map(E),channels:[]},
+      finance:{id:'finance',name:'FINANCE',status:'green',
+        kpis:[
+          {id:'f1',name:'Cash Balance',actual:420000,target:380000,status:'green',type:'Total',fmt:'eur',owner:'Klara Engel',source:'DATEV',weekly:{9:410000,10:420000}},
+          {id:'f2',name:'Burn Rate',actual:95000,target:110000,status:'green',type:'Avg',fmt:'eur',owner:'Klara Engel',source:'DATEV',weekly:{9:98000,10:92000}},
+        ].map(E),channels:[]},
+    };
+    const depts=['paid_mkt','org_mkt','setting','closing','csm','people','finance'].map(k=>D[k]);
+
+    const icD=[
+      {id:'ic1',name:'Retention Rate',target:92,actual:87,as:'yellow',so:null,fmt:'pct',type:'Manual',cm:'Cumulative',weekly:{9:91,10:87},context:''},
+      {id:'ic2',name:'Upsell Revenue',target:25000,actual:16500,as:'yellow',so:null,fmt:'eur',type:'Total',cm:'Incremental',weekly:{9:8000,10:8500},context:'Upsell: Schmidt AG — €8.5k'},
+      {id:'ic3',name:'Active Clients',target:24,actual:22,as:'yellow',so:null,fmt:'num',type:'Total',cm:'Cumulative',weekly:{9:23,10:22},context:'Lost Mustermann GmbH'},
+      {id:'ic4',name:'NPS Score',target:70,actual:66,as:'yellow',so:null,fmt:'num',type:'Avg',cm:'Cumulative',weekly:{9:62,10:66},context:''},
+      {id:'ic5',name:'Onboarding Calls',target:8,actual:3,as:'red',so:'yellow',fmt:'num',type:'Total',cm:'Incremental',weekly:{9:2,10:1},context:'3 scheduled next week'},
+    ].map(k=>{const p=k.actual/DE*DM;k.pv=Math.round(p*10)/10;k.pr=p/k.target;return k});
+
+    return{
+      role:'ceo',cM:2,cY:2026,MN:['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+      WK,CW,WR,STS,D,depts,
+      sw:false,openSt:null,
+      bc:[{l:'Company KPIs'}],
+      activeDept:null,activeCh:null,
+      icD,icS:false,
+
+      toggleW(e){
+        const sc=e.target.closest('.overflow-x-auto');
+        const expanding=!this.sw;
+        this.sw=!this.sw;
+        this.$nextTick(()=>{if(!sc)return;setTimeout(()=>{const ths=sc.querySelectorAll('th');const lastWeekTh=ths.length>=3?ths[ths.length-3]:null;const target=lastWeekTh?lastWeekTh.offsetLeft+lastWeekTh.offsetWidth-sc.clientWidth:0;sc.scrollTo({left:expanding?Math.max(0,target):0,behavior:'smooth'})},20)});
+      },
+
+      canEdit(o){return this.role==='ceo'||this.role==='lead'},
+
+      reCalc(k){
+        if(!k.actual||!k.target){k.pv=null;k.pr=0;return}
+        const p=k.actual/DE*DM;k.pv=k.fmt==='pct'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;
+      },
+
+      topRows(dept){
+        const r=[];
+        r.push({_k:dept.id+'_h',_t:'dept',_tr:'dh',name:dept.name,_click:()=>this.drillDept(dept)});
+        for(const k of dept.kpis){k._k=k.id;k._t='kpi';k._tr='';k._click=()=>this.drillDept(dept);r.push(k)}
+        return r;
+      },
+
+      switchRole(r){this.role=r;this.bc=[{l:r==='ceo'?'Company KPIs':r==='lead'?'CSM Department':'My KPIs'}];this.activeDept=null;this.activeCh=null;this.icS=false;this.openSt=null},
+      drillDept(dept){this.activeDept=dept;this.activeCh=null;this.bc=[{l:this.role==='ceo'?'Company KPIs':'CSM Department'},{l:dept.name}];this.openSt=null},
+      drillCh(ch){this.activeCh=ch;this.bc=[...this.bc.slice(0,2),{l:ch.name}];this.openSt=null},
+      navTo(i){this.bc=this.bc.slice(0,i+1);if(i===0){this.activeDept=null;this.activeCh=null}if(i===1)this.activeCh=null;this.openSt=null},
+
+      uIc(i,w,v){
+        const val=v===''?undefined:parseFloat(v);this.icD[i].weekly[w]=val;
+        const k=this.icD[i];const vs=Object.values(k.weekly).filter(x=>x!==undefined);
+        if(!vs.length){k.actual=null;k.pv=null;k.pr=null;return}
+        k.actual=k.cm==='Incremental'?vs.reduce((a,b)=>a+b,0):vs[vs.length-1];
+        const p=k.actual/DE*DM;k.pv=Math.round(p*10)/10;k.pr=p/k.target;
+        k.as=k.pr>=1?'green':k.pr>=0.8?'yellow':'red';this.icS=false;
+      },
+
+      F(v,fmt){
+        if(v===null||v===undefined)return'—';
+        if(fmt==='eur'){if(Math.abs(v)>=1000)return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(v)}
+        if(fmt==='pct'){const r=Math.round(v*10)/10;return(r%1===0?r.toFixed(0):r.toFixed(1).replace('.',','))+'%'}
+        if(typeof v==='number'){if(v>=1000)return new Intl.NumberFormat('de-DE').format(Math.round(v));return String(Math.round(v*10)/10).replace('.',',')}
+        return String(v);
+      },
+      pcC(r){if(!r)return'';if(r>=1)return'pc-g';if(r>=0.8)return'pc-y';return'pc-r'},
+      scC(s){return{green:'sc-g',yellow:'sc-y',red:'sc-r'}[s]||''},
+      scL(s){return{green:'On-Track',yellow:'Behind',red:'Off Track'}[s]||'—'},
+    }
+  }
+  </script>
+
+</body>
+</html>
