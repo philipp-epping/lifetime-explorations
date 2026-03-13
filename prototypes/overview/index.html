@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Explorations — Lifetime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+
+      --color-p0: oklch(0.982 0 0);
+      --color-p1: oklch(1 0 0);
+
+      --color-g0: oklch(1 0 0);
+      --color-g1: oklch(0.991 0 0);
+      --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0);
+      --color-g4: oklch(0.931 0 0);
+      --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0);
+      --color-g7: oklch(0.851 0 0);
+      --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0);
+      --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228);
+      --color-g12: oklch(0.21 0.004 286.059);
+
+      --color-a1: oklch(0.994 0.001 286.376);
+      --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09);
+      --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198);
+      --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675);
+      --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643);
+      --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713);
+      --color-a12: oklch(0.312 0.107 271.681);
+
+      --color-y1: oklch(0.994 0.003 84.559);
+      --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943);
+      --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209);
+      --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55);
+      --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907);
+      --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633);
+      --color-y12: oklch(0.353 0.053 69.99);
+
+      --color-d1: oklch(0.993 0.003 17.212);
+      --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81);
+      --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206);
+      --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189);
+      --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103);
+      --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228);
+      --color-d12: oklch(0.34 0.115 26.406);
+
+      --color-s1: oklch(0.994 0.006 137.773);
+      --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807);
+      --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615);
+      --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63);
+      --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544);
+      --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444);
+      --color-s12: oklch(0.326 0.058 136.282);
+
+      --color-alpha-2: oklch(0 0 0 / 0.02);
+      --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06);
+      --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1);
+      --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16);
+      --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36);
+      --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+
+      --text-micro: 10px;
+      --text-micro--font-weight: 450;
+      --text-micro--line-height: 14px;
+      --text-micro-medium: 10px;
+      --text-micro-medium--font-weight: 500;
+      --text-micro-medium--line-height: 14px;
+      --text-mini: 12px;
+      --text-mini--font-weight: 450;
+      --text-mini--line-height: 15px;
+      --text-mini-medium: 12px;
+      --text-mini-medium--font-weight: 500;
+      --text-mini-medium--line-height: 15px;
+      --text-sm: 13px;
+      --text-sm--font-weight: 450;
+      --text-sm--line-height: 18px;
+      --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px;
+      --text-sm-medium--font-weight: 500;
+      --text-sm-medium--line-height: 18px;
+      --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px;
+      --text-regular--font-weight: 450;
+      --text-regular--line-height: 20px;
+      --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px;
+      --text-regular-medium--font-weight: 500;
+      --text-regular-medium--line-height: 20px;
+      --text-regular-medium--letter-spacing: -0.13px;
+
+      --radius-0: 0px;
+      --radius-2: 2px;
+      --radius-4: 4px;
+      --radius-6: 6px;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --radius-12: 12px;
+      --radius-full: 999px;
+
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0, 0, 0, 0.27), 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+      --duration-fast: 120ms;
+      --duration-normal: 200ms;
+      --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased">
+
+  <div x-data="explorations()" x-cloak class="mx-auto max-w-5xl px-6 py-10">
+
+    <!-- Header -->
+    <div class="mb-8">
+      <h1 class="text-lg font-semibold text-g12 tracking-tight">Explorations</h1>
+      <p class="text-sm text-g9 mt-1">Prototypes and design explorations for Lifetime.</p>
+    </div>
+
+    <!-- Filter tabs -->
+    <div class="flex items-center gap-1 mb-5 border-b border-g4">
+      <template x-for="tab in tabs" :key="tab.key">
+        <button
+          @click="activeTab = tab.key"
+          :class="activeTab === tab.key
+            ? 'text-g12 border-b-2 border-g12'
+            : 'text-g9 border-b-2 border-transparent hover:text-g11'"
+          class="px-3 py-2 text-sm-medium transition-colors -mb-px"
+        >
+          <span x-text="tab.label"></span>
+          <span
+            class="ml-1.5 inline-flex items-center justify-center rounded-full bg-g3 px-1.5 text-micro-medium text-g10 min-w-5 h-4"
+            x-text="countForTab(tab.key)"
+          ></span>
+        </button>
+      </template>
+    </div>
+
+    <!-- Table -->
+    <div class="rounded-8 bg-p1 shadow-xs overflow-hidden">
+
+      <!-- Table header -->
+      <div class="grid grid-cols-[1fr_minmax(120px,200px)_140px_90px_44px] items-center gap-3 px-4 py-2.5 border-b border-g4 text-micro-medium text-g9 uppercase tracking-wide">
+        <span>Exploration</span>
+        <span>Project</span>
+        <span>Status</span>
+        <span>Started</span>
+        <span></span>
+      </div>
+
+      <!-- Table rows -->
+      <template x-for="item in filteredItems" :key="item.slug">
+        <div class="grid grid-cols-[1fr_minmax(120px,200px)_140px_90px_44px] items-center gap-3 px-4 py-3 border-b border-g3 last:border-b-0 hover:bg-g2 transition-colors duration-fast group">
+
+          <!-- Name + description -->
+          <div class="min-w-0">
+            <a
+              :href="'../' + item.slug + '/index.html'"
+              class="text-sm-medium text-g12 hover:text-a11 transition-colors truncate block"
+              x-text="item.name"
+            ></a>
+            <p class="text-mini text-g9 truncate mt-0.5" x-text="item.description"></p>
+          </div>
+
+          <!-- Project -->
+          <span class="text-sm text-g10 truncate" x-text="item.project"></span>
+
+          <!-- Status dropdown -->
+          <div class="relative" x-data="{ open: false }">
+            <button
+              @click="open = !open"
+              class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro-medium transition-colors cursor-pointer"
+              :class="statusStyle(item.status)"
+            >
+              <span x-text="item.status"></span>
+              <svg class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div
+              x-show="open"
+              @click.away="open = false"
+              x-transition.opacity
+              class="absolute left-0 top-full mt-1 z-20 w-40 rounded-8 bg-p1 shadow-md py-1"
+            >
+              <template x-for="s in statuses" :key="s">
+                <button
+                  @click="item.status = s; open = false; saveState()"
+                  class="flex items-center gap-2 w-full px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors text-left"
+                >
+                  <span class="w-2 h-2 rounded-full" :class="statusDot(s)"></span>
+                  <span x-text="s"></span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <!-- Started date -->
+          <span class="text-mini text-g9 tabular-nums" x-text="item.started"></span>
+
+          <!-- Download -->
+          <a
+            :href="'../' + item.slug + '/index.html'"
+            :download="item.slug + '.html'"
+            class="flex items-center justify-center w-7 h-7 rounded-6 text-g9 hover:text-g11 hover:bg-g3 transition-colors opacity-0 group-hover:opacity-100"
+            title="Download HTML"
+          >
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5m0 0l5-5m-5 5V3"/></svg>
+          </a>
+        </div>
+      </template>
+
+      <!-- Empty state -->
+      <div x-show="filteredItems.length === 0" class="px-4 py-12 text-center">
+        <p class="text-sm text-g9">No explorations match this filter.</p>
+      </div>
+    </div>
+
+    <!-- Count -->
+    <p class="text-mini text-g9 mt-3 px-1">
+      <span x-text="filteredItems.length"></span> of <span x-text="items.length"></span> explorations
+    </p>
+  </div>
+
+  <script>
+    function explorations() {
+      const defaultItems = [
+        {
+          slug: 'settings',
+          name: 'Settings',
+          description: 'User and workspace settings panel',
+          project: 'Settings',
+          status: 'In Exploration',
+          started: '2025-03-13',
+        },
+        {
+          slug: 'kpi-source-config',
+          name: 'KPI Source Config',
+          description: 'Configure manual vs connected data sources for KPIs',
+          project: 'KPI Tracking',
+          status: 'In Exploration',
+          started: '2025-03-10',
+        },
+        {
+          slug: 'kpi-tree-editor',
+          name: 'KPI Tree Editor',
+          description: 'Hierarchical KPI structure editor with keyboard shortcuts',
+          project: 'KPI Tracking',
+          status: 'In Exploration',
+          started: '2025-03-08',
+        },
+        {
+          slug: 'kpi-tracker',
+          name: 'KPI Tracker',
+          description: 'KPI tracking dashboard with role switching and drill-down',
+          project: 'KPI Tracking',
+          status: 'In Exploration',
+          started: '2025-03-05',
+        },
+        {
+          slug: 'login',
+          name: 'Login & Auth',
+          description: 'Magic link authentication flow',
+          project: 'Authentication',
+          status: 'In Exploration',
+          started: '2025-02-20',
+        },
+      ];
+
+      const saved = localStorage.getItem('explorations-status');
+      let items = defaultItems;
+      if (saved) {
+        try {
+          const statusMap = JSON.parse(saved);
+          items = defaultItems.map(item => ({
+            ...item,
+            status: statusMap[item.slug] || item.status,
+          }));
+        } catch (e) { /* ignore */ }
+      }
+
+      return {
+        activeTab: 'All',
+        statuses: ['In Exploration', 'In Design', 'Completed', 'Cancelled'],
+        tabs: [
+          { key: 'All', label: 'All' },
+          { key: 'In Exploration', label: 'In Exploration' },
+          { key: 'In Design', label: 'In Design' },
+          { key: 'Completed', label: 'Completed' },
+          { key: 'Cancelled', label: 'Cancelled' },
+        ],
+        items,
+
+        get filteredItems() {
+          const filtered = this.activeTab === 'All'
+            ? this.items
+            : this.items.filter(i => i.status === this.activeTab);
+          return filtered.sort((a, b) => b.started.localeCompare(a.started));
+        },
+
+        countForTab(key) {
+          return key === 'All'
+            ? this.items.length
+            : this.items.filter(i => i.status === key).length;
+        },
+
+        statusStyle(status) {
+          const styles = {
+            'In Exploration': 'bg-a3 text-a11',
+            'In Design': 'bg-y3 text-y11',
+            'Completed': 'bg-s3 text-s11',
+            'Cancelled': 'bg-g3 text-g9',
+          };
+          return styles[status] || 'bg-g3 text-g9';
+        },
+
+        statusDot(status) {
+          const dots = {
+            'In Exploration': 'bg-a9',
+            'In Design': 'bg-y9',
+            'Completed': 'bg-s9',
+            'Cancelled': 'bg-g8',
+          };
+          return dots[status] || 'bg-g8';
+        },
+
+        saveState() {
+          const statusMap = {};
+          this.items.forEach(i => { statusMap[i.slug] = i.status; });
+          localStorage.setItem('explorations-status', JSON.stringify(statusMap));
+        },
+      };
+    }
+  </script>
+
+</body>
+</html>
