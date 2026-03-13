@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Settings — Aaron</title>
+  <title>Settings — Aren</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
@@ -200,11 +200,21 @@
               </div>
             </div>
 
-            <div class="flex items-center justify-between px-5 py-4">
+            <div class="flex items-center justify-between px-5 py-4" x-data="{ editing: false }">
               <span class="text-sm text-g11">Email</span>
               <div class="flex items-center gap-2">
-                <span class="text-sm text-g12" x-text="profile.email"></span>
-                <button class="text-mini text-a11 hover:underline">Change</button>
+                <template x-if="!editing">
+                  <div class="flex items-center gap-2">
+                    <span class="text-sm text-g12" x-text="profile.email"></span>
+                    <button @click="editing = true" class="text-mini text-a11 hover:underline">Change</button>
+                  </div>
+                </template>
+                <template x-if="editing">
+                  <div class="flex items-center gap-2">
+                    <input type="email" x-model="profile.email" x-init="$nextTick(() => $el.focus())" @keydown.enter="editing = false" @keydown.escape="editing = false" class="w-56 text-right rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                    <button @click="editing = false" class="text-mini text-a11 hover:underline">Save</button>
+                  </div>
+                </template>
               </div>
             </div>
 
@@ -214,33 +224,27 @@
             </div>
 
             <div class="flex items-center justify-between px-5 py-4">
-              <div>
-                <span class="text-sm text-g11">Timezone</span>
-                <span class="text-mini text-g9 block mt-0.5" x-text="resolvedTimezone"></span>
-              </div>
-              <div class="flex items-center gap-3">
-                <span class="text-sm-medium text-g12 tabular-nums" x-text="currentTime"></span>
-                <select x-model="profile.timezone" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
-                  <option value="auto">Detect from device</option>
-                  <optgroup label="Europe">
-                    <option value="Europe/Berlin">(UTC+1) CET — Berlin</option>
-                    <option value="Europe/London">(UTC+0) GMT — London</option>
-                    <option value="Europe/Paris">(UTC+1) CET — Paris</option>
-                    <option value="Europe/Zurich">(UTC+1) CET — Zurich</option>
-                    <option value="Europe/Helsinki">(UTC+2) EET — Helsinki</option>
-                  </optgroup>
-                  <optgroup label="Americas">
-                    <option value="America/New_York">(UTC-5) Eastern — New York</option>
-                    <option value="America/Chicago">(UTC-6) Central — Chicago</option>
-                    <option value="America/Los_Angeles">(UTC-8) Pacific — Los Angeles</option>
-                  </optgroup>
-                  <optgroup label="Asia & Pacific">
-                    <option value="Asia/Dubai">(UTC+4) GST — Dubai</option>
-                    <option value="Asia/Tokyo">(UTC+9) JST — Tokyo</option>
-                    <option value="Australia/Sydney">(UTC+11) AEDT — Sydney</option>
-                  </optgroup>
-                </select>
-              </div>
+              <span class="text-sm text-g11">Timezone</span>
+              <select x-model="profile.timezone" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option value="auto" x-text="tzLabel('auto')"></option>
+                <optgroup label="Europe">
+                  <option value="Europe/Berlin" x-text="tzLabel('Europe/Berlin')"></option>
+                  <option value="Europe/London" x-text="tzLabel('Europe/London')"></option>
+                  <option value="Europe/Paris" x-text="tzLabel('Europe/Paris')"></option>
+                  <option value="Europe/Zurich" x-text="tzLabel('Europe/Zurich')"></option>
+                  <option value="Europe/Helsinki" x-text="tzLabel('Europe/Helsinki')"></option>
+                </optgroup>
+                <optgroup label="Americas">
+                  <option value="America/New_York" x-text="tzLabel('America/New_York')"></option>
+                  <option value="America/Chicago" x-text="tzLabel('America/Chicago')"></option>
+                  <option value="America/Los_Angeles" x-text="tzLabel('America/Los_Angeles')"></option>
+                </optgroup>
+                <optgroup label="Asia & Pacific">
+                  <option value="Asia/Dubai" x-text="tzLabel('Asia/Dubai')"></option>
+                  <option value="Asia/Tokyo" x-text="tzLabel('Asia/Tokyo')"></option>
+                  <option value="Australia/Sydney" x-text="tzLabel('Australia/Sydney')"></option>
+                </optgroup>
+              </select>
             </div>
 
             <div class="flex items-center justify-between px-5 py-4">
@@ -270,7 +274,7 @@
             <div class="absolute inset-0 bg-alpha-48" @click="showLeaveModal = false"></div>
             <div x-show="showLeaveModal" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="relative bg-p1 rounded-12 shadow-md w-full max-w-sm p-6">
               <h3 class="text-regular-medium text-g12">Leave <span x-text="company.name"></span>?</h3>
-              <p class="text-sm text-g9 mt-2">You will lose access to all company data, dashboards, and settings. This action cannot be undone.</p>
+              <p class="text-sm text-g9 mt-2">You'll lose access to all company data and settings. To rejoin, an admin will need to invite you again.</p>
               <div class="flex items-center justify-end gap-3 mt-6">
                 <button @click="showLeaveModal = false" class="rounded-6 px-4 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors duration-fast">Cancel</button>
                 <button @click="showLeaveModal = false" class="rounded-6 bg-d9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-d10 transition-colors duration-fast">Leave Company</button>
@@ -426,10 +430,10 @@
                   <span class="text-sm text-g11">Estimated annual profit</span>
                   <div class="relative" x-data="{ showTip: false }">
                     <button @mouseenter="showTip = true" @mouseleave="showTip = false" @click="showTip = !showTip" class="text-g9 hover:text-g11 transition-colors duration-fast">
-                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+                      <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
                     </button>
                     <div x-show="showTip" x-transition:enter="transition ease-out duration-fast" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 rounded-8 bg-g12 px-3 py-2.5 text-mini text-white shadow-md z-20">
-                      Enter the profit amount your tax advisor uses to calculate your current prepayments. Aaron uses this to estimate whether you'll owe additional payments or may receive a refund at year-end.
+                      Enter the profit amount you reported to the Finanzamt for your current prepayment calculation. Aren uses this to estimate whether you'll owe additional payments or receive a refund at year-end. If your prepayments change during the year, come back and update this number so your estimates stay accurate.
                       <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-g12"></div>
                     </div>
                   </div>
@@ -560,15 +564,18 @@
               <template x-for="role in roles" :key="role.name">
                 <div class="px-5 py-4">
                   <div class="flex items-center justify-between">
-                    <span class="text-sm-medium text-g12" x-text="role.name"></span>
-                    <span class="text-mini text-g9" x-text="roleCount(role.name) + (roleCount(role.name) === 1 ? ' member' : ' members')"></span>
+                    <div class="flex items-center gap-1.5">
+                      <span class="text-sm-medium text-g12" x-text="role.name"></span>
+                      <span class="text-sm text-g9" x-text="'(' + roleCount(role.name) + ')'"></span>
+                    </div>
+                    <div class="flex items-center -space-x-1.5">
+                      <template x-for="(m, mi) in membersInRole(role.name).slice(0, 3)" :key="mi">
+                        <div class="w-6 h-6 rounded-full bg-g5 flex items-center justify-center text-micro text-g10 ring-2 ring-p1" x-text="m.name.split(' ').map(n => n[0]).join('')"></div>
+                      </template>
+                      <div x-show="membersInRole(role.name).length > 3" class="w-6 h-6 rounded-full bg-g3 flex items-center justify-center text-micro text-g10 ring-2 ring-p1" x-text="'+' + (membersInRole(role.name).length - 3)"></div>
+                    </div>
                   </div>
                   <p class="text-sm text-g9 mt-1" x-text="role.description"></p>
-                  <div class="flex flex-wrap gap-1.5 mt-3">
-                    <template x-for="perm in role.permissions" :key="perm">
-                      <span class="inline-flex rounded-full bg-g3 px-2 py-0.5 text-micro text-g10" x-text="perm"></span>
-                    </template>
-                  </div>
                 </div>
               </template>
             </div>
@@ -580,148 +587,110 @@
           <h2 class="text-lg font-semibold text-g12">Categories</h2>
           <p class="text-sm text-g9 mt-1">Manage the categories used to classify your transactions. These appear when categorizing income and expenses.</p>
 
-          <!-- Income -->
-          <h3 class="text-regular-medium text-g12 mt-6 mb-3">Income</h3>
-          <div class="rounded-8 bg-p1 shadow-xs">
-            <template x-for="(cat, ci) in incomeCategories" :key="ci">
-              <div :class="ci > 0 && 'border-t border-g4'">
-                <!-- Level 1: Parent -->
-                <div class="flex items-center justify-between px-5 py-3">
-                  <div class="flex items-center gap-2 cursor-pointer select-none" @click="cat.open = !cat.open">
-                    <svg :class="cat.open && 'rotate-90'" class="w-3 h-3 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
-                    <span class="text-sm-medium text-g12" x-text="cat.name"></span>
-                    <span class="text-mini text-g9" x-text="'(' + cat.children.length + ')'"></span>
-                  </div>
-                  <button @click="toggleCategory(cat)" :class="cat.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
-                    <span :class="cat.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
-                  </button>
-                </div>
-                <!-- Level 2: Children -->
-                <div x-show="cat.open">
-                  <template x-for="(child, chi) in cat.children" :key="chi">
-                    <div>
-                      <div class="flex items-center justify-between pl-10 pr-5 py-2.5 border-t border-g4">
-                        <div class="flex items-center gap-2" :class="child.children && child.children.length > 0 ? 'cursor-pointer select-none' : ''" @click="child.children && child.children.length > 0 && (child.open = !child.open)">
-                          <svg x-show="child.children && child.children.length > 0" :class="child.open && 'rotate-90'" class="w-2.5 h-2.5 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
-                          <span class="text-sm text-g11" x-text="child.name"></span>
-                          <span x-show="child.children && child.children.length > 0" class="text-micro text-g9" x-text="'(' + child.children.length + ')'"></span>
-                        </div>
-                        <button @click="toggleCategory(child)" :class="child.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
-                          <span :class="child.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
-                        </button>
-                      </div>
-                      <!-- Level 3: Grandchildren -->
-                      <div x-show="child.open && child.children && child.children.length > 0">
-                        <template x-for="(gc, gci) in child.children" :key="gci">
-                          <div class="flex items-center justify-between pl-16 pr-5 py-2 border-t border-g4">
-                            <span class="text-sm text-g9" x-text="gc.name"></span>
-                            <button @click="gc.on = !gc.on" :class="gc.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
-                              <span :class="gc.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
-                            </button>
-                          </div>
-                        </template>
-                      </div>
-                    </div>
-                  </template>
-                  <!-- Add subcategory -->
-                  <div class="border-t border-g4 pl-10 pr-5 py-2.5">
-                    <template x-if="addingAt !== cat">
-                      <button @click="addingAt = cat; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add subcategory</button>
-                    </template>
-                    <template x-if="addingAt === cat">
-                      <div class="flex items-center gap-2">
-                        <input x-model="newCatName" @keydown.enter="addCat(cat.children); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
-                        <button @click="addCat(cat.children); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
-                        <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
-                      </div>
-                    </template>
-                  </div>
-                </div>
-              </div>
-            </template>
-            <!-- Add top-level income category -->
-            <div class="border-t border-g4 px-5 py-2.5">
-              <template x-if="addingAt !== 'income'">
-                <button @click="addingAt = 'income'; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add category</button>
-              </template>
-              <template x-if="addingAt === 'income'">
-                <div class="flex items-center gap-2">
-                  <input x-model="newCatName" @keydown.enter="addCat(incomeCategories); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
-                  <button @click="addCat(incomeCategories); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
-                  <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
-                </div>
-              </template>
-            </div>
-          </div>
+          <template x-for="(group, gi) in categoryGroups" :key="group.label">
+            <div>
+              <h3 class="text-regular-medium text-g12 mt-8 mb-3" x-text="group.label"></h3>
 
-          <!-- Expense -->
-          <h3 class="text-regular-medium text-g12 mt-8 mb-3">Expense</h3>
-          <div class="rounded-8 bg-p1 shadow-xs">
-            <template x-for="(cat, ci) in expenseCategories" :key="ci">
-              <div :class="ci > 0 && 'border-t border-g4'">
-                <div class="flex items-center justify-between px-5 py-3">
-                  <div class="flex items-center gap-2 cursor-pointer select-none" @click="cat.open = !cat.open">
-                    <svg :class="cat.open && 'rotate-90'" class="w-3 h-3 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
-                    <span class="text-sm-medium text-g12" x-text="cat.name"></span>
-                    <span class="text-mini text-g9" x-text="'(' + cat.children.length + ')'"></span>
-                  </div>
-                  <button @click="toggleCategory(cat)" :class="cat.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
-                    <span :class="cat.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
-                  </button>
-                </div>
-                <div x-show="cat.open">
-                  <template x-for="(child, chi) in cat.children" :key="chi">
-                    <div>
-                      <div class="flex items-center justify-between pl-10 pr-5 py-2.5 border-t border-g4">
-                        <div class="flex items-center gap-2" :class="child.children && child.children.length > 0 ? 'cursor-pointer select-none' : ''" @click="child.children && child.children.length > 0 && (child.open = !child.open)">
-                          <svg x-show="child.children && child.children.length > 0" :class="child.open && 'rotate-90'" class="w-2.5 h-2.5 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
-                          <span class="text-sm text-g11" x-text="child.name"></span>
-                          <span x-show="child.children && child.children.length > 0" class="text-micro text-g9" x-text="'(' + child.children.length + ')'"></span>
-                        </div>
-                        <button @click="toggleCategory(child)" :class="child.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
-                          <span :class="child.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
-                        </button>
-                      </div>
-                      <div x-show="child.open && child.children && child.children.length > 0">
-                        <template x-for="(gc, gci) in child.children" :key="gci">
-                          <div class="flex items-center justify-between pl-16 pr-5 py-2 border-t border-g4">
-                            <span class="text-sm text-g9" x-text="gc.name"></span>
-                            <button @click="gc.on = !gc.on" :class="gc.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
-                              <span :class="gc.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
-                            </button>
+              <template x-for="(section, si) in group.sections" :key="si">
+                <div class="mt-4">
+                  <h4 class="text-mini-medium text-g10 uppercase tracking-wider mb-2 px-1" x-text="section.name"></h4>
+                  <div class="rounded-8 bg-p1 shadow-xs">
+                    <div x-show="section.categories.length === 0 && addingAt !== section" class="px-5 py-4 text-sm text-g9">No subcategories</div>
+
+                    <template x-for="(cat, ci) in section.categories" :key="ci">
+                      <div :class="ci > 0 && 'border-t border-g4'">
+                        <div class="flex items-center justify-between px-5 py-3">
+                          <div class="flex items-center gap-2 cursor-pointer select-none" @click="cat.open = !cat.open">
+                            <svg x-show="cat.children && cat.children.length > 0" :class="cat.open && 'rotate-90'" class="w-3 h-3 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                            <span class="text-sm-medium text-g12" x-text="cat.name"></span>
+                            <span x-show="cat.children && cat.children.length > 0" class="text-mini text-g9" x-text="'(' + cat.children.length + ')'"></span>
                           </div>
-                        </template>
+                          <template x-if="cat.fixed">
+                            <svg class="w-3.5 h-3.5 text-g7 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                          </template>
+                          <template x-if="!cat.fixed">
+                            <button @click="toggleCategory(cat)" :class="cat.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                              <span :class="cat.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                            </button>
+                          </template>
+                        </div>
+                        <div x-show="cat.open && cat.children && cat.children.length > 0">
+                          <template x-for="(child, chi) in cat.children" :key="chi">
+                            <div>
+                              <div class="flex items-center justify-between pl-10 pr-5 py-2.5 border-t border-g4">
+                                <div class="flex items-center gap-2" :class="child.children && child.children.length > 0 ? 'cursor-pointer select-none' : ''" @click="child.children && child.children.length > 0 && (child.open = !child.open)">
+                                  <svg x-show="child.children && child.children.length > 0" :class="child.open && 'rotate-90'" class="w-2.5 h-2.5 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                                  <span class="text-sm text-g11" x-text="child.name"></span>
+                                  <span x-show="child.children && child.children.length > 0" class="text-micro text-g9" x-text="'(' + child.children.length + ')'"></span>
+                                </div>
+                                <template x-if="child.fixed">
+                                  <svg class="w-3.5 h-3.5 text-g7 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </template>
+                                <template x-if="!child.fixed">
+                                  <button @click="toggleCategory(child)" :class="child.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                                    <span :class="child.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                                  </button>
+                                </template>
+                              </div>
+                              <div x-show="child.open && child.children && child.children.length > 0">
+                                <template x-for="(gc, gci) in child.children" :key="gci">
+                                  <div class="flex items-center justify-between pl-16 pr-5 py-2 border-t border-g4">
+                                    <span class="text-sm text-g9" x-text="gc.name"></span>
+                                    <button @click="gc.on = !gc.on" :class="gc.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                                      <span :class="gc.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                                    </button>
+                                  </div>
+                                </template>
+                              </div>
+                            </div>
+                          </template>
+                          <div class="border-t border-g4 pl-10 pr-5 py-2.5">
+                            <template x-if="addingAt !== cat">
+                              <button @click="addingAt = cat; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add subcategory</button>
+                            </template>
+                            <template x-if="addingAt === cat">
+                              <div class="relative">
+                                <input x-model="newCatName" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Search or create category..." class="w-full rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                                <div x-show="newCatName.length > 0" x-cloak class="absolute top-full left-0 right-0 mt-1 rounded-8 bg-p1 shadow-md border border-g4 overflow-hidden z-10 max-h-48 overflow-y-auto">
+                                  <template x-for="sug in filteredCatalog" :key="sug">
+                                    <button @click="addCatTo(cat.children, sug)" class="w-full text-left px-4 py-2 text-sm text-g11 hover:bg-g3 transition-colors duration-fast" x-text="sug"></button>
+                                  </template>
+                                  <button x-show="canCreateNew" @click="addCatTo(cat.children, newCatName.trim())" class="w-full text-left px-4 py-2 text-sm text-a11 hover:bg-a2 border-t border-g4">
+                                    Create "<span x-text="newCatName.trim()"></span>"
+                                  </button>
+                                  <div x-show="filteredCatalog.length === 0 && !canCreateNew" class="px-4 py-2 text-sm text-g9">No results</div>
+                                </div>
+                              </div>
+                            </template>
+                          </div>
+                        </div>
                       </div>
+                    </template>
+
+                    <div :class="section.categories.length > 0 && 'border-t border-g4'" class="px-5 py-2.5">
+                      <template x-if="addingAt !== section">
+                        <button @click="addingAt = section; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add category</button>
+                      </template>
+                      <template x-if="addingAt === section">
+                        <div class="relative">
+                          <input x-model="newCatName" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Search or create category..." class="w-full rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                          <div x-show="newCatName.length > 0" x-cloak class="absolute top-full left-0 right-0 mt-1 rounded-8 bg-p1 shadow-md border border-g4 overflow-hidden z-10 max-h-48 overflow-y-auto">
+                            <template x-for="sug in filteredCatalog" :key="sug">
+                              <button @click="addCatTo(section.categories, sug)" class="w-full text-left px-4 py-2 text-sm text-g11 hover:bg-g3 transition-colors duration-fast" x-text="sug"></button>
+                            </template>
+                            <button x-show="canCreateNew" @click="addCatTo(section.categories, newCatName.trim())" class="w-full text-left px-4 py-2 text-sm text-a11 hover:bg-a2 border-t border-g4">
+                              Create "<span x-text="newCatName.trim()"></span>"
+                            </button>
+                            <div x-show="filteredCatalog.length === 0 && !canCreateNew" class="px-4 py-2 text-sm text-g9">No results</div>
+                          </div>
+                        </div>
+                      </template>
                     </div>
-                  </template>
-                  <div class="border-t border-g4 pl-10 pr-5 py-2.5">
-                    <template x-if="addingAt !== cat">
-                      <button @click="addingAt = cat; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add subcategory</button>
-                    </template>
-                    <template x-if="addingAt === cat">
-                      <div class="flex items-center gap-2">
-                        <input x-model="newCatName" @keydown.enter="addCat(cat.children); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
-                        <button @click="addCat(cat.children); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
-                        <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
-                      </div>
-                    </template>
                   </div>
-                </div>
-              </div>
-            </template>
-            <div class="border-t border-g4 px-5 py-2.5">
-              <template x-if="addingAt !== 'expense'">
-                <button @click="addingAt = 'expense'; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add category</button>
-              </template>
-              <template x-if="addingAt === 'expense'">
-                <div class="flex items-center gap-2">
-                  <input x-model="newCatName" @keydown.enter="addCat(expenseCategories); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
-                  <button @click="addCat(expenseCategories); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
-                  <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
                 </div>
               </template>
             </div>
-          </div>
+          </template>
         </div>
 
         <!-- ==================== EXPORT ==================== -->
@@ -821,27 +790,18 @@
 
           <h3 class="text-regular-medium text-g12 mt-10 mb-3">Invoice History</h3>
           <div class="rounded-8 bg-p1 shadow-xs divide-y divide-g4">
-            <div class="flex items-center justify-between px-5 py-3.5">
-              <div>
-                <div class="text-sm text-g12">March 2026</div>
-                <div class="text-mini text-g9">Starter plan · €49.00</div>
+            <template x-for="(inv, ii) in (showAllInvoices ? invoices : invoices.slice(0, 3))" :key="ii">
+              <div class="flex items-center justify-between px-5 py-3.5">
+                <div>
+                  <div class="text-sm text-g12" x-text="inv.month"></div>
+                  <div class="text-mini text-g9">Starter plan · €<span x-text="inv.amount"></span></div>
+                </div>
+                <button class="text-mini text-a11 hover:underline">Download</button>
               </div>
-              <button class="text-mini text-a11 hover:underline">Download</button>
-            </div>
-            <div class="flex items-center justify-between px-5 py-3.5">
-              <div>
-                <div class="text-sm text-g12">February 2026</div>
-                <div class="text-mini text-g9">Starter plan · €49.00</div>
-              </div>
-              <button class="text-mini text-a11 hover:underline">Download</button>
-            </div>
-            <div class="flex items-center justify-between px-5 py-3.5">
-              <div>
-                <div class="text-sm text-g12">January 2026</div>
-                <div class="text-mini text-g9">Starter plan · €49.00</div>
-              </div>
-              <button class="text-mini text-a11 hover:underline">Download</button>
-            </div>
+            </template>
+            <button x-show="!showAllInvoices && invoices.length > 3" @click="showAllInvoices = true" class="w-full px-5 py-3 text-sm text-a11 hover:bg-g2 transition-colors duration-fast text-center">
+              Show all <span x-text="invoices.length"></span> invoices
+            </button>
           </div>
         </div>
 
@@ -853,9 +813,10 @@
     function settings() {
       return {
         page: 'profile',
-
         showLeaveModal: false,
-        currentTime: '',
+        tick: 0,
+        hoveredRole: null,
+        showAllInvoices: false,
 
         profile: {
           name: 'Philipp Epping',
@@ -888,71 +849,136 @@
         },
 
         membersTab: 'members',
-
         members: [
           { name: 'Philipp Epping', email: 'philipp@digitalxresults.de', role: 'Owner', isOwner: true },
           { name: 'Anton Weber', email: 'anton@digitalxresults.de', role: 'Admin', isOwner: false },
           { name: 'Kevin Du', email: 'kevin@kevdu.co', role: 'Member', isOwner: false },
+          { name: 'Niclas Eppinger', email: 'niclas@digitalxresults.de', role: 'Member', isOwner: false },
+          { name: 'David Becker', email: 'david@digitalxresults.de', role: 'Member', isOwner: false },
+          { name: 'Albert Zhang', email: 'albert@digitalxresults.de', role: 'Member', isOwner: false },
         ],
-
         inviteEmail: '',
         inviteRole: 'Member',
-
         pendingInvites: [
           { email: 'sarah@designstudio.de', role: 'Member', sent: 'Mar 10, 2026' },
         ],
-
         roles: [
-          { name: 'Owner', description: 'Full access. Can manage billing, transfer ownership, and delete the company.', permissions: ['Billing', 'Ownership', 'Delete company', 'All settings'] },
-          { name: 'Admin', description: 'Can manage members, categories, export settings, and company configuration.', permissions: ['Members', 'Categories', 'Export', 'Company settings'] },
-          { name: 'Member', description: 'Can view dashboards, categorize transactions, and upload documents.', permissions: ['View dashboards', 'Categorize', 'Upload documents'] },
+          { name: 'Owner', description: 'Full access. Can manage billing, transfer ownership, and delete the company.' },
+          { name: 'Admin', description: 'Can manage members, categories, export settings, and company configuration.' },
+          { name: 'Member', description: 'Can view dashboards, categorize transactions, and upload documents.' },
         ],
 
         addingAt: null,
         newCatName: '',
 
-        incomeCategories: [
-          { name: 'Revenue', on: true, open: true, children: [
-            { name: 'Product Sales', on: true, open: false, children: [
-              { name: 'Physical Products', on: true, children: [] },
-              { name: 'Digital Products', on: true, children: [] },
+        expenseSections: [
+          { name: 'Operative Expenditures (OPEX)', categories: [
+            { name: 'Marketing', fixed: true, on: true, open: true, children: [
+              { name: 'Ad Spend', on: true, open: false, children: [
+                { name: 'Meta', on: true }, { name: 'Google', on: true }, { name: 'TikTok', on: true },
+                { name: 'LinkedIn', on: true }, { name: 'YouTube', on: true },
+                { name: 'Influencer Spend', on: true }, { name: 'Sponsorships', on: true },
+              ]},
+              { name: 'Content (external)', on: true, open: false, children: [] },
+              { name: 'Event / Exhibition', on: true, children: [] },
+              { name: 'Referral Commissions', on: true, children: [] },
+              { name: 'Marketing Salaries & Payroll', fixed: true, on: true, open: false, children: [] },
+              { name: 'Software', on: true, open: false, children: [
+                { name: 'Funnel & Tracking', on: true },
+              ]},
+              { name: 'Marketing Fines / Penalties', on: true, children: [] },
             ]},
-            { name: 'Service Revenue', on: true, open: false, children: [] },
-            { name: 'Recurring Subscriptions', on: true, open: false, children: [
-              { name: 'Monthly Plans', on: true, children: [] },
-              { name: 'Annual Plans', on: true, children: [] },
+            { name: 'Sales', fixed: true, on: true, open: false, children: [
+              { name: 'Sales Salaries & Payroll', on: true, open: false, children: [
+                { name: 'Appointment Setter', on: true }, { name: 'Closer', on: true },
+                { name: 'Management', on: true }, { name: 'Sales Assistants', on: true },
+              ]},
+              { name: 'Software & Tools', on: true, children: [] },
+              { name: 'Hardware', on: true, children: [] },
+              { name: 'Sales Coaching', on: true, children: [] },
+            ]},
+            { name: 'General & Admin', fixed: true, on: true, open: false, children: [
+              { name: 'Professional Services', on: true, open: false, children: [
+                { name: 'Accounting & Tax', on: true }, { name: 'Legal', on: true },
+                { name: 'Education / Training', on: true },
+              ]},
+              { name: 'Overhead', on: true, open: false, children: [
+                { name: 'Rent', on: true }, { name: 'Insurance', on: true },
+                { name: 'Office Supplies', on: true }, { name: 'Telecom & Internet', on: true },
+                { name: 'Equipment & Hardware', on: true },
+              ]},
+              { name: 'General Software & Tools', on: true, children: [] },
+              { name: 'Salaries & Payroll', on: true, children: [] },
+              { name: 'Employer Payroll Costs', on: true, open: false, children: [
+                { name: 'AG-Anteil Sozialversicherung', on: true },
+                { name: 'Berufsgenossenschaft', on: true },
+                { name: 'Employee Benefits', on: true },
+              ]},
+              { name: 'Travel', on: true, children: [] },
+              { name: 'Team Events', on: true, children: [] },
+              { name: 'Banking & FX Fees', on: true, children: [] },
             ]},
           ]},
-          { name: 'Other Income', on: true, open: false, children: [
-            { name: 'Interest Income', on: false, open: false, children: [] },
-            { name: 'Refunds & Credits', on: true, open: false, children: [] },
+          { name: 'Fulfillment & Cost of Goods Sold', categories: [
+            { name: 'Fulfillment Labor', on: true, children: [] },
+            { name: 'Contractors', on: true, children: [] },
+            { name: 'Fulfillment Software', on: true, children: [] },
+            { name: 'Materials & Supplies', on: true, children: [] },
+            { name: 'Product Development', on: true, children: [] },
+            { name: 'Payment Processing Fees', on: true, children: [] },
+            { name: 'Client / Customer Support', on: true, children: [] },
+          ]},
+          { name: 'Customer Refunds & Chargebacks', categories: [] },
+          { name: 'Owner Benefits', categories: [
+            { name: 'Restaurants', on: true, children: [] },
+            { name: 'Travel (Private)', on: true, children: [] },
+            { name: 'Vehicle', on: true, children: [] },
+            { name: 'Housing', on: true, children: [] },
+            { name: 'Tech / Devices (Private)', on: true, children: [] },
+            { name: 'Lifestyle & Shopping', on: true, children: [] },
+          ]},
+          { name: 'Owner Payouts (Income & Dividends)', categories: [
+            { name: 'Owner Income & Payroll', on: true, children: [] },
+            { name: 'Management Fees', on: true, children: [] },
+            { name: 'Dividends', on: true, children: [] },
+          ]},
+          { name: 'Loan (Outflows)', categories: [
+            { name: 'Loan Issued to Shareholder', on: true, children: [] },
+            { name: 'Loan Issued to 3rd Party', on: true, children: [] },
+            { name: 'Loan Payback to Shareholder', on: true, children: [] },
+            { name: 'Loan Payback to 3rd Party', on: true, children: [] },
           ]},
         ],
 
-        expenseCategories: [
-          { name: 'Marketing', on: true, open: true, children: [
-            { name: 'Paid Advertising', on: true, open: false, children: [
-              { name: 'Google Ads', on: true, children: [] },
-              { name: 'Social Media Ads', on: true, children: [] },
-            ]},
-            { name: 'Content & SEO', on: true, open: false, children: [] },
-            { name: 'Events & Sponsorships', on: false, open: false, children: [] },
+        incomeSections: [
+          { name: 'Product & Service Income', categories: [
+            { name: 'Product A', on: true, children: [] },
+            { name: 'Product B', on: true, children: [] },
+            { name: 'Product C', on: true, children: [] },
           ]},
-          { name: 'Sales', on: true, open: false, children: [
-            { name: 'Sales Commission', on: true, open: false, children: [] },
-            { name: 'Business Travel', on: true, open: false, children: [] },
+          { name: 'Refunds', categories: [
+            { name: 'Merchant Refund', on: true, children: [] },
           ]},
-          { name: 'Operations', on: true, open: false, children: [
-            { name: 'Office & Rent', on: true, open: false, children: [] },
-            { name: 'Software & Tools', on: true, open: false, children: [] },
-            { name: 'Legal & Accounting', on: true, open: false, children: [] },
-            { name: 'Insurance', on: false, open: false, children: [] },
+          { name: 'Capital', categories: [
+            { name: 'Loan from 3rd Party', on: true, children: [] },
+            { name: 'Loan from Stakeholder', on: true, children: [] },
+            { name: 'Loan Repayment from Shareholder', on: true, children: [] },
+            { name: 'Loan Repayment from 3rd Party', on: true, children: [] },
+            { name: 'Equity / Owner Contributions', on: true, children: [] },
           ]},
-          { name: 'Personnel', on: true, open: false, children: [
-            { name: 'Salaries & Wages', on: true, open: false, children: [] },
-            { name: 'Benefits & Perks', on: true, open: false, children: [] },
-            { name: 'Training & Development', on: false, open: false, children: [] },
+          { name: 'Financial Income', categories: [
+            { name: 'Interest', on: true, children: [] },
           ]},
+        ],
+
+        catalogCategories: [
+          'Shipping & Logistics', 'Warehousing', 'Packaging Materials',
+          'Marketplace Fees (Amazon)', 'Marketplace Fees (Shopify)',
+          'Returns Processing', 'Inventory Management',
+          'Product Photography', 'Customer Acquisition Cost',
+          'Affiliate Commissions', 'Print & Design',
+          'Public Relations', 'Market Research',
+          'Cleaning', 'Misc Team Spend',
         ],
 
         exportParts: [
@@ -962,26 +988,52 @@
           { id: 'amount', label: 'Amount', on: true, sample: '€4250' },
           { id: 'category', label: 'Category', on: false, sample: 'Software' },
         ],
-
         separator: '_',
         dragIdx: null,
         dropIdx: null,
 
-        get resolvedTimezone() {
-          if (this.profile.timezone === 'auto') {
-            try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch(e) { return 'UTC'; }
-          }
-          return this.profile.timezone;
-        },
+        invoices: [
+          { month: 'March 2026', amount: '49.00' },
+          { month: 'February 2026', amount: '49.00' },
+          { month: 'January 2026', amount: '49.00' },
+          { month: 'December 2025', amount: '49.00' },
+          { month: 'November 2025', amount: '49.00' },
+          { month: 'October 2025', amount: '49.00' },
+          { month: 'September 2025', amount: '49.00' },
+          { month: 'August 2025', amount: '49.00' },
+        ],
 
         init() {
-          const updateClock = () => {
-            try {
-              this.currentTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: this.resolvedTimezone });
-            } catch(e) { this.currentTime = '--:--'; }
+          setInterval(() => this.tick++, 60000);
+        },
+
+        tzLabel(value) {
+          const cities = {
+            'Europe/Berlin': 'Berlin', 'Europe/London': 'London', 'Europe/Paris': 'Paris',
+            'Europe/Zurich': 'Zurich', 'Europe/Helsinki': 'Helsinki',
+            'America/New_York': 'New York', 'America/Chicago': 'Chicago', 'America/Los_Angeles': 'Los Angeles',
+            'Asia/Dubai': 'Dubai', 'Asia/Tokyo': 'Tokyo', 'Australia/Sydney': 'Sydney',
           };
-          updateClock();
-          setInterval(updateClock, 10000);
+          const fmt = (tz, city) => {
+            try {
+              const now = new Date();
+              const time = now.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: tz });
+              const offset = new Intl.DateTimeFormat('en-GB', { timeZone: tz, timeZoneName: 'shortOffset' })
+                .formatToParts(now).find(p => p.type === 'timeZoneName')?.value?.replace('GMT', 'UTC') || '';
+              const abbr = new Intl.DateTimeFormat('en-GB', { timeZone: tz, timeZoneName: 'short' })
+                .formatToParts(now).find(p => p.type === 'timeZoneName')?.value || '';
+              return `${time} \u2014 ${city} (${offset} ${abbr})`;
+            } catch(e) { return city; }
+          };
+          void this.tick;
+          if (value === 'auto') {
+            try {
+              const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+              const city = cities[tz] || tz.split('/').pop().replace(/_/g, ' ');
+              return fmt(tz, city) + ' \xb7 Auto';
+            } catch(e) { return 'Detect from device'; }
+          }
+          return fmt(value, cities[value] || value.split('/').pop().replace(/_/g, ' '));
         },
 
         get filename() {
@@ -989,26 +1041,55 @@
           return parts.length ? parts.join(this.separator) + '.pdf' : 'no-components-selected.pdf';
         },
 
+        get filteredCatalog() {
+          if (!this.newCatName) return [];
+          return this.catalogCategories.filter(c => c.toLowerCase().includes(this.newCatName.toLowerCase()));
+        },
+
+        get canCreateNew() {
+          return this.newCatName.trim().length > 0 &&
+            !this.catalogCategories.some(c => c.toLowerCase() === this.newCatName.trim().toLowerCase());
+        },
+
+        get categoryGroups() {
+          return [
+            { label: 'Expense', sections: this.expenseSections },
+            { label: 'Income', sections: this.incomeSections },
+          ];
+        },
+
         roleCount(role) {
           return this.members.filter(m => m.role === role).length;
         },
 
-        toggleCategory(cat) {
-          cat.on = !cat.on;
-          if (cat.children && cat.children.length) {
-            cat.children.forEach(child => {
-              child.on = cat.on;
-              if (child.children && child.children.length) {
-                child.children.forEach(gc => { gc.on = cat.on; });
-              }
-            });
-          }
+        membersInRole(role) {
+          return this.members.filter(m => m.role === role);
         },
 
-        addCat(arr) {
-          if (!this.newCatName.trim()) return;
-          arr.push({ name: this.newCatName.trim(), on: true, open: false, children: [] });
+        shortName(name) {
+          const p = name.split(' ');
+          return p.length > 1 ? p[0] + ' ' + p[p.length - 1][0] + '.' : p[0];
+        },
+
+        toggleCategory(cat) {
+          if (cat.fixed) return;
+          cat.on = !cat.on;
+          const cascade = (items, state) => {
+            if (!items) return;
+            items.forEach(c => {
+              if (!c.fixed) c.on = state;
+              cascade(c.children, state);
+            });
+          };
+          cascade(cat.children, cat.on);
+        },
+
+        addCatTo(arr, name) {
+          const n = (name || '').trim();
+          if (!n) return;
+          arr.push({ name: n, on: true, open: false, children: [] });
           this.newCatName = '';
+          this.addingAt = null;
         },
 
         reorder(from, to) {
