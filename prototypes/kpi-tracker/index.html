@@ -117,6 +117,35 @@
     /* Source modal preview */
     .editable-cell{cursor:pointer;position:relative}
     .editable-cell:hover{background:var(--color-a2)}
+
+    /* Cell detail popover */
+    .cd-pop{position:fixed;z-index:60;width:340px;max-height:420px;background:var(--color-p1);border:1px solid var(--color-g4);border-radius:var(--radius-8);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column}
+    .cd-pop-body{overflow-y:auto;flex:1;min-height:0}
+    .cd-pop table{width:100%;border-collapse:collapse}
+    .cd-pop th{text-align:left;padding:6px 10px;font-size:11px;font-weight:500;color:var(--color-g10);border-bottom:1px solid var(--color-g4);background:var(--color-g2)}
+    .cd-pop td{padding:5px 10px;font-size:12px;color:var(--color-g11);border-bottom:1px solid var(--color-g3)}
+    .cd-pop tr:last-child td{border-bottom:0}
+    .cd-pop tr:hover td{background:var(--color-g2)}
+
+    /* Connected cell indicator */
+    .kg td.cell-conn{cursor:pointer;position:relative}
+    .kg td.cell-conn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--color-a8);opacity:0;transition:opacity 120ms}
+    .kg td.cell-conn:hover::after{opacity:1}
+    .kg td.cell-conn .ei{cursor:pointer}
+    .kg td.cell-conn .ei:focus{cursor:text}
+
+    /* Detail modal */
+    .dtl-modal{position:fixed;inset:0;z-index:70;display:flex;align-items:center;justify-content:center}
+    .dtl-inner{background:var(--color-p1);border-radius:var(--radius-12);box-shadow:var(--shadow-lg);width:90%;max-width:900px;max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+    .dtl-table{width:100%;border-collapse:collapse}
+    .dtl-table th{text-align:left;padding:8px 14px;font-size:12px;font-weight:500;color:var(--color-g10);border-bottom:1px solid var(--color-g4);background:var(--color-g2);position:sticky;top:0;z-index:1}
+    .dtl-table td{padding:6px 14px;font-size:13px;color:var(--color-g11);border-bottom:1px solid var(--color-g3)}
+    .dtl-table tr:hover td{background:var(--color-g2)}
+    .dtl-table .st-badge{display:inline-flex;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:500;cursor:pointer}
+    .dtl-table .st-won{background:var(--color-s3);color:var(--color-s11)}
+    .dtl-table .st-show{background:var(--color-s3);color:var(--color-s11)}
+    .dtl-table .st-pending{background:var(--color-y3);color:var(--color-y11)}
+    .dtl-table .st-bad{background:var(--color-d3);color:var(--color-d11)}
   </style>
 </head>
 <body class="bg-p0 font-sans antialiased" x-data="app()" @keydown.window="handleKey($event)" x-cloak>
@@ -178,7 +207,7 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- ═══════════ TRACKER VIEW ═══════════════════════ -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <main x-show="view==='tracker'" class="mx-auto px-6 py-5" style="max-width:1500px" @click="openSt=null;openOwn=null" @scroll.window="if(openOwn&&_ownTrigger){let r=_ownTrigger.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};if(_dbgC++%10===0)_dbg('scroll recalc',{x:r.left,y:r.bottom,openOwn},'H-A')}">
+  <main x-show="view==='tracker'" class="mx-auto px-6 py-5" style="max-width:1500px" @click="openSt=null;openOwn=null;closeCellPop()" @scroll.window="if(cellPop.open)closeCellPop();if(openOwn&&_ownTrigger){let r=_ownTrigger.getBoundingClientRect();ownPos={x:r.left,y:r.bottom}}">
 
     <nav class="mb-3 flex items-center gap-1.5 text-sm text-g9" x-show="bc.length>1">
       <template x-for="(c,i) in bc" :key="i"><div class="flex items-center gap-1.5">
@@ -220,7 +249,7 @@
                         <template x-if="row._t==='kpi'"><div><span class="text-g3" x-text="row.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(row.agg)"></span></div></template>
                       </td>
                       <td class="tabular-nums text-g5"><template x-if="row._t==='kpi'"><input class="ei" type="text" :value="F(row.target,row.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row.target||''}" @blur="row.target=+$el.value||row.target;reCalc(row);$el.value=F(row.target,row.fmt)" @keydown.enter="$el.blur()"></template></td>
-                      <td class="tabular-nums font-medium text-g2"><template x-if="row._t==='kpi'"><input class="ei font-medium" type="text" :value="F(row.actual,row.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row.actual||''}" @blur="row.actual=+$el.value||row.actual;reCalc(row);$el.value=F(row.actual,row.fmt)" @keydown.enter="$el.blur()"></template></td>
+                      <td class="tabular-nums font-medium text-g2" :class="row._t==='kpi'&&(row.db||row.source)?'cell-conn':''" @click.stop="if(row._t==='kpi'&&(row.db||row.source))openCellPop(row,null,$event.currentTarget)"><template x-if="row._t==='kpi'"><input class="ei font-medium" type="text" :value="F(row.actual,row.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row.actual||'';setTimeout(()=>$el.select())}" @blur="row.actual=+$el.value||row.actual;reCalc(row);$el.value=F(row.actual,row.fmt)" @keydown.enter="$el.blur()"></template></td>
                       <td class="tabular-nums font-medium" :class="(row._t==='kpi'?pcC(row.pr):'')+' '+(row._t==='kpi'&&row.pv!==null?'pace-cell':'')">
                         <span x-text="row._t==='kpi'&&row.pv!==null?F(row.pv,row.fmt):''"></span>
                         <template x-if="row._t==='kpi'&&row.pv!==null"><span class="pace-tip">Projected end-of-month value at current pace</span></template>
@@ -234,11 +263,11 @@
                         </div></template>
                       </td>
                       <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
-                        <td class="tabular-nums text-mini" :class="row._t==='kpi'?(w===CW?'font-medium text-g2':'wk'):''" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(row._t==='kpi'&&w===CW?';background:var(--color-a12)':'')">
-                          <template x-if="row._t==='kpi'"><input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="row.weekly?.[w]!==undefined?F(row.weekly[w],row.fmt):''" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row.weekly?.[w]??''}" @blur="if(row.weekly){row.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=row.weekly?.[w]!==undefined?F(row.weekly[w],row.fmt):''" @keydown.enter="$el.blur()"></template>
+                        <td class="tabular-nums text-mini" :class="(row._t==='kpi'?(w===CW?'font-medium text-g2':'wk'):'')+((row._t==='kpi'&&(row.db||row.source))?' cell-conn':'')" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(row._t==='kpi'&&w===CW?';background:var(--color-a12)':'')" @click.stop="if(row._t==='kpi'&&(row.db||row.source))openCellPop(row,w,$event.currentTarget)">
+                          <template x-if="row._t==='kpi'"><input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="row.weekly?.[w]!==undefined?F(row.weekly[w],row.fmt):''" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row.weekly?.[w]??'';setTimeout(()=>$el.select())}" @blur="if(row.weekly){row.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=row.weekly?.[w]!==undefined?F(row.weekly[w],row.fmt):''" @keydown.enter="$el.blur()"></template>
                         </td>
                       </template></template>
-                      <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><template x-if="row._t==='kpi'"><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===row.id?null:row.id;_dbg('trigger click',{id:row.id,x:r.left,y:r.bottom,hasTrigger:!!_ownTrigger},'H-B')" class="flex items-center gap-1 hover:text-g3 transition-colors text-left"><template x-if="row.ownerId"><span class="text-g8" x-text="ownerName(row.ownerId)"></span></template><template x-if="!row.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></template></td>
+                      <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><template x-if="row._t==='kpi'"><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===row.id?null:row.id" class="w-full flex items-center justify-center gap-1 hover:text-g3 transition-colors"><template x-if="row.ownerId"><span class="text-g8" x-text="ownerName(row.ownerId)"></span></template><template x-if="!row.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></template></td>
                       <td @click.stop>
                         <template x-if="row._t==='kpi'"><div class="source-badge" @click.stop="openSourceModal(row)">
                           <svg x-show="row.sourceMode==='manual'" class="h-3 w-3 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
@@ -284,18 +313,18 @@
                     <tr>
                       <td class="sc" style="background:var(--color-g12)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span></td>
                       <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
-                      <td class="tabular-nums font-medium text-g2"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.actual||''" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
+                      <td class="tabular-nums font-medium text-g2" :class="(k.db||k.source)?'cell-conn':''" @click.stop="if(k.db||k.source)openCellPop(k,null,$event.currentTarget)"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.actual||'';setTimeout(()=>$el.select())}" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
                       <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
                       <td :class="scC(k.status)+' st-cell'" class="relative">
                         <button class="w-full flex items-center justify-center gap-1" @click.stop="openOwn=null;openSt=openSt===k.id?null:k.id"><span x-text="scL(k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
                         <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
                       </td>
                       <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
-                        <td class="tabular-nums text-mini" :class="w===CW?'font-medium text-g2':'wk'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')">
-                          <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.weekly?.[w]??''" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
+                        <td class="tabular-nums text-mini" :class="(w===CW?'font-medium text-g2':'wk')+((k.db||k.source)?' cell-conn':'')" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')" @click.stop="if(k.db||k.source)openCellPop(k,w,$event.currentTarget)">
+                          <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.weekly?.[w]??'';setTimeout(()=>$el.select())}" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
                         </td>
                       </template></template>
-                      <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===k.id?null:k.id" class="flex items-center gap-1 hover:text-g3 transition-colors text-left"><template x-if="k.ownerId"><span class="text-g8" x-text="ownerName(k.ownerId)"></span></template><template x-if="!k.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></td>
+                      <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===k.id?null:k.id" class="w-full flex items-center justify-center gap-1 hover:text-g3 transition-colors"><template x-if="k.ownerId"><span class="text-g8" x-text="ownerName(k.ownerId)"></span></template><template x-if="!k.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></td>
                       <td @click.stop><div class="source-badge" @click.stop="openSourceModal(k)">
                         <svg x-show="k.sourceMode==='manual'" class="h-3 w-3 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         <svg x-show="k.sourceMode==='auto'" class="h-3 w-3 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -319,18 +348,18 @@
                       <tr>
                         <td class="sc kpi-name" style="background:var(--color-g12)" @click="drillCh(ch)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span></td>
                         <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
-                        <td class="tabular-nums font-medium text-g2"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.actual||''" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
+                        <td class="tabular-nums font-medium text-g2" :class="(k.db||k.source)?'cell-conn':''" @click.stop="if(k.db||k.source)openCellPop(k,null,$event.currentTarget)"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.actual||'';setTimeout(()=>$el.select())}" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
                         <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
                         <td :class="scC(k.status)+' st-cell'" class="relative">
                           <button class="w-full flex items-center justify-center gap-1" @click.stop="openOwn=null;openSt=openSt===k.id?null:k.id"><span x-text="scL(k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
                           <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
                         </td>
                         <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
-                          <td class="tabular-nums text-mini" :class="w===CW?'font-medium text-g2':'wk'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')">
-                            <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.weekly?.[w]??''" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
+                          <td class="tabular-nums text-mini" :class="(w===CW?'font-medium text-g2':'wk')+((k.db||k.source)?' cell-conn':'')" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')" @click.stop="if(k.db||k.source)openCellPop(k,w,$event.currentTarget)">
+                            <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.weekly?.[w]??'';setTimeout(()=>$el.select())}" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
                           </td>
                         </template></template>
-                        <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===k.id?null:k.id" class="flex items-center gap-1 hover:text-g3 transition-colors text-left"><template x-if="k.ownerId"><span class="text-g8" x-text="ownerName(k.ownerId)"></span></template><template x-if="!k.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></td>
+                        <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===k.id?null:k.id" class="w-full flex items-center justify-center gap-1 hover:text-g3 transition-colors"><template x-if="k.ownerId"><span class="text-g8" x-text="ownerName(k.ownerId)"></span></template><template x-if="!k.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></td>
                         <td @click.stop><div class="source-badge" @click.stop="openSourceModal(k)">
                           <svg x-show="k.sourceMode==='manual'" class="h-3 w-3 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                           <svg x-show="k.sourceMode==='auto'" class="h-3 w-3 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -374,18 +403,18 @@
                   <tr>
                     <td class="sc" style="background:var(--color-g12)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span></td>
                     <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
-                    <td class="tabular-nums font-medium text-g2"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.actual||''" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
+                    <td class="tabular-nums font-medium text-g2" :class="(k.db||k.source)?'cell-conn':''" @click.stop="if(k.db||k.source)openCellPop(k,null,$event.currentTarget)"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.actual||'';setTimeout(()=>$el.select())}" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
                     <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
                     <td :class="scC(k.status)+' st-cell'" class="relative">
                       <button class="w-full flex items-center justify-center gap-1" @click.stop="openOwn=null;openSt=openSt===k.id?null:k.id"><span x-text="scL(k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
                       <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md"><template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k.status=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template></div>
                     </td>
                     <template x-if="sw"><template x-for="(w,wi) in WK" :key="w">
-                      <td class="tabular-nums text-mini" :class="w===CW?'font-medium text-g2':'wk'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')">
-                        <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.weekly?.[w]??''" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
+                      <td class="tabular-nums text-mini" :class="(w===CW?'font-medium text-g2':'wk')+((k.db||k.source)?' cell-conn':'')" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')" @click.stop="if(k.db||k.source)openCellPop(k,w,$event.currentTarget)">
+                        <input class="ei text-mini" :class="w===CW?'font-medium':''" type="text" :value="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.weekly?.[w]??'';setTimeout(()=>$el.select())}" @blur="if(k.weekly){k.weekly[w]=$el.value===''?undefined:+$el.value};$el.value=k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''" @keydown.enter="$el.blur()">
                       </td>
                     </template></template>
-                    <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===k.id?null:k.id" class="flex items-center gap-1 hover:text-g3 transition-colors text-left"><template x-if="k.ownerId"><span class="text-g8" x-text="ownerName(k.ownerId)"></span></template><template x-if="!k.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></td>
+                    <td class="text-mini" :style="sw?'border-left:2px solid var(--color-a8)':''" @click.stop><button @click="openSt=null;_ownTrigger=$el;let r=$el.getBoundingClientRect();ownPos={x:r.left,y:r.bottom};openOwn=openOwn===k.id?null:k.id" class="w-full flex items-center justify-center gap-1 hover:text-g3 transition-colors"><template x-if="k.ownerId"><span class="text-g8" x-text="ownerName(k.ownerId)"></span></template><template x-if="!k.ownerId"><span class="flex items-center gap-1 text-y11"><svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>No owner</span></template></button></td>
                     <td @click.stop><div class="source-badge" @click.stop="openSourceModal(k)">
                       <svg x-show="k.sourceMode==='manual'" class="h-3 w-3 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                       <svg x-show="k.sourceMode==='auto'" class="h-3 w-3 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
@@ -645,6 +674,86 @@
     </div>
   </template>
 
+  <!-- Detail Records Modal -->
+  <template x-teleport="body">
+    <div x-show="dtl.open" x-transition:enter="transition ease-out duration-slow" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="dtl-modal bg-alpha-48" @click.self="closeDtl()" @keydown.escape.window="if(dtl.open&&!cellPop.open)closeDtl()">
+      <div class="dtl-inner" @click.stop x-show="dtl.open" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+        <div class="flex items-center justify-between px-5 py-3.5 border-b border-g4">
+          <div>
+            <h2 class="text-regular-medium text-g12" x-text="(dtl.kpi?.name||'')+' — Source Records'"></h2>
+            <div class="flex items-center gap-2 mt-0.5">
+              <p class="text-mini text-g9" x-text="dtlWeekLabel()"></p>
+              <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro-medium bg-a3 text-a11">
+                <svg class="h-2.5 w-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                <span x-text="dtl.kpi?.db||dtl.kpi?.source"></span>
+              </span>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <span class="text-mini text-g9" x-text="dtlRecs.length+' records'"></span>
+            <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="closeDtl()">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="flex-1 overflow-y-auto" style="min-height:0" @click="dtlSt=null">
+          <template x-if="dtlRecs.length>0">
+            <table class="dtl-table">
+              <thead><tr>
+                <template x-for="col in dtlCols" :key="col"><th x-text="col"></th></template>
+                <th style="width:48px"></th>
+              </tr></thead>
+              <tbody>
+                <template x-for="(rec,ri) in dtlRecs" :key="ri">
+                  <tr>
+                    <template x-for="(col,ci) in dtlCols" :key="col">
+                      <td>
+                        <template x-if="col==='Status'||col==='Stage'||col==='Outcome'">
+                          <div class="relative" x-data="{open:false}">
+                            <button class="st-badge" :class="stBadgeClass(rec[col])" @click="open=!open" x-text="rec[col]||'—'"></button>
+                            <div x-show="open" @click.away="open=false" x-transition class="absolute left-0 bottom-full mb-1 rounded-8 bg-p1 shadow-lg border border-g4 z-20 p-1 min-w-28">
+                              <template x-for="st in ['Won','Pending','Lost','Active','Cancelled']" :key="st">
+                                <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini text-g11 hover:bg-g3 transition-colors" @click="rec[col]=st;open=false" x-text="st"></button>
+                              </template>
+                            </div>
+                          </div>
+                        </template>
+                        <template x-if="col!=='Status'&&col!=='Stage'&&col!=='Outcome'">
+                          <div x-data="{editing:false}">
+                            <span x-show="!editing" class="cursor-pointer hover:text-g12 transition-colors" x-text="rec[col]||'—'" @dblclick="editing=true"></span>
+                            <input x-show="editing" x-ref="edt" type="text" class="w-full rounded-4 bg-g2 px-2 py-0.5 text-sm text-g12 outline-none focus:ring-2 focus:ring-a9" :value="rec[col]" @blur="rec[col]=$el.value;editing=false" @keydown.enter="$el.blur()" @keydown.escape="editing=false" x-effect="if(editing)$nextTick(()=>{$refs.edt?.focus();$refs.edt?.select()})">
+                          </div>
+                        </template>
+                      </td>
+                    </template>
+                    <td class="text-center">
+                      <button class="rounded-4 p-1 text-g8 hover:text-d11 hover:bg-d3 transition-colors opacity-0 group-hover:opacity-100" style="opacity:0" @mouseenter="$el.style.opacity=1" @mouseleave="$el.style.opacity=0" @click="dtlRecs.splice(ri,1)" title="Remove record">
+                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                      </button>
+                    </td>
+                  </tr>
+                </template>
+              </tbody>
+            </table>
+          </template>
+          <template x-if="dtlRecs.length===0">
+            <div class="px-6 py-16 text-center">
+              <div class="w-10 h-10 rounded-8 bg-g2 flex items-center justify-center mx-auto mb-3">
+                <svg class="h-5 w-5 text-g8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
+              </div>
+              <p class="text-sm text-g10">No records found for this period</p>
+              <p class="text-mini text-g8 mt-1">There are no matching source entries for this week.</p>
+            </div>
+          </template>
+        </div>
+        <div class="flex items-center justify-between px-5 py-3 border-t border-g4">
+          <p class="text-mini text-g9">Double-click any value to edit · Click status to change</p>
+          <button class="rounded-6 bg-a9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="closeDtl()">Done</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
   <!-- Toast -->
   <!-- Shared owner picker dropdown (dark, matches status dropdown) -->
   <div x-show="openOwn" x-transition.opacity class="fixed z-50 rounded-8 p-1 w-64 max-h-64 overflow-y-auto own-drop shadow-md" :style="'top:'+(ownPos.y+4)+'px;left:'+ownPos.x+'px'" @click.stop>
@@ -655,16 +764,54 @@
     </div></template>
   </div>
 
+  <!-- Cell Detail Popover -->
+  <div x-show="cellPop.open" x-transition:enter="transition ease-out duration-fast" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="cd-pop" :style="'top:'+cellPop.pos.y+'px;left:'+cellPop.pos.x+'px'" @click.stop @keydown.escape.window="closeCellPop()">
+    <div class="flex items-center justify-between px-3 py-2.5 border-b border-g4">
+      <div class="min-w-0">
+        <p class="text-sm-medium text-g12 truncate" x-text="cellPop.kpi?.name"></p>
+        <p class="text-micro text-g9" x-text="cpWeekLabel()"></p>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0 ml-2">
+        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro-medium bg-a3 text-a11">
+          <svg class="h-2.5 w-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          <span x-text="cellPop.kpi?.db||cellPop.kpi?.source"></span>
+        </span>
+        <button class="rounded-4 p-1 text-g8 hover:bg-g3 hover:text-g11 transition-colors" @click="closeCellPop()">
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="cd-pop-body">
+      <template x-if="cpRecs.length>0">
+        <table>
+          <thead><tr><template x-for="col in cpCols" :key="col"><th x-text="col"></th></template></tr></thead>
+          <tbody><template x-for="(rec,ri) in cpRecs.slice(0,5)" :key="ri">
+            <tr><template x-for="col in cpCols" :key="col"><td x-text="rec[col]||'—'"></td></template></tr>
+          </template></tbody>
+        </table>
+      </template>
+      <template x-if="cpRecs.length===0">
+        <div class="px-4 py-6 text-center">
+          <p class="text-sm text-g9">No records for this period</p>
+          <p class="text-mini text-g8 mt-1">This week has no matching entries.</p>
+        </div>
+      </template>
+    </div>
+    <div class="flex items-center justify-between px-3 py-2 border-t border-g4 bg-g2">
+      <span class="text-micro text-g9" x-text="cpRecs.length+' record'+(cpRecs.length!==1?'s':'')+(cpRecs.length>5?' · showing first 5':'')"></span>
+      <button class="rounded-6 px-2.5 py-1 text-mini-medium text-a11 hover:bg-a3 transition-colors flex items-center gap-1" @click="openDtl()">
+        View all
+        <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </div>
+  </div>
+
   <div x-show="toast" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full bg-g12 text-p1 px-4 py-2 text-sm shadow-lg" x-text="toast"></div>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- ═══════════ JAVASCRIPT ═════════════════════════ -->
   <!-- ═══════════════════════════════════════════════════ -->
   <script>
-  // #region agent log
-  let _dbgC=0;
-  function _dbg(msg,data,hId){fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'298fbd'},body:JSON.stringify({sessionId:'298fbd',location:'index.html',message:msg,data:data,timestamp:Date.now(),hypothesisId:hId})}).catch(()=>{});}
-  // #endregion
   function app() {
     const users=[{id:'u1',name:'Philipp Epping',dept:'Leadership',role:'CEO',order:1},{id:'u2',name:'Anton Wieprecht',dept:'Marketing',role:'Marketing Lead',order:1},{id:'u3',name:'Robert Meier',dept:'Sales',role:'Closer',order:2},{id:'u4',name:'Lisa König',dept:'Sales',role:'Setter',order:3},{id:'u5',name:'Mira Schuster',dept:'People & Culture',role:'HR Lead',order:1},{id:'u6',name:'Klara Engel',dept:'Finance',role:'Finance Lead',order:1}];
     const deptColors={'Sales':'bg-s3 text-s11','Marketing':'bg-a3 text-a11','Finance':'bg-y3 text-y11','People & Culture':'bg-d2 text-d11','Leadership':'bg-g3 text-g10'};
@@ -811,6 +958,40 @@
 
     function filterRows(rows,filters,cw){let result=rows.filter(r=>r._cw===cw);for(const f of filters){if(!f.field)continue;if(f.operator==='is_empty'){result=result.filter(r=>!r[f.field]);continue;}if(f.operator==='is_not_empty'){result=result.filter(r=>!!r[f.field]);continue;}if(!f.value)continue;result=result.filter(r=>{const val=(r[f.field]||'').toLowerCase();const v=f.value.toLowerCase();if(f.operator==='is')return val===v;if(f.operator==='is_not')return val!==v;if(f.operator==='contains')return val.includes(v);return true;});}return result;}
 
+    const srcNames=['Schmidt GmbH','Hartmann AG','Weber & Partner','Fischer Consulting','Müller Solutions','Koch Industries','Bauer Holding','Wagner Corp','Braun Holding','Lange & Söhne','Huber AG','Richter GmbH'];
+    const srcDays={9:1,10:6,11:13,12:20,13:28};
+    function genSrcRec(kpi,cw){
+      const val=kpi.weekly?.[cw];if(val===undefined||val===null||val===0)return[];
+      const isInt=kpi.fmt==='number'&&val>0&&val===Math.round(val)&&val<=20;
+      const cnt=isInt?val:Math.min(Math.max(2,Math.ceil(Math.abs(val)/5)),5);const ds=srcDays[cw]||1;const recs=[];const seed=kpi.id.charCodeAt(kpi.id.length-1)+cw;
+      const src=kpi.db||kpi.source;
+      for(let i=0;i<cnt;i++){const day=String(Math.min(ds+Math.floor(i*6/cnt),31)).padStart(2,'0');const d=day+'/03/2026';const nm=srcNames[(seed+i)%srcNames.length];
+        if(src==='Plecto')recs.push({Name:nm,Date:d,Value:kpi.fmt==='currency'?'€'+new Intl.NumberFormat('de-DE').format(Math.round(val/cnt)):String(Math.round(val*10/cnt)/10),Stage:['Won','Won','Pending'][i%3]});
+        else if(src==='Aircall')recs.push({Contact:nm,Date:d,Duration:(2+i)+':'+String(10+i*13).padStart(2,'0'),Outcome:['Connected','Voicemail','Connected','No Answer'][i%4]});
+        else if(src==='Instantly')recs.push({Recipient:nm,Date:d,Subject:['Re: Partnership','Intro Call','Follow-up','Proposal'][i%4],Status:['Opened','Replied','Opened','Bounced'][i%4]});
+        else if(src==='YouTube')recs.push({Video:['How to Scale','Client Story','Market Deep-Dive','Team Update'][i%4],Date:d,Views:String(120+i*90),Watchtime:String(Math.round(val/cnt))+'h'});
+        else if(src==='Personio')recs.push({Candidate:['Th. Schmidt','A. Weber','M. Fischer','S. Müller','K. Koch'][i%5],Date:d,Position:['Sales Rep','CSM','Developer','Marketing'][i%4],Stage:['Applied','Interview','Offer','Hired'][Math.min(i,3)]});
+        else if(src==='DATEV')recs.push({Category:['Revenue','Payroll','Marketing','Ops'][i%4],Month:'Mar 2026',Amount:'€'+new Intl.NumberFormat('de-DE').format(Math.round(val/cnt)),Type:['Income','Expense'][i%2]});
+        else if(src==='Airtable')recs.push({Name:nm,Date:d,Source:['Website','LinkedIn','Referral','Ads'][i%4],Status:['New','Qualified','Contacted'][i%3]});
+        else if(src==='AI Tool')recs.push({Contact:nm,Date:d,Score:String(55+i*9),Outcome:['Qualified','Nurture','Booked'][i%3]});
+        else recs.push({Name:nm,Date:d,Value:String(Math.round(val*10/cnt)/10),Status:'Active'});
+      }return recs;
+    }
+    function getCellCols(kpi){
+      if(kpi.db==='Marketing Tracking')return['Name','Booking Date','UTM Source','Status','Revenue'];
+      const src=kpi.db||kpi.source;
+      if(src==='Plecto')return['Name','Date','Value','Stage'];if(src==='Aircall')return['Contact','Date','Duration','Outcome'];
+      if(src==='Instantly')return['Recipient','Date','Subject','Status'];if(src==='YouTube')return['Video','Date','Views','Watchtime'];
+      if(src==='Personio')return['Candidate','Date','Position','Stage'];if(src==='DATEV')return['Category','Month','Amount','Type'];
+      if(src==='Airtable')return['Name','Date','Source','Status'];if(src==='AI Tool')return['Contact','Date','Score','Outcome'];
+      return['Name','Date','Value','Status'];
+    }
+    function getCellRecs(kpi,cw){
+      if(cw===null){let all=[];for(const w of WK)all=all.concat(getCellRecs(kpi,w));return all;}
+      if(kpi.db==='Marketing Tracking')return filterRows(allRecords,kpi.filters||[],cw);
+      return genSrcRec(kpi,cw);
+    }
+
     function buildDescription(kpi){
       const filters=kpi.filters||[];const opLabels={is:'is',is_not:'is not',contains:'contains'};
       let parts=[];for(const f of filters){if(f.operator==='is_empty'||f.operator==='is_not_empty'){parts.push(`${f.field} ${f.operator.replace(/_/g,' ')}`);}else if(f.value){parts.push(`<strong>${f.field}</strong> ${opLabels[f.operator]||'is'} <strong>${f.value}</strong>`);}}
@@ -832,6 +1013,8 @@
       tree,users,databases,fieldDefs,
       selId:null,showHelp:false,_v:0,toast:'',
       modal:{open:false,kpi:null,editing:false,editName:'',editFmt:'number',editAgg:'total',editPeriod:'resets',editOwner:'',editMode:'manual',editDb:'',editFilters:[],editDateScope:'week',editConfidence:'review',viewCW:10,editCW:10,viewExpanded:false,editExpanded:false},
+      cellPop:{open:false,kpi:null,week:null,pos:{x:0,y:0}},
+      dtl:{open:false,kpi:null,week:null},dtlSt:null,
 
       get flat(){this._v;return flatList(this.tree,0);},
       get selNode(){if(!this.selId)return null;return findNode(this.selId,this.tree);},
@@ -956,6 +1139,27 @@
       // Source config modal
       openSourceModal(kpi){this.modal.kpi=kpi;this.modal.editing=false;this.modal.viewCW=CW;this.modal.editCW=CW;this.modal.viewExpanded=false;this.modal.editExpanded=false;this.modal.open=true;this.prepareSourceEdit(kpi);},
       closeSourceModal(){this.modal.open=false;},
+
+      isConn(k){return !!(k.db||k.source);},
+      openCellPop(kpi,week,el){
+        if(!this.isConn(kpi))return;this.openSt=null;this.openOwn=null;
+        const r=el.getBoundingClientRect();const pw=340;const rx=window.innerWidth-r.right;
+        this.cellPop.kpi=kpi;this.cellPop.week=week;this.cellPop.pos={x:rx>pw+16?r.right+8:r.left-pw-8,y:Math.min(Math.max(r.top-4,8),window.innerHeight-430)};this.cellPop.open=true;
+      },
+      closeCellPop(){
+        if(!this.cellPop.open)return;
+        this.cellPop.open=false;this.cellPop.kpi=null;this.cellPop.week=null;
+      },
+      openDtl(){this.dtl={open:true,kpi:this.cellPop.kpi,week:this.cellPop.week};this.closeCellPop();},
+      closeDtl(){this.dtl={open:false,kpi:null,week:null};this.dtlSt=null;},
+      get cpRecs(){if(!this.cellPop.open||!this.cellPop.kpi)return[];return getCellRecs(this.cellPop.kpi,this.cellPop.week);},
+      get cpCols(){if(!this.cellPop.kpi)return[];return getCellCols(this.cellPop.kpi);},
+      get dtlRecs(){if(!this.dtl.open||!this.dtl.kpi)return[];return getCellRecs(this.dtl.kpi,this.dtl.week);},
+      get dtlCols(){if(!this.dtl.kpi)return[];return getCellCols(this.dtl.kpi);},
+      cpWeekLabel(){const w=this.cellPop.week;if(w===null)return MN[this.cM]+' '+this.cY;return 'CW'+w+' · '+(WR[w]||'');},
+      dtlWeekLabel(){const w=this.dtl.week;if(w===null)return MN[this.cM]+' '+this.cY;return 'CW'+w+' · '+(WR[w]||'');},
+      stBadgeClass(val){const v=(val||'').toLowerCase();if(['won','show','connected','hired','replied','qualified','completed','active','booked'].includes(v))return'st-won';if(['no show','no answer','bounced','disqualified','lost','cancelled'].includes(v))return'st-bad';return'st-pending';},
+
       prepareSourceEdit(kpi){
         this.modal.editName=kpi.name||'';this.modal.editFmt=kpi.fmt||'number';this.modal.editAgg=kpi.agg||'total';this.modal.editPeriod=kpi.period||'resets';
         this.modal.editOwner=kpi.ownerId||'';this.modal.editMode=kpi.sourceMode==='manual'?'manual':'connected';
