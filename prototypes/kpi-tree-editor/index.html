@@ -116,22 +116,22 @@
       </div>
       <div class="flex-1 overflow-y-auto py-1">
         <template x-for="item in flat" :key="item.n.id">
-          <div class="tr px-2 py-0.5" :class="selId===item.n.id?'sel':''" :style="'padding-left:'+(item.d*20+8)+'px'" :data-nid="item.n.id" @click="selId=item.n.id">
+          <div class="tr px-2 py-0.5" :class="selId===item.n.id?'sel':''" :style="'padding-left:'+(item.d*20+8)+'px'" :data-nid="item.n.id" @click="selectNode(item.n)">
             <button x-show="item.hc" class="flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-g11 hover:bg-g3 transition-colors" @click.stop="item.n.exp=!item.n.exp;_v++">
               <svg class="h-3 w-3 transition-transform duration-fast" :class="item.n.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
             </button>
             <span x-show="!item.hc" class="w-5 shrink-0 flex items-center justify-center">
               <span class="w-1.5 h-1.5 rounded-full" :class="selId===item.n.id?'bg-a9':'bg-g6'"></span>
             </span>
-            <span class="flex-1 truncate ml-1 text-sm" :class="item.hc?(item.d===0?'text-g12 font-semibold':'text-g12 font-medium'):'text-g11'" x-text="item.n.name"></span>
-            <span x-show="item.n.showInParent && !item.hc" class="tag bg-a3 text-a11 ml-1.5">↑</span>
-            <span x-show="item.n.focusKpi" class="tag bg-y3 text-y11 ml-1">Focus</span>
-            <!-- Add child (groups only) -->
-            <button x-show="item.hc" class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-a11 hover:bg-a3 transition-colors ml-1" @click.stop="addChildOf(item.n.id)" title="Add child">
+            <span class="flex-1 truncate ml-1 text-sm" :class="item.hc?(item.d===0?'text-g12 font-semibold':'text-g12 font-medium'):'text-g11'" x-text="item.n.refId?refName(item.n.refId):item.n.name"></span>
+            <!-- Focus ref badge -->
+            <span x-show="item.n.refId" class="tag bg-y3 text-y11 ml-1">Focus</span>
+            <!-- Add child -->
+            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-a11 hover:bg-a3 transition-colors ml-1" @click.stop="addChildOf(item.n.id)" title="Add child" x-show="!item.n.refId">
               <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
             </button>
             <!-- Delete -->
-            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" :class="item.hc?'':'ml-1'" @click.stop="deleteNode(item.n.id)" title="Delete">
+            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" @click.stop="deleteNode(item.n.id)" title="Delete">
               <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
           </div>
@@ -142,7 +142,7 @@
       </div>
     </div>
 
-    <!-- ═══ PROPERTIES PANEL (drawer-style) ═══ -->
+    <!-- ═══ PROPERTIES PANEL ═══ -->
     <div class="flex-1 overflow-y-auto bg-p0" style="min-width:0">
 
       <!-- Empty state -->
@@ -154,13 +154,27 @@
         <p class="text-mini text-g9 mt-1">Use arrow keys to navigate, Tab to indent</p>
       </div>
 
-      <!-- ═══ LEAF KPI PROPERTIES ═══ -->
-      <template x-if="selNode && selIsLeaf">
+      <!-- ═══ REFERENCE NODE (Focus KPI ref) ═══ -->
+      <template x-if="selNode && selNode.refId">
         <div class="max-w-lg mx-auto px-8 py-6">
-          <div class="flex items-center justify-between mb-5">
-            <h2 class="text-regular-medium text-g12" x-text="selNode.name"></h2>
-            <span class="tag bg-a3 text-a11">KPI</span>
+          <div class="flex items-center gap-2 mb-5">
+            <svg class="h-4 w-4 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+            <h2 class="text-regular-medium text-g12" x-text="refName(selNode.refId)"></h2>
           </div>
+          <div class="rounded-8 bg-a3 px-4 py-3 mb-5">
+            <p class="text-sm text-a11">This is a Focus KPI reference. It mirrors a KPI that lives in its native department.</p>
+          </div>
+          <button class="rounded-6 bg-a9 px-3 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="selId=selNode.refId">Go to original KPI</button>
+          <div class="border-t border-g4 pt-5 mt-5">
+            <button class="rounded-6 px-3 py-1.5 text-sm text-d11 hover:bg-d3 transition-colors" @click="removeFocusRef(selNode.id)">Remove from Focus KPIs</button>
+          </div>
+        </div>
+      </template>
+
+      <!-- ═══ LEAF KPI PROPERTIES ═══ -->
+      <template x-if="selNode && selIsLeaf && !selNode.refId">
+        <div class="max-w-lg mx-auto px-8 py-6">
+          <h2 class="text-regular-medium text-g12 mb-5" x-text="selNode.name"></h2>
 
           <!-- Name -->
           <div class="mb-5">
@@ -173,7 +187,7 @@
             <label class="block text-mini-medium text-g10 mb-1.5">Format</label>
             <div class="seg">
               <button :class="selNode.fmt==='number'?'on':''" @click="selNode.fmt='number';_v++">Number</button>
-              <button :class="selNode.fmt==='currency'?'on':''" @click="selNode.fmt='currency';_v++">EUR (€)</button>
+              <button :class="selNode.fmt==='currency'?'on':''" @click="selNode.fmt='currency';_v++">Currency</button>
               <button :class="selNode.fmt==='percentage'?'on':''" @click="selNode.fmt='percentage';_v++">Percentage (%)</button>
             </div>
           </div>
@@ -214,30 +228,18 @@
           <div class="border-t border-g4 pt-5 mb-5">
             <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">Source Configuration</p>
 
-            <!-- Source mode -->
             <div class="mb-5">
-              <div class="flex rounded-8 bg-g2 p-1 gap-1">
-                <button class="flex-1 rounded-6 px-3 py-2 text-sm transition-colors" :class="selNode.sourceMode==='manual'?'bg-p1 text-g12 shadow-xs font-medium':'text-g9 hover:text-g11'" @click="selNode.sourceMode='manual';_v++">
-                  <div class="flex items-center justify-center gap-1.5">
-                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-                    Manual
-                  </div>
-                </button>
-                <button class="flex-1 rounded-6 px-3 py-2 text-sm transition-colors" :class="selNode.sourceMode!=='manual'?'bg-p1 text-g12 shadow-xs font-medium':'text-g9 hover:text-g11'" @click="if(selNode.sourceMode==='manual')selNode.sourceMode='review';_v++">
-                  <div class="flex items-center justify-center gap-1.5">
-                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-                    Connected
-                  </div>
-                </button>
+              <label class="block text-mini-medium text-g10 mb-1.5">Source mode</label>
+              <div class="seg">
+                <button :class="selNode.sourceMode==='manual'?'on':''" @click="selNode.sourceMode='manual';_v++">Manual</button>
+                <button :class="selNode.sourceMode!=='manual'?'on':''" @click="if(selNode.sourceMode==='manual')selNode.sourceMode='review';_v++">Connected</button>
               </div>
             </div>
 
-            <!-- Manual info -->
             <div x-show="selNode.sourceMode==='manual'" class="rounded-8 bg-g2 px-4 py-3 mb-4">
               <p class="text-sm text-g11">Value is entered manually each period by the KPI owner.</p>
             </div>
 
-            <!-- Connected: Database -->
             <div x-show="selNode.sourceMode!=='manual'" class="mb-4">
               <label class="block text-mini-medium text-g10 mb-1.5">Database</label>
               <div class="relative" x-data="{open:false}">
@@ -250,12 +252,10 @@
               </div>
             </div>
 
-            <!-- Connected: hint when no DB selected -->
             <div x-show="selNode.sourceMode!=='manual' && !selNode.db" class="rounded-8 bg-g2 px-4 py-3 mb-4">
               <p class="text-sm text-g9">Select a database above to configure filter conditions.</p>
             </div>
 
-            <!-- Filter conditions (connected + DB selected) -->
             <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4">
               <label class="block text-mini-medium text-g10 mb-1.5">Filter conditions</label>
               <div class="space-y-2">
@@ -291,7 +291,6 @@
               <button class="mt-2 rounded-6 px-3 py-1.5 text-mini text-a11 hover:bg-a3 transition-colors" @click="selNode.filters.push({field:'',operator:'is',value:''});_v++">+ Add condition</button>
             </div>
 
-            <!-- Date scope (connected + DB selected) -->
             <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4">
               <label class="block text-mini-medium text-g10 mb-1.5">Date scope</label>
               <div class="flex items-center gap-2">
@@ -303,7 +302,6 @@
               </div>
             </div>
 
-            <!-- Data entry mode (connected + DB selected) -->
             <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4">
               <label class="block text-mini-medium text-g10 mb-2">Data entry</label>
               <div class="space-y-2">
@@ -329,26 +327,26 @@
             </div>
           </div>
 
-          <!-- ── Tree Settings ── -->
+          <!-- ── Visibility ── -->
           <div class="border-t border-g4 pt-5 mb-5">
             <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">Visibility</p>
             <div class="space-y-4">
-              <div class="flex items-start gap-3 cursor-pointer group" @click="selNode.showInParent=!selNode.showInParent;_v++">
-                <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors" :class="selNode.showInParent?'bg-a9 border-a9':'border-g6 group-hover:border-g8'">
-                  <svg x-show="selNode.showInParent" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+              <div class="flex items-start gap-3 cursor-pointer group" @click="selNode.companyDashboard=!selNode.companyDashboard;_v++">
+                <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors" :class="selNode.companyDashboard?'bg-a9 border-a9':'border-g6 group-hover:border-g8'">
+                  <svg x-show="selNode.companyDashboard" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
                 </div>
                 <div>
-                  <p class="text-sm text-g12">Show in parent overview</p>
-                  <p class="text-mini text-g9 mt-0.5">Surface this KPI when the parent group is shown in summary</p>
+                  <p class="text-sm text-g12">Show on company dashboard</p>
+                  <p class="text-mini text-g9 mt-0.5">Display this KPI on the top-level CEO overview</p>
                 </div>
               </div>
-              <div class="flex items-start gap-3 cursor-pointer group" @click="selNode.focusKpi=!selNode.focusKpi;_v++">
+              <div class="flex items-start gap-3 cursor-pointer group" @click="toggleFocus()">
                 <div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors" :class="selNode.focusKpi?'bg-y9 border-y9':'border-g6 group-hover:border-g8'">
                   <svg x-show="selNode.focusKpi" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
                 </div>
                 <div>
                   <p class="text-sm text-g12">Focus KPI</p>
-                  <p class="text-mini text-g9 mt-0.5">Highlight as a current priority metric</p>
+                  <p class="text-mini text-g9 mt-0.5">Quarterly priority — highlighted on the company dashboard</p>
                 </div>
               </div>
             </div>
@@ -362,7 +360,7 @@
       </template>
 
       <!-- ═══ GROUP PROPERTIES ═══ -->
-      <template x-if="selNode && !selIsLeaf">
+      <template x-if="selNode && !selIsLeaf && !selNode.refId">
         <div class="max-w-lg mx-auto px-8 py-6">
           <div class="flex items-center justify-between mb-5">
             <h2 class="text-regular-medium text-g12" x-text="selNode.name"></h2>
@@ -411,26 +409,26 @@
 
     let _nid = 200;
     function N(id,nm,ch,p){
-      return {id,name:nm,exp:true,children:ch||[],fmt:'number',agg:'total',period:'resets',ownerId:'',source:'',showInParent:false,focusKpi:false,sourceMode:'manual',db:'',filters:[],dateField:'',dateScope:'week',...p};
+      return {id,name:nm,exp:true,children:ch||[],fmt:'number',agg:'total',period:'resets',ownerId:'',source:'',companyDashboard:false,focusKpi:false,refId:'',sourceMode:'manual',db:'',filters:[],dateField:'',dateScope:'week',...p};
     }
 
     const tree = [
-      N('sc','COMPANY SCORECARD',[
-        N('sc1','Total Revenue',[],{fmt:'currency',ownerId:'u1',source:'Plecto',showInParent:true,sourceMode:'auto',db:'CRM Pipeline'}),
-        N('sc2','Active Clients',[],{period:'carries_over',ownerId:'u1',source:'CRM',showInParent:true}),
-        N('sc3','Revenue per Employee',[],{fmt:'currency',agg:'average',ownerId:'u1',source:'DATEV',showInParent:true}),
-        N('sc4','CAC',[],{fmt:'currency',agg:'average',ownerId:'u1',showInParent:true}),
-        N('sc5','Cash Position',[],{fmt:'currency',period:'carries_over',ownerId:'u6',source:'DATEV',showInParent:true}),
+      N('sc','COMPANY OVERVIEW',[
+        N('sc1','Total Revenue',[],{fmt:'currency',ownerId:'u1',source:'Plecto',companyDashboard:true,sourceMode:'auto',db:'CRM Pipeline'}),
+        N('sc2','Active Clients',[],{period:'carries_over',ownerId:'u1',source:'CRM',companyDashboard:true}),
+        N('sc3','Revenue per Employee',[],{fmt:'currency',agg:'average',ownerId:'u1',source:'DATEV',companyDashboard:true}),
+        N('sc4','CAC',[],{fmt:'currency',agg:'average',ownerId:'u1',companyDashboard:true}),
+        N('sc5','Cash Position',[],{fmt:'currency',period:'carries_over',ownerId:'u6',source:'DATEV',companyDashboard:true}),
       ]),
       N('fk','FOCUS KPIs',[
-        N('fk1','Total YouTube Watchtime',[],{ownerId:'u2',focusKpi:true}),
-        N('fk2','Launched Creatives',[],{ownerId:'u2',focusKpi:true}),
-        N('fk3','Live Calls',[],{ownerId:'u1',focusKpi:true}),
+        N('fkr1','',[], {refId:'m1'}),
+        N('fkr2','',[], {refId:'s2'}),
+        N('fkr3','',[], {refId:'c4'}),
       ]),
       N('mkt','MARKETING',[
-        N('m1','Total Bookings',[],{ownerId:'u2',showInParent:true,sourceMode:'review',db:'Marketing Tracking',filters:[{field:'UTM Source',operator:'is',value:'Paid Ads'},{field:'Status',operator:'is',value:'Show'}]}),
-        N('m2','Adspend',[],{fmt:'currency',ownerId:'u2',source:'Meta Ads',showInParent:true,sourceMode:'auto',db:'Marketing Tracking'}),
-        N('m3','Cost per Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',showInParent:true}),
+        N('m1','Total Bookings',[],{ownerId:'u2',companyDashboard:true,focusKpi:true,sourceMode:'review',db:'Marketing Tracking',filters:[{field:'UTM Source',operator:'is',value:'Paid Ads'},{field:'Status',operator:'is',value:'Show'}]}),
+        N('m2','Adspend',[],{fmt:'currency',ownerId:'u2',source:'Meta Ads',companyDashboard:true,sourceMode:'auto',db:'Marketing Tracking'}),
+        N('m3','Cost per Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',companyDashboard:true}),
         N('pa','Paid Ads',[
           N('pa1','Adspend',[],{fmt:'currency',ownerId:'u2',source:'Meta Ads',sourceMode:'auto',db:'Marketing Tracking'}),
           N('pa2','Impressions',[],{ownerId:'u2',source:'Meta Ads'}),
@@ -458,9 +456,9 @@
         ],{exp:false}),
       ]),
       N('set','SETTING',[
-        N('s1','Leads',[],{ownerId:'u2',source:'Airtable',showInParent:true}),
-        N('s2','Sets',[],{ownerId:'u1',source:'Plecto',showInParent:true}),
-        N('s3','Set Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',source:'Plecto',showInParent:true}),
+        N('s1','Leads',[],{ownerId:'u2',source:'Airtable',companyDashboard:true}),
+        N('s2','Sets',[],{ownerId:'u1',source:'Plecto',companyDashboard:true,focusKpi:true}),
+        N('s3','Set Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',source:'Plecto',companyDashboard:true}),
         N('hc','Human Calling',[
           N('hc1','Dials',[],{ownerId:'u3',source:'Aircall'}),
           N('hc2','Pickups',[],{ownerId:'u3',source:'Aircall'}),
@@ -476,15 +474,15 @@
         ],{exp:false}),
       ]),
       N('cls','CLOSING',[
-        N('c1','FE-Deals',[],{ownerId:'u1',source:'Plecto',showInParent:true}),
-        N('c2','FE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',source:'Plecto',showInParent:true}),
-        N('c3','Avg. Dealsize',[],{fmt:'currency',agg:'average',ownerId:'u1',source:'Plecto',showInParent:true}),
-        N('c4','Call-Close Rate',[],{fmt:'percentage',agg:'manual',ownerId:'u1',source:'Plecto',showInParent:true}),
+        N('c1','FE-Deals',[],{ownerId:'u1',source:'Plecto',companyDashboard:true}),
+        N('c2','FE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',source:'Plecto',companyDashboard:true}),
+        N('c3','Avg. Dealsize',[],{fmt:'currency',agg:'average',ownerId:'u1',source:'Plecto',companyDashboard:true}),
+        N('c4','Call-Close Rate',[],{fmt:'percentage',agg:'manual',ownerId:'u1',source:'Plecto',companyDashboard:true,focusKpi:true}),
       ]),
       N('del','DELIVERY',[
-        N('d1','BE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',source:'Plecto',showInParent:true}),
-        N('d2','Retention Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',source:'Plecto',showInParent:true}),
-        N('d3','Time-to-First-Value',[],{agg:'average',ownerId:'u1',showInParent:true}),
+        N('d1','BE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',source:'Plecto',companyDashboard:true}),
+        N('d2','Retention Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',source:'Plecto',companyDashboard:true}),
+        N('d3','Time-to-First-Value',[],{agg:'average',ownerId:'u1',companyDashboard:true}),
         N('dse','DSE',[
           N('dse1','Time-to-First-Milestone',[],{agg:'average',ownerId:'u1'}),
           N('dse2','Projekt Timing (Gesamt)',[],{agg:'average',ownerId:'u1'}),
@@ -499,10 +497,10 @@
         ],{exp:false}),
       ]),
       N('ppl','PEOPLE & CULTURE',[
-        N('p1','Open Roles',[],{period:'carries_over',ownerId:'u5',source:'Personio',showInParent:true}),
-        N('p2','Einstellungen',[],{ownerId:'u5',source:'Personio',showInParent:true}),
-        N('p3','Time-to-Hire',[],{agg:'average',ownerId:'u5',source:'Personio',showInParent:true}),
-        N('p4','eNPS',[],{agg:'average',period:'carries_over',ownerId:'u5',source:'Personio',showInParent:true}),
+        N('p1','Open Roles',[],{period:'carries_over',ownerId:'u5',source:'Personio',companyDashboard:true}),
+        N('p2','Einstellungen',[],{ownerId:'u5',source:'Personio',companyDashboard:true}),
+        N('p3','Time-to-Hire',[],{agg:'average',ownerId:'u5',source:'Personio',companyDashboard:true}),
+        N('p4','eNPS',[],{agg:'average',period:'carries_over',ownerId:'u5',source:'Personio',companyDashboard:true}),
         N('hf','Hiring Funnel',[
           N('hf1','Loom Videos',[],{ownerId:'u5',source:'Personio'}),
           N('hf2','Gruppeninterview Einladungen',[],{ownerId:'u5',source:'Personio'}),
@@ -510,9 +508,9 @@
         ],{exp:false}),
       ]),
       N('fin','FINANCE',[
-        N('f1','Cash In',[],{fmt:'currency',ownerId:'u6',source:'DATEV',showInParent:true}),
-        N('f2','Cash Out',[],{fmt:'currency',ownerId:'u6',source:'DATEV',showInParent:true}),
-        N('f3','Cashflow',[],{fmt:'currency',ownerId:'u6',source:'DATEV',showInParent:true}),
+        N('f1','Cash In',[],{fmt:'currency',ownerId:'u6',source:'DATEV',companyDashboard:true}),
+        N('f2','Cash Out',[],{fmt:'currency',ownerId:'u6',source:'DATEV',companyDashboard:true}),
+        N('f3','Cashflow',[],{fmt:'currency',ownerId:'u6',source:'DATEV',companyDashboard:true}),
       ]),
     ];
 
@@ -553,7 +551,7 @@
       let groups = 0, kpis = 0;
       for (const n of nodes) {
         if (n.children.length) { groups++; const s = countStats(n.children); groups += s.groups; kpis += s.kpis; }
-        else kpis++;
+        else if (!n.refId) kpis++;
       }
       return { groups, kpis };
     }
@@ -562,6 +560,7 @@
       tree, users, databases, fieldDefs,
       selId: 'sc',
       showHelp: false,
+      toast: '',
       _v: 0,
 
       get flat() { this._v; return flatList(this.tree, 0); },
@@ -573,6 +572,51 @@
       opsFor(fn) { const d = fieldDefs.find(f=>f.name===fn); return ops[d?.type||'text']; },
       countAll(node) { return countDescendants(node); },
       selIdx() { return this.flat.findIndex(f => f.n.id === this.selId); },
+
+      refName(refId) {
+        const orig = findNode(refId, this.tree);
+        return orig ? orig.name : 'Unknown KPI';
+      },
+
+      selectNode(node) {
+        if (node.refId) {
+          this.selId = node.refId;
+          this.toast = 'Jumped to original KPI — this is a Focus reference';
+          clearTimeout(this._toastTimer);
+          this._toastTimer = setTimeout(() => { this.toast = ''; }, 2500);
+        } else {
+          this.selId = node.id;
+        }
+      },
+
+      toggleFocus() {
+        if (!this.selNode) return;
+        const fk = findNode('fk', this.tree);
+        if (!fk) return;
+        if (this.selNode.focusKpi) {
+          const ri = fk.children.findIndex(c => c.refId === this.selId);
+          if (ri >= 0) fk.children.splice(ri, 1);
+          this.selNode.focusKpi = false;
+        } else {
+          const ref = N('fkr' + (++_nid), '', [], { refId: this.selId });
+          fk.children.push(ref);
+          fk.exp = true;
+          this.selNode.focusKpi = true;
+          this.selNode.companyDashboard = true;
+        }
+        this._v++;
+      },
+
+      removeFocusRef(refNodeId) {
+        const refNode = findNode(refNodeId, this.tree);
+        if (refNode && refNode.refId) {
+          const orig = findNode(refNode.refId, this.tree);
+          if (orig) orig.focusKpi = false;
+        }
+        removeFromTree(refNodeId, this.tree);
+        this.selId = null;
+        this._v++;
+      },
 
       nav(dir) {
         const fl = this.flat;
@@ -643,6 +687,18 @@
       },
       deleteNode(id) {
         if (!id) return;
+        const node = findNode(id, this.tree);
+        if (node && node.focusKpi) {
+          const fk = findNode('fk', this.tree);
+          if (fk) {
+            const ri = fk.children.findIndex(c => c.refId === id);
+            if (ri >= 0) fk.children.splice(ri, 1);
+          }
+        }
+        if (node && node.refId) {
+          const orig = findNode(node.refId, this.tree);
+          if (orig) orig.focusKpi = false;
+        }
         const fl = this.flat;
         const ci = fl.findIndex(f => f.n.id === id);
         removeFromTree(id, this.tree);
@@ -672,6 +728,9 @@
     };
   }
   </script>
+
+  <!-- Toast -->
+  <div x-show="toast" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full bg-g12 text-p1 px-4 py-2 text-sm shadow-lg" x-text="toast"></div>
 
 </body>
 </html>

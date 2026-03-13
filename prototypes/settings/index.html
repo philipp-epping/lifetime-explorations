@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Aaron</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+
+      --color-p0: oklch(0.982 0 0);
+      --color-p1: oklch(1 0 0);
+
+      --color-g0: oklch(1 0 0);
+      --color-g1: oklch(0.991 0 0);
+      --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0);
+      --color-g4: oklch(0.931 0 0);
+      --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0);
+      --color-g7: oklch(0.851 0 0);
+      --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0);
+      --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228);
+      --color-g12: oklch(0.21 0.004 286.059);
+
+      --color-a1: oklch(0.994 0.001 286.376);
+      --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09);
+      --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198);
+      --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675);
+      --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643);
+      --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713);
+      --color-a12: oklch(0.312 0.107 271.681);
+
+      --color-y1: oklch(0.994 0.003 84.559);
+      --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943);
+      --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209);
+      --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55);
+      --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907);
+      --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633);
+      --color-y12: oklch(0.353 0.053 69.99);
+
+      --color-d1: oklch(0.993 0.003 17.212);
+      --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81);
+      --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206);
+      --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189);
+      --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103);
+      --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228);
+      --color-d12: oklch(0.34 0.115 26.406);
+
+      --color-s1: oklch(0.994 0.006 137.773);
+      --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807);
+      --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615);
+      --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63);
+      --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544);
+      --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444);
+      --color-s12: oklch(0.326 0.058 136.282);
+
+      --color-alpha-2: oklch(0 0 0 / 0.02);
+      --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06);
+      --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1);
+      --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16);
+      --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36);
+      --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+
+      --text-micro: 10px;
+      --text-micro--font-weight: 450;
+      --text-micro--line-height: 14px;
+      --text-micro-medium: 10px;
+      --text-micro-medium--font-weight: 500;
+      --text-micro-medium--line-height: 14px;
+      --text-mini: 12px;
+      --text-mini--font-weight: 450;
+      --text-mini--line-height: 15px;
+      --text-mini-medium: 12px;
+      --text-mini-medium--font-weight: 500;
+      --text-mini-medium--line-height: 15px;
+      --text-sm: 13px;
+      --text-sm--font-weight: 450;
+      --text-sm--line-height: 18px;
+      --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px;
+      --text-sm-medium--font-weight: 500;
+      --text-sm-medium--line-height: 18px;
+      --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px;
+      --text-regular--font-weight: 450;
+      --text-regular--line-height: 20px;
+      --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px;
+      --text-regular-medium--font-weight: 500;
+      --text-regular-medium--line-height: 20px;
+      --text-regular-medium--letter-spacing: -0.13px;
+
+      --radius-0: 0px;
+      --radius-2: 2px;
+      --radius-4: 4px;
+      --radius-6: 6px;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --radius-12: 12px;
+      --radius-full: 999px;
+
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0, 0, 0, 0.27), 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+      --duration-fast: 120ms;
+      --duration-normal: 200ms;
+      --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased">
+
+  <div x-data="settings()" x-cloak class="flex h-screen">
+
+    <!-- ===== SIDEBAR ===== -->
+    <aside class="w-56 shrink-0 border-r border-g4 bg-p1 flex flex-col">
+      <div class="p-5 pb-3">
+        <h1 class="text-lg font-semibold text-g12">Settings</h1>
+        <a href="#" class="mt-3 inline-flex items-center gap-1 text-sm text-g9 hover:text-g11 transition-colors duration-fast">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+          Back to app
+        </a>
+      </div>
+      <nav class="flex-1 px-3 pt-3 space-y-5 overflow-y-auto">
+        <div>
+          <div class="px-2 mb-1.5 text-micro-medium text-g9 uppercase tracking-wider">Account</div>
+          <button @click="page = 'profile'" :class="page === 'profile' ? 'bg-g3 text-g12' : 'text-g10 hover:bg-g3 hover:text-g11'" class="w-full text-left px-2 py-1.5 rounded-6 text-sm transition-colors duration-fast">Profile</button>
+        </div>
+        <div>
+          <div class="px-2 mb-0.5 text-micro-medium text-g9 uppercase tracking-wider">Company</div>
+          <div class="px-2 mb-1.5 text-mini text-g9 truncate" x-text="company.name"></div>
+          <div class="space-y-0.5">
+            <button @click="page = 'general'" :class="page === 'general' ? 'bg-g3 text-g12' : 'text-g10 hover:bg-g3 hover:text-g11'" class="w-full text-left px-2 py-1.5 rounded-6 text-sm transition-colors duration-fast">General</button>
+            <button @click="page = 'members'" :class="page === 'members' ? 'bg-g3 text-g12' : 'text-g10 hover:bg-g3 hover:text-g11'" class="w-full text-left px-2 py-1.5 rounded-6 text-sm transition-colors duration-fast">Members & Roles</button>
+            <button @click="page = 'categories'" :class="page === 'categories' ? 'bg-g3 text-g12' : 'text-g10 hover:bg-g3 hover:text-g11'" class="w-full text-left px-2 py-1.5 rounded-6 text-sm transition-colors duration-fast">Categories</button>
+            <button @click="page = 'export'" :class="page === 'export' ? 'bg-g3 text-g12' : 'text-g10 hover:bg-g3 hover:text-g11'" class="w-full text-left px-2 py-1.5 rounded-6 text-sm transition-colors duration-fast">Export</button>
+          </div>
+        </div>
+        <div>
+          <div class="px-2 mb-1.5 text-micro-medium text-g9 uppercase tracking-wider">Billing</div>
+          <button @click="page = 'billing'" :class="page === 'billing' ? 'bg-g3 text-g12' : 'text-g10 hover:bg-g3 hover:text-g11'" class="w-full text-left px-2 py-1.5 rounded-6 text-sm transition-colors duration-fast">Plan & Billing</button>
+        </div>
+      </nav>
+    </aside>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <main class="flex-1 overflow-y-auto">
+      <div class="mx-auto max-w-2xl px-10 py-10">
+
+        <!-- ==================== PROFILE ==================== -->
+        <div x-show="page === 'profile'">
+          <h2 class="text-lg font-semibold text-g12">Profile</h2>
+          <p class="text-sm text-g9 mt-1">Your personal information and preferences.</p>
+
+          <div class="mt-6 rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+            <div class="flex items-center justify-between px-5 py-4">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-a3 flex items-center justify-center text-sm-medium text-a11 shrink-0">PE</div>
+                <span class="text-sm text-g11">Profile Picture</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <button class="rounded-6 bg-p1 px-3 py-1.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors duration-fast">Upload</button>
+                <button class="rounded-6 px-2 py-1.5 text-sm text-g9 hover:text-d11 hover:bg-d3 transition-colors duration-fast">Remove</button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Email</span>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-g12" x-text="profile.email"></span>
+                <button class="text-mini text-a11 hover:underline">Change</button>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Full Name</span>
+              <input type="text" x-model="profile.name" class="w-48 text-right rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <div>
+                <span class="text-sm text-g11">Timezone</span>
+                <span class="text-mini text-g9 block mt-0.5" x-text="resolvedTimezone"></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-sm-medium text-g12 tabular-nums" x-text="currentTime"></span>
+                <select x-model="profile.timezone" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                  <option value="auto">Detect from device</option>
+                  <optgroup label="Europe">
+                    <option value="Europe/Berlin">(UTC+1) CET — Berlin</option>
+                    <option value="Europe/London">(UTC+0) GMT — London</option>
+                    <option value="Europe/Paris">(UTC+1) CET — Paris</option>
+                    <option value="Europe/Zurich">(UTC+1) CET — Zurich</option>
+                    <option value="Europe/Helsinki">(UTC+2) EET — Helsinki</option>
+                  </optgroup>
+                  <optgroup label="Americas">
+                    <option value="America/New_York">(UTC-5) Eastern — New York</option>
+                    <option value="America/Chicago">(UTC-6) Central — Chicago</option>
+                    <option value="America/Los_Angeles">(UTC-8) Pacific — Los Angeles</option>
+                  </optgroup>
+                  <optgroup label="Asia & Pacific">
+                    <option value="Asia/Dubai">(UTC+4) GST — Dubai</option>
+                    <option value="Asia/Tokyo">(UTC+9) JST — Tokyo</option>
+                    <option value="Australia/Sydney">(UTC+11) AEDT — Sydney</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Language</span>
+              <select x-model="profile.language" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option value="en">English</option>
+                <option value="de">Deutsch</option>
+              </select>
+            </div>
+          </div>
+
+          <h3 class="text-regular-medium text-d11 mt-10 mb-3">Danger Zone</h3>
+          <div class="rounded-8 bg-p1 shadow-xs">
+            <div class="flex items-center justify-between px-5 py-4">
+              <div>
+                <span class="text-sm text-g12">Leave this company</span>
+                <span class="text-mini text-g9 block mt-0.5">Remove yourself from <span x-text="company.name"></span></span>
+              </div>
+              <button @click="showLeaveModal = true" class="rounded-6 px-3 py-1.5 text-sm text-d11 hover:bg-d3 transition-colors duration-fast">Leave</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Leave Company Confirmation Modal -->
+        <template x-teleport="body">
+          <div x-show="showLeaveModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center" @keydown.escape.window="showLeaveModal = false">
+            <div class="absolute inset-0 bg-alpha-48" @click="showLeaveModal = false"></div>
+            <div x-show="showLeaveModal" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="relative bg-p1 rounded-12 shadow-md w-full max-w-sm p-6">
+              <h3 class="text-regular-medium text-g12">Leave <span x-text="company.name"></span>?</h3>
+              <p class="text-sm text-g9 mt-2">You will lose access to all company data, dashboards, and settings. This action cannot be undone.</p>
+              <div class="flex items-center justify-end gap-3 mt-6">
+                <button @click="showLeaveModal = false" class="rounded-6 px-4 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors duration-fast">Cancel</button>
+                <button @click="showLeaveModal = false" class="rounded-6 bg-d9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-d10 transition-colors duration-fast">Leave Company</button>
+              </div>
+            </div>
+          </div>
+        </template>
+
+        <!-- ==================== GENERAL ==================== -->
+        <div x-show="page === 'general'" x-cloak>
+          <h2 class="text-lg font-semibold text-g12">General</h2>
+          <p class="text-sm text-g9 mt-1">Company configuration, legal details, and financial defaults.</p>
+
+          <div class="mt-6 rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Company Name</span>
+              <input type="text" x-model="company.name" class="w-56 text-right rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Country</span>
+              <select x-model="company.country" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option>Germany</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <div>
+                <span class="text-sm text-g11">Base Currency</span>
+                <span class="text-mini text-g9 block mt-0.5">All amounts displayed in this currency</span>
+              </div>
+              <select x-model="company.currency" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option>EUR</option>
+                <option>USD</option>
+                <option>GBP</option>
+                <option>CHF</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4">
+              <div>
+                <span class="text-sm text-g11">Legal Entity</span>
+                <span class="text-mini text-g9 block mt-0.5">Determines tax and reporting rules</span>
+              </div>
+              <select x-model="company.entity" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option>GmbH</option>
+                <option>Einzelunternehmen</option>
+              </select>
+            </div>
+
+            <!-- Registered Address -->
+            <div class="px-5 py-4" x-data="{ query: '', showSuggestions: false, suggestions: [
+              { full: 'Musterstraße 42, 10115 Berlin', street: 'Musterstraße 42', zip: '10115', city: 'Berlin' },
+              { full: 'Musterweg 12, 10117 Berlin', street: 'Musterweg 12', zip: '10117', city: 'Berlin' },
+              { full: 'Münchner Straße 1, 80331 München', street: 'Münchner Straße 1', zip: '80331', city: 'München' },
+            ]}">
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <span class="text-sm text-g11">Registered Address</span>
+                  <span class="text-mini text-g9 block mt-0.5">Used to determine your local trade tax rate (Hebesatz)</span>
+                </div>
+              </div>
+              <div class="relative">
+                <div class="relative">
+                  <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-g9" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                  <input type="text"
+                    x-model="query"
+                    @input="showSuggestions = query.length > 0"
+                    @focus="showSuggestions = query.length > 0"
+                    @click.away="showSuggestions = false"
+                    :placeholder="company.address ? company.address : 'Search address...'"
+                    :class="company.address ? 'text-g12' : ''"
+                    class="w-full rounded-6 bg-p0 pl-9 pr-3 py-2 text-sm text-g12 outline-none placeholder:text-g9 transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                </div>
+                <!-- Autocomplete dropdown -->
+                <div x-show="showSuggestions && query.length > 0" x-cloak class="absolute top-full left-0 right-0 mt-1 rounded-8 bg-p1 shadow-md border border-g4 overflow-hidden z-10">
+                  <template x-for="s in suggestions.filter(s => s.full.toLowerCase().includes(query.toLowerCase()))" :key="s.full">
+                    <button @click="company.address = s.full; company.street = s.street; company.zip = s.zip; company.city = s.city; query = ''; showSuggestions = false"
+                      class="w-full text-left px-4 py-2.5 text-sm text-g11 hover:bg-g3 transition-colors duration-fast flex items-center gap-2">
+                      <svg class="w-3.5 h-3.5 text-g9 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"/><path d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"/></svg>
+                      <span x-text="s.full"></span>
+                    </button>
+                  </template>
+                  <div x-show="suggestions.filter(s => s.full.toLowerCase().includes(query.toLowerCase())).length === 0" class="px-4 py-3 text-sm text-g9">No results found</div>
+                </div>
+              </div>
+              <!-- Resolved address display -->
+              <div x-show="company.address" class="mt-2 flex items-start gap-2 px-1">
+                <svg class="w-3.5 h-3.5 text-s11 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M5 13l4 4L19 7"/></svg>
+                <span class="text-sm text-g12" x-text="company.address"></span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tax Configuration (inline, entity-dependent) -->
+          <h3 class="text-regular-medium text-g12 mt-8 mb-3">Tax Configuration</h3>
+          <div class="rounded-8 bg-p1 shadow-xs overflow-hidden">
+
+            <!-- VAT section header -->
+            <div class="px-5 py-2.5 bg-g2 border-b border-g4">
+              <span class="text-mini-medium text-g10 uppercase tracking-wider">VAT Settings</span>
+            </div>
+
+            <!-- Kleinunternehmerregelung — only for Einzelunternehmen -->
+            <div x-show="company.entity === 'Einzelunternehmen'" class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <div>
+                <span class="text-sm text-g11">Kleinunternehmerregelung</span>
+                <span class="text-mini text-g9 block mt-0.5">Exempt from VAT if annual revenue below €22,000</span>
+              </div>
+              <button @click="tax.kleinunternehmer = !tax.kleinunternehmer"
+                :class="tax.kleinunternehmer ? 'bg-a9' : 'bg-g5'"
+                class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                <span :class="tax.kleinunternehmer ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+              </button>
+            </div>
+
+            <!-- VAT scheme — hidden if Kleinunternehmer is active -->
+            <div x-show="company.entity === 'GmbH' || !tax.kleinunternehmer" class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <span class="text-sm text-g11">VAT scheme</span>
+              <select x-model="tax.vatScheme" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option value="ist">Cash VAT (Istversteuerung)</option>
+                <option value="soll">Accrual VAT (Sollversteuerung)</option>
+              </select>
+            </div>
+
+            <!-- VAT filing frequency — hidden if Kleinunternehmer is active -->
+            <div x-show="company.entity === 'GmbH' || !tax.kleinunternehmer" class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <span class="text-sm text-g11">Filing frequency</span>
+              <select x-model="tax.vatFrequency" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option value="monthly">Monthly</option>
+                <option value="quarterly">Quarterly</option>
+                <option value="yearly">Yearly</option>
+              </select>
+            </div>
+
+            <!-- Tax section header -->
+            <div class="px-5 py-2.5 bg-g2 border-b border-g4">
+              <span class="text-mini-medium text-g10 uppercase tracking-wider" x-text="company.entity === 'GmbH' ? 'Corporate Tax' : 'Income Tax'"></span>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <span class="text-sm text-g11">Tax year</span>
+              <select x-model="tax.taxYear" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option>2024</option>
+                <option>2025</option>
+                <option>2026</option>
+              </select>
+            </div>
+
+            <div class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <div>
+                <div class="flex items-center gap-1.5">
+                  <span class="text-sm text-g11">Estimated annual profit</span>
+                  <div class="relative" x-data="{ showTip: false }">
+                    <button @mouseenter="showTip = true" @mouseleave="showTip = false" @click="showTip = !showTip" class="text-g9 hover:text-g11 transition-colors duration-fast">
+                      <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4m0-4h.01"/></svg>
+                    </button>
+                    <div x-show="showTip" x-transition:enter="transition ease-out duration-fast" x-transition:enter-start="opacity-0 translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" x-cloak class="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 w-64 rounded-8 bg-g12 px-3 py-2.5 text-mini text-white shadow-md z-20">
+                      Enter the profit amount your tax advisor uses to calculate your current prepayments. Aaron uses this to estimate whether you'll owe additional payments or may receive a refund at year-end.
+                      <div class="absolute left-1/2 -translate-x-1/2 top-full w-0 h-0 border-x-4 border-x-transparent border-t-4 border-t-g12"></div>
+                    </div>
+                  </div>
+                </div>
+                <span class="text-mini text-g9 block mt-0.5">As reported to your Finanzamt for prepayments</span>
+              </div>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-sm text-g9">€</span>
+                <input type="text" x-model="tax.estimatedProfit" placeholder="0" class="w-32 pl-7 text-right rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+              </div>
+            </div>
+
+            <!-- Filing status — only for Einzelunternehmen -->
+            <div x-show="company.entity === 'Einzelunternehmen'" class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <span class="text-sm text-g11">Filing status</span>
+              <select x-model="tax.filingStatus" class="rounded-6 border border-g4 bg-p1 px-3 py-1.5 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option value="single">Single</option>
+                <option value="married">Married</option>
+              </select>
+            </div>
+
+            <!-- Church tax — only for Einzelunternehmen -->
+            <div x-show="company.entity === 'Einzelunternehmen'" class="flex items-center justify-between px-5 py-4 border-b border-g4">
+              <span class="text-sm text-g11">Church tax</span>
+              <button @click="tax.churchTax = !tax.churchTax"
+                :class="tax.churchTax ? 'bg-a9' : 'bg-g5'"
+                class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                <span :class="tax.churchTax ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+              </button>
+            </div>
+
+            <!-- Automation section header -->
+            <div class="px-5 py-2.5 bg-g2 border-b border-g4">
+              <span class="text-mini-medium text-g10 uppercase tracking-wider">Automation</span>
+            </div>
+
+            <div class="px-5 py-4">
+              <button @click="tax.autoDetectTax = !tax.autoDetectTax" class="flex items-center gap-3 w-full text-left">
+                <div :class="tax.autoDetectTax ? 'bg-a9 border-a9' : 'bg-p1 border-g5'" class="w-4 h-4 rounded-4 border flex items-center justify-center shrink-0 transition-colors duration-fast">
+                  <svg x-show="tax.autoDetectTax" class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <span class="text-sm text-g11">Auto-detect tax prepayments</span>
+              </button>
+              <button @click="tax.autoDetectVat = !tax.autoDetectVat" class="flex items-center gap-3 w-full text-left mt-3">
+                <div :class="tax.autoDetectVat ? 'bg-a9 border-a9' : 'bg-p1 border-g5'" class="w-4 h-4 rounded-4 border flex items-center justify-center shrink-0 transition-colors duration-fast">
+                  <svg x-show="tax.autoDetectVat" class="w-2.5 h-2.5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="3"><path d="M5 13l4 4L19 7"/></svg>
+                </div>
+                <span class="text-sm text-g11">Auto-detect VAT payments</span>
+              </button>
+              <p class="text-mini text-g9 mt-3">You can change this later.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== MEMBERS & ROLES ==================== -->
+        <div x-show="page === 'members'" x-cloak>
+          <h2 class="text-lg font-semibold text-g12">Members & Roles</h2>
+          <p class="text-sm text-g9 mt-1">Manage your team and permissions for <span x-text="company.name"></span>.</p>
+
+          <!-- Tabs -->
+          <div class="mt-6 flex items-center gap-0 border-b border-g4">
+            <button @click="membersTab = 'members'"
+              :class="membersTab === 'members' ? 'text-g12 border-b-2 border-a9' : 'text-g9 hover:text-g11'"
+              class="px-4 py-2 text-sm-medium transition-colors duration-fast -mb-px">Members</button>
+            <button @click="membersTab = 'roles'"
+              :class="membersTab === 'roles' ? 'text-g12 border-b-2 border-a9' : 'text-g9 hover:text-g11'"
+              class="px-4 py-2 text-sm-medium transition-colors duration-fast -mb-px">Roles</button>
+          </div>
+
+          <!-- Members tab -->
+          <div x-show="membersTab === 'members'">
+            <div class="mt-6 flex items-center gap-3">
+              <input type="email" x-model="inviteEmail" placeholder="colleague@company.com" @keydown.enter="invite()"
+                class="flex-1 rounded-6 bg-p1 px-3 py-2 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+              <select x-model="inviteRole" class="rounded-6 border border-g4 bg-p1 px-3 py-2 text-sm text-g12 outline-none cursor-pointer transition-colors duration-fast focus:border-a9">
+                <option>Member</option>
+                <option>Admin</option>
+              </select>
+              <button @click="invite()" class="rounded-6 bg-a9 px-4 py-2 text-sm text-white shadow-xs hover:bg-a10 transition-colors duration-fast">Invite</button>
+            </div>
+
+            <div class="mt-6 rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+              <template x-for="(m, mi) in members" :key="mi">
+                <div class="flex items-center justify-between px-5 py-3.5">
+                  <div class="flex items-center gap-3 min-w-0">
+                    <div class="w-8 h-8 rounded-full bg-a3 flex items-center justify-center text-mini-medium text-a11 shrink-0" x-text="m.name.split(' ').map(n => n[0]).join('')"></div>
+                    <div class="min-w-0">
+                      <div class="text-sm text-g12 flex items-center gap-2">
+                        <span x-text="m.name"></span>
+                        <span x-show="m.isOwner" class="inline-flex rounded-full bg-a3 px-2 py-0.5 text-micro-medium text-a11">Owner</span>
+                      </div>
+                      <div class="text-mini text-g9 truncate" x-text="m.email"></div>
+                    </div>
+                  </div>
+                  <div class="flex items-center gap-4 shrink-0 ml-4">
+                    <select x-model="m.role" :disabled="m.isOwner" class="rounded-6 border border-g4 bg-p1 px-2 py-1 text-mini text-g12 outline-none cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-fast focus:border-a9">
+                      <option>Owner</option>
+                      <option>Admin</option>
+                      <option>Member</option>
+                    </select>
+                    <button x-show="!m.isOwner" @click="removeMember(mi)" class="text-mini text-d11 hover:underline">Remove</button>
+                    <span x-show="m.isOwner" class="w-12">&nbsp;</span>
+                  </div>
+                </div>
+              </template>
+            </div>
+
+            <h3 class="text-regular-medium text-g12 mt-10 mb-3">Pending Invitations</h3>
+            <div x-show="pendingInvites.length === 0" class="rounded-8 bg-p1 shadow-xs px-5 py-8 text-center">
+              <p class="text-sm text-g9">No pending invitations</p>
+            </div>
+            <div x-show="pendingInvites.length > 0" class="rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+              <template x-for="(inv, ii) in pendingInvites" :key="ii">
+                <div class="flex items-center justify-between px-5 py-3.5">
+                  <div>
+                    <div class="text-sm text-g12" x-text="inv.email"></div>
+                    <div class="text-mini text-g9"><span x-text="inv.role"></span> · Sent <span x-text="inv.sent"></span></div>
+                  </div>
+                  <button @click="revokeInvite(ii)" class="text-mini text-d11 hover:underline">Revoke</button>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Roles tab -->
+          <div x-show="membersTab === 'roles'" x-cloak>
+            <div class="mt-6 rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+              <template x-for="role in roles" :key="role.name">
+                <div class="px-5 py-4">
+                  <div class="flex items-center justify-between">
+                    <span class="text-sm-medium text-g12" x-text="role.name"></span>
+                    <span class="text-mini text-g9" x-text="roleCount(role.name) + (roleCount(role.name) === 1 ? ' member' : ' members')"></span>
+                  </div>
+                  <p class="text-sm text-g9 mt-1" x-text="role.description"></p>
+                  <div class="flex flex-wrap gap-1.5 mt-3">
+                    <template x-for="perm in role.permissions" :key="perm">
+                      <span class="inline-flex rounded-full bg-g3 px-2 py-0.5 text-micro text-g10" x-text="perm"></span>
+                    </template>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== CATEGORIES ==================== -->
+        <div x-show="page === 'categories'" x-cloak>
+          <h2 class="text-lg font-semibold text-g12">Categories</h2>
+          <p class="text-sm text-g9 mt-1">Manage the categories used to classify your transactions. These appear when categorizing income and expenses.</p>
+
+          <!-- Income -->
+          <h3 class="text-regular-medium text-g12 mt-6 mb-3">Income</h3>
+          <div class="rounded-8 bg-p1 shadow-xs">
+            <template x-for="(cat, ci) in incomeCategories" :key="ci">
+              <div :class="ci > 0 && 'border-t border-g4'">
+                <!-- Level 1: Parent -->
+                <div class="flex items-center justify-between px-5 py-3">
+                  <div class="flex items-center gap-2 cursor-pointer select-none" @click="cat.open = !cat.open">
+                    <svg :class="cat.open && 'rotate-90'" class="w-3 h-3 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                    <span class="text-sm-medium text-g12" x-text="cat.name"></span>
+                    <span class="text-mini text-g9" x-text="'(' + cat.children.length + ')'"></span>
+                  </div>
+                  <button @click="toggleCategory(cat)" :class="cat.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                    <span :class="cat.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                  </button>
+                </div>
+                <!-- Level 2: Children -->
+                <div x-show="cat.open">
+                  <template x-for="(child, chi) in cat.children" :key="chi">
+                    <div>
+                      <div class="flex items-center justify-between pl-10 pr-5 py-2.5 border-t border-g4">
+                        <div class="flex items-center gap-2" :class="child.children && child.children.length > 0 ? 'cursor-pointer select-none' : ''" @click="child.children && child.children.length > 0 && (child.open = !child.open)">
+                          <svg x-show="child.children && child.children.length > 0" :class="child.open && 'rotate-90'" class="w-2.5 h-2.5 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                          <span class="text-sm text-g11" x-text="child.name"></span>
+                          <span x-show="child.children && child.children.length > 0" class="text-micro text-g9" x-text="'(' + child.children.length + ')'"></span>
+                        </div>
+                        <button @click="toggleCategory(child)" :class="child.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                          <span :class="child.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                        </button>
+                      </div>
+                      <!-- Level 3: Grandchildren -->
+                      <div x-show="child.open && child.children && child.children.length > 0">
+                        <template x-for="(gc, gci) in child.children" :key="gci">
+                          <div class="flex items-center justify-between pl-16 pr-5 py-2 border-t border-g4">
+                            <span class="text-sm text-g9" x-text="gc.name"></span>
+                            <button @click="gc.on = !gc.on" :class="gc.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                              <span :class="gc.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                            </button>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </template>
+                  <!-- Add subcategory -->
+                  <div class="border-t border-g4 pl-10 pr-5 py-2.5">
+                    <template x-if="addingAt !== cat">
+                      <button @click="addingAt = cat; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add subcategory</button>
+                    </template>
+                    <template x-if="addingAt === cat">
+                      <div class="flex items-center gap-2">
+                        <input x-model="newCatName" @keydown.enter="addCat(cat.children); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                        <button @click="addCat(cat.children); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
+                        <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <!-- Add top-level income category -->
+            <div class="border-t border-g4 px-5 py-2.5">
+              <template x-if="addingAt !== 'income'">
+                <button @click="addingAt = 'income'; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add category</button>
+              </template>
+              <template x-if="addingAt === 'income'">
+                <div class="flex items-center gap-2">
+                  <input x-model="newCatName" @keydown.enter="addCat(incomeCategories); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                  <button @click="addCat(incomeCategories); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
+                  <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
+                </div>
+              </template>
+            </div>
+          </div>
+
+          <!-- Expense -->
+          <h3 class="text-regular-medium text-g12 mt-8 mb-3">Expense</h3>
+          <div class="rounded-8 bg-p1 shadow-xs">
+            <template x-for="(cat, ci) in expenseCategories" :key="ci">
+              <div :class="ci > 0 && 'border-t border-g4'">
+                <div class="flex items-center justify-between px-5 py-3">
+                  <div class="flex items-center gap-2 cursor-pointer select-none" @click="cat.open = !cat.open">
+                    <svg :class="cat.open && 'rotate-90'" class="w-3 h-3 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                    <span class="text-sm-medium text-g12" x-text="cat.name"></span>
+                    <span class="text-mini text-g9" x-text="'(' + cat.children.length + ')'"></span>
+                  </div>
+                  <button @click="toggleCategory(cat)" :class="cat.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                    <span :class="cat.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                  </button>
+                </div>
+                <div x-show="cat.open">
+                  <template x-for="(child, chi) in cat.children" :key="chi">
+                    <div>
+                      <div class="flex items-center justify-between pl-10 pr-5 py-2.5 border-t border-g4">
+                        <div class="flex items-center gap-2" :class="child.children && child.children.length > 0 ? 'cursor-pointer select-none' : ''" @click="child.children && child.children.length > 0 && (child.open = !child.open)">
+                          <svg x-show="child.children && child.children.length > 0" :class="child.open && 'rotate-90'" class="w-2.5 h-2.5 text-g9 transition-transform duration-fast" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2.5"><path d="M9 5l7 7-7 7"/></svg>
+                          <span class="text-sm text-g11" x-text="child.name"></span>
+                          <span x-show="child.children && child.children.length > 0" class="text-micro text-g9" x-text="'(' + child.children.length + ')'"></span>
+                        </div>
+                        <button @click="toggleCategory(child)" :class="child.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                          <span :class="child.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                        </button>
+                      </div>
+                      <div x-show="child.open && child.children && child.children.length > 0">
+                        <template x-for="(gc, gci) in child.children" :key="gci">
+                          <div class="flex items-center justify-between pl-16 pr-5 py-2 border-t border-g4">
+                            <span class="text-sm text-g9" x-text="gc.name"></span>
+                            <button @click="gc.on = !gc.on" :class="gc.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast">
+                              <span :class="gc.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                            </button>
+                          </div>
+                        </template>
+                      </div>
+                    </div>
+                  </template>
+                  <div class="border-t border-g4 pl-10 pr-5 py-2.5">
+                    <template x-if="addingAt !== cat">
+                      <button @click="addingAt = cat; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add subcategory</button>
+                    </template>
+                    <template x-if="addingAt === cat">
+                      <div class="flex items-center gap-2">
+                        <input x-model="newCatName" @keydown.enter="addCat(cat.children); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                        <button @click="addCat(cat.children); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
+                        <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
+                      </div>
+                    </template>
+                  </div>
+                </div>
+              </div>
+            </template>
+            <div class="border-t border-g4 px-5 py-2.5">
+              <template x-if="addingAt !== 'expense'">
+                <button @click="addingAt = 'expense'; newCatName = ''" class="text-sm text-a11 hover:underline">+ Add category</button>
+              </template>
+              <template x-if="addingAt === 'expense'">
+                <div class="flex items-center gap-2">
+                  <input x-model="newCatName" @keydown.enter="addCat(expenseCategories); addingAt = null" @keydown.escape="addingAt = null" x-init="$nextTick(() => $el.focus())" placeholder="Category name" class="flex-1 rounded-6 bg-p0 px-3 py-1.5 text-sm text-g12 outline-none transition-shadow duration-fast focus:ring-2 focus:ring-a9">
+                  <button @click="addCat(expenseCategories); addingAt = null" class="text-sm text-a11 hover:underline">Add</button>
+                  <button @click="addingAt = null" class="text-sm text-g9 hover:underline">Cancel</button>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== EXPORT ==================== -->
+        <div x-show="page === 'export'" x-cloak>
+          <h2 class="text-lg font-semibold text-g12">Export</h2>
+          <p class="text-sm text-g9 mt-1">Configure how exported filenames are structured for your tax advisor.</p>
+
+          <h3 class="text-regular-medium text-g12 mt-6 mb-1">Filename Components</h3>
+          <p class="text-mini text-g9 mb-3">Drag to reorder, toggle to include or exclude.</p>
+
+          <div class="rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+            <template x-for="(part, pi) in exportParts" :key="part.id">
+              <div draggable="true"
+                @dragstart="dragIdx = pi; $event.dataTransfer.effectAllowed = 'move'"
+                @dragend="dragIdx = null; dropIdx = null"
+                @dragover.prevent
+                @dragenter.prevent="dropIdx = pi"
+                @drop.prevent="reorder(dragIdx, pi); dragIdx = null; dropIdx = null"
+                :class="{ 'opacity-40': dragIdx === pi, 'ring-2 ring-a9 ring-inset': dropIdx === pi && dragIdx !== null && dragIdx !== pi }"
+                class="flex items-center gap-3 px-5 py-3 cursor-grab select-none transition-all duration-fast">
+                <svg class="w-4 h-4 text-g7 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                  <circle cx="5" cy="3" r="1.2"/><circle cx="11" cy="3" r="1.2"/>
+                  <circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/>
+                  <circle cx="5" cy="13" r="1.2"/><circle cx="11" cy="13" r="1.2"/>
+                </svg>
+                <span class="flex-1 text-sm text-g12" x-text="part.label"></span>
+                <span class="text-mini text-g9 mr-2" x-text="part.sample"></span>
+                <button @click.stop="part.on = !part.on" :class="part.on ? 'bg-a9' : 'bg-g5'" class="relative inline-flex h-5 w-8 shrink-0 items-center rounded-full transition-colors duration-fast cursor-pointer">
+                  <span :class="part.on ? 'translate-x-4' : 'translate-x-0.5'" class="inline-block h-3.5 w-3.5 rounded-full bg-white shadow-xs transition-all duration-fast"></span>
+                </button>
+              </div>
+            </template>
+          </div>
+
+          <h3 class="text-regular-medium text-g12 mt-8 mb-3">Separator</h3>
+          <div class="flex items-center gap-2">
+            <button @click="separator = '_'" :class="separator === '_' ? 'bg-a3 text-a11 border-a9' : 'bg-p1 text-g11 border-g4 hover:bg-g3'" class="rounded-6 border px-4 py-1.5 text-sm transition-colors duration-fast">
+              <span class="font-mono">_</span> <span class="text-mini ml-1">underscore</span>
+            </button>
+            <button @click="separator = '-'" :class="separator === '-' ? 'bg-a3 text-a11 border-a9' : 'bg-p1 text-g11 border-g4 hover:bg-g3'" class="rounded-6 border px-4 py-1.5 text-sm transition-colors duration-fast">
+              <span class="font-mono">-</span> <span class="text-mini ml-1">dash</span>
+            </button>
+            <button @click="separator = '.'" :class="separator === '.' ? 'bg-a3 text-a11 border-a9' : 'bg-p1 text-g11 border-g4 hover:bg-g3'" class="rounded-6 border px-4 py-1.5 text-sm transition-colors duration-fast">
+              <span class="font-mono">.</span> <span class="text-mini ml-1">dot</span>
+            </button>
+          </div>
+
+          <h3 class="text-regular-medium text-g12 mt-8 mb-3">Preview</h3>
+          <div class="rounded-8 bg-p1 shadow-xs px-5 py-4">
+            <div class="flex items-center gap-3">
+              <svg class="w-5 h-5 text-g7 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+                <path d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+              </svg>
+              <span class="text-sm text-g12 font-mono break-all" x-text="filename"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- ==================== BILLING ==================== -->
+        <div x-show="page === 'billing'" x-cloak>
+          <h2 class="text-lg font-semibold text-g12">Plan & Billing</h2>
+          <p class="text-sm text-g9 mt-1">Your subscription and payment details.</p>
+
+          <div class="mt-6 rounded-8 bg-p1 shadow-xs px-5 py-5">
+            <div class="flex items-start justify-between">
+              <div>
+                <div class="flex items-center gap-2">
+                  <span class="text-regular-medium text-g12">Starter</span>
+                  <span class="inline-flex rounded-full bg-s3 px-2 py-0.5 text-micro-medium text-s11">Active</span>
+                </div>
+                <div class="text-sm text-g9 mt-1">3 team members · Unlimited transactions · PDF export</div>
+              </div>
+              <div class="text-right">
+                <div class="text-lg font-semibold text-g12">€49<span class="text-sm font-normal text-g9">/month</span></div>
+              </div>
+            </div>
+            <button class="mt-4 rounded-6 bg-p1 px-4 py-1.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors duration-fast">Upgrade Plan</button>
+          </div>
+
+          <div class="mt-6 rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Next billing date</span>
+              <span class="text-sm text-g12">April 1, 2026</span>
+            </div>
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Payment method</span>
+              <div class="flex items-center gap-2">
+                <span class="text-sm text-g12">Visa •••• 4242</span>
+                <button class="text-mini text-a11 hover:underline">Change</button>
+              </div>
+            </div>
+            <div class="flex items-center justify-between px-5 py-4">
+              <span class="text-sm text-g11">Billing email</span>
+              <span class="text-sm text-g12" x-text="profile.email"></span>
+            </div>
+          </div>
+
+          <h3 class="text-regular-medium text-g12 mt-10 mb-3">Invoice History</h3>
+          <div class="rounded-8 bg-p1 shadow-xs divide-y divide-g4">
+            <div class="flex items-center justify-between px-5 py-3.5">
+              <div>
+                <div class="text-sm text-g12">March 2026</div>
+                <div class="text-mini text-g9">Starter plan · €49.00</div>
+              </div>
+              <button class="text-mini text-a11 hover:underline">Download</button>
+            </div>
+            <div class="flex items-center justify-between px-5 py-3.5">
+              <div>
+                <div class="text-sm text-g12">February 2026</div>
+                <div class="text-mini text-g9">Starter plan · €49.00</div>
+              </div>
+              <button class="text-mini text-a11 hover:underline">Download</button>
+            </div>
+            <div class="flex items-center justify-between px-5 py-3.5">
+              <div>
+                <div class="text-sm text-g12">January 2026</div>
+                <div class="text-mini text-g9">Starter plan · €49.00</div>
+              </div>
+              <button class="text-mini text-a11 hover:underline">Download</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function settings() {
+      return {
+        page: 'profile',
+
+        showLeaveModal: false,
+        currentTime: '',
+
+        profile: {
+          name: 'Philipp Epping',
+          email: 'philipp@digitalxresults.de',
+          timezone: 'auto',
+          language: 'en',
+        },
+
+        company: {
+          name: 'DigitalXResults GmbH',
+          country: 'Germany',
+          currency: 'EUR',
+          entity: 'GmbH',
+          address: 'Musterstraße 42, 10115 Berlin',
+          street: 'Musterstraße 42',
+          zip: '10115',
+          city: 'Berlin',
+        },
+
+        tax: {
+          vatScheme: 'ist',
+          vatFrequency: 'quarterly',
+          taxYear: '2026',
+          estimatedProfit: '',
+          kleinunternehmer: false,
+          filingStatus: 'single',
+          churchTax: false,
+          autoDetectTax: true,
+          autoDetectVat: false,
+        },
+
+        membersTab: 'members',
+
+        members: [
+          { name: 'Philipp Epping', email: 'philipp@digitalxresults.de', role: 'Owner', isOwner: true },
+          { name: 'Anton Weber', email: 'anton@digitalxresults.de', role: 'Admin', isOwner: false },
+          { name: 'Kevin Du', email: 'kevin@kevdu.co', role: 'Member', isOwner: false },
+        ],
+
+        inviteEmail: '',
+        inviteRole: 'Member',
+
+        pendingInvites: [
+          { email: 'sarah@designstudio.de', role: 'Member', sent: 'Mar 10, 2026' },
+        ],
+
+        roles: [
+          { name: 'Owner', description: 'Full access. Can manage billing, transfer ownership, and delete the company.', permissions: ['Billing', 'Ownership', 'Delete company', 'All settings'] },
+          { name: 'Admin', description: 'Can manage members, categories, export settings, and company configuration.', permissions: ['Members', 'Categories', 'Export', 'Company settings'] },
+          { name: 'Member', description: 'Can view dashboards, categorize transactions, and upload documents.', permissions: ['View dashboards', 'Categorize', 'Upload documents'] },
+        ],
+
+        addingAt: null,
+        newCatName: '',
+
+        incomeCategories: [
+          { name: 'Revenue', on: true, open: true, children: [
+            { name: 'Product Sales', on: true, open: false, children: [
+              { name: 'Physical Products', on: true, children: [] },
+              { name: 'Digital Products', on: true, children: [] },
+            ]},
+            { name: 'Service Revenue', on: true, open: false, children: [] },
+            { name: 'Recurring Subscriptions', on: true, open: false, children: [
+              { name: 'Monthly Plans', on: true, children: [] },
+              { name: 'Annual Plans', on: true, children: [] },
+            ]},
+          ]},
+          { name: 'Other Income', on: true, open: false, children: [
+            { name: 'Interest Income', on: false, open: false, children: [] },
+            { name: 'Refunds & Credits', on: true, open: false, children: [] },
+          ]},
+        ],
+
+        expenseCategories: [
+          { name: 'Marketing', on: true, open: true, children: [
+            { name: 'Paid Advertising', on: true, open: false, children: [
+              { name: 'Google Ads', on: true, children: [] },
+              { name: 'Social Media Ads', on: true, children: [] },
+            ]},
+            { name: 'Content & SEO', on: true, open: false, children: [] },
+            { name: 'Events & Sponsorships', on: false, open: false, children: [] },
+          ]},
+          { name: 'Sales', on: true, open: false, children: [
+            { name: 'Sales Commission', on: true, open: false, children: [] },
+            { name: 'Business Travel', on: true, open: false, children: [] },
+          ]},
+          { name: 'Operations', on: true, open: false, children: [
+            { name: 'Office & Rent', on: true, open: false, children: [] },
+            { name: 'Software & Tools', on: true, open: false, children: [] },
+            { name: 'Legal & Accounting', on: true, open: false, children: [] },
+            { name: 'Insurance', on: false, open: false, children: [] },
+          ]},
+          { name: 'Personnel', on: true, open: false, children: [
+            { name: 'Salaries & Wages', on: true, open: false, children: [] },
+            { name: 'Benefits & Perks', on: true, open: false, children: [] },
+            { name: 'Training & Development', on: false, open: false, children: [] },
+          ]},
+        ],
+
+        exportParts: [
+          { id: 'date', label: 'Date', on: true, sample: '2026-03-13' },
+          { id: 'bank', label: 'Bank Account', on: true, sample: 'Deutsche-Bank' },
+          { id: 'counterparty', label: 'Counterparty', on: true, sample: 'Stripe-Payment' },
+          { id: 'amount', label: 'Amount', on: true, sample: '€4250' },
+          { id: 'category', label: 'Category', on: false, sample: 'Software' },
+        ],
+
+        separator: '_',
+        dragIdx: null,
+        dropIdx: null,
+
+        get resolvedTimezone() {
+          if (this.profile.timezone === 'auto') {
+            try { return Intl.DateTimeFormat().resolvedOptions().timeZone; } catch(e) { return 'UTC'; }
+          }
+          return this.profile.timezone;
+        },
+
+        init() {
+          const updateClock = () => {
+            try {
+              this.currentTime = new Date().toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: this.resolvedTimezone });
+            } catch(e) { this.currentTime = '--:--'; }
+          };
+          updateClock();
+          setInterval(updateClock, 10000);
+        },
+
+        get filename() {
+          const parts = this.exportParts.filter(p => p.on).map(p => p.sample);
+          return parts.length ? parts.join(this.separator) + '.pdf' : 'no-components-selected.pdf';
+        },
+
+        roleCount(role) {
+          return this.members.filter(m => m.role === role).length;
+        },
+
+        toggleCategory(cat) {
+          cat.on = !cat.on;
+          if (cat.children && cat.children.length) {
+            cat.children.forEach(child => {
+              child.on = cat.on;
+              if (child.children && child.children.length) {
+                child.children.forEach(gc => { gc.on = cat.on; });
+              }
+            });
+          }
+        },
+
+        addCat(arr) {
+          if (!this.newCatName.trim()) return;
+          arr.push({ name: this.newCatName.trim(), on: true, open: false, children: [] });
+          this.newCatName = '';
+        },
+
+        reorder(from, to) {
+          if (from === null || from === to) return;
+          const item = this.exportParts.splice(from, 1)[0];
+          this.exportParts.splice(to, 0, item);
+        },
+
+        invite() {
+          if (!this.inviteEmail.trim()) return;
+          this.pendingInvites.push({ email: this.inviteEmail.trim(), role: this.inviteRole, sent: 'Just now' });
+          this.inviteEmail = '';
+          this.inviteRole = 'Member';
+        },
+
+        revokeInvite(i) { this.pendingInvites.splice(i, 1); },
+        removeMember(i) { this.members.splice(i, 1); },
+      }
+    }
+  </script>
+
+</body>
+</html>
