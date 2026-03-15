@@ -70,11 +70,13 @@
     /* Dark spreadsheet table */
     .kg{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;border-left:1px solid var(--color-g11);border-top:1px solid var(--color-g11)}
     .kg th,.kg td{border-right:1px solid var(--color-g11);border-bottom:1px solid var(--color-g11);padding:0 10px;text-align:center;vertical-align:middle;height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .kg th{background:var(--color-g11);color:var(--color-g7);height:32px}
+    .kg th{background:var(--color-g11);color:var(--color-g7);height:32px;position:sticky;top:49px;z-index:20}
     .kg td{background:var(--color-g12);color:var(--color-g3)}
     .kg td:first-child,.kg th:first-child{text-align:left;overflow:visible}
     .kg td.st-cell{overflow:visible}
     .kg .sc{position:sticky;left:0;z-index:10}
+    .kg th.sc{z-index:25}
+    .kg-wrap{overflow:visible}
     .kg .dh td{background:var(--color-a9);color:white;font-weight:600;border-color:var(--color-a10);letter-spacing:.3px}
     .kg .ch td{background:var(--color-a11);color:var(--color-a5);font-weight:500;border-color:var(--color-a12)}
     .pc-g{background:var(--color-s6)!important;color:var(--color-s12)!important;font-weight:500}
@@ -119,7 +121,7 @@
     .editable-cell:hover{background:var(--color-a2)}
 
     /* Cell detail popover */
-    .cd-pop{position:fixed;z-index:60;width:340px;max-height:420px;background:var(--color-p1);border:1px solid var(--color-g4);border-radius:var(--radius-8);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column}
+    .cd-pop{position:fixed;z-index:60;width:340px;max-height:500px;background:var(--color-p1);border:1px solid var(--color-g4);border-radius:var(--radius-8);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column}
     .cd-pop-body{overflow-y:auto;flex:1;min-height:0}
     .cd-pop table{width:100%;border-collapse:collapse}
     .cd-pop th{text-align:left;padding:6px 10px;font-size:11px;font-weight:500;color:var(--color-g10);border-bottom:1px solid var(--color-g4);background:var(--color-g2)}
@@ -146,9 +148,29 @@
     .dtl-table .st-show{background:var(--color-s3);color:var(--color-s11)}
     .dtl-table .st-pending{background:var(--color-y3);color:var(--color-y11)}
     .dtl-table .st-bad{background:var(--color-d3);color:var(--color-d11)}
+    .dtl-table tr.excluded td{opacity:.4}
+    .dtl-table input[type=checkbox]{accent-color:var(--color-a9);cursor:pointer}
+    .dtl-search{border-top:1px solid var(--color-g4);background:var(--color-g2)}
   </style>
 </head>
 <body class="bg-p0 font-sans antialiased" x-data="app()" @keydown.window="handleKey($event)" x-cloak>
+<!-- #region agent log -->
+<script>
+document.addEventListener('DOMContentLoaded',()=>{setTimeout(()=>{
+  const hdr=document.querySelector('header');
+  const hdrH=hdr?hdr.getBoundingClientRect().height:null;
+  const wrap=document.querySelector('.kg-wrap');
+  const wrapOvX=wrap?getComputedStyle(wrap).overflowX:null;
+  const wrapOvY=wrap?getComputedStyle(wrap).overflowY:null;
+  const th=document.querySelector('.kg th');
+  const thPos=th?getComputedStyle(th).position:null;
+  const thTop=th?getComputedStyle(th).top:null;
+  const tbl=document.querySelector('.kg');
+  const tblBorderTop=tbl?getComputedStyle(tbl).borderTopWidth:null;
+  fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1b132a'},body:JSON.stringify({sessionId:'1b132a',location:'index.html:DOMReady',message:'sticky-header-debug',data:{hdrHeight:hdrH,wrapOverflowX:wrapOvX,wrapOverflowY:wrapOvY,thPosition:thPos,thTop:thTop,tblBorderTop:tblBorderTop},timestamp:Date.now(),hypothesisId:'H1-H2-H3'})}).catch(()=>{});
+},500)});
+</script>
+<!-- #endregion -->
 
   <!-- ═══════════ TRACKER HEADER ═══════════ -->
   <header x-show="view==='tracker'" class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
@@ -225,7 +247,7 @@
             <h1 class="text-regular-medium text-g12" x-text="role==='ceo'?'Company KPIs':leadDeptName"></h1>
             <p class="mt-0.5 text-mini text-g9" x-text="MN[cM]+' '+cY+' — CW'+CW"></p>
           </div>
-          <div class="overflow-x-auto rounded-8">
+          <div class="kg-wrap rounded-8">
             <div :style="'min-width:'+(sw?'1560':'1060')+'px'">
             <table class="kg text-sm">
               <thead><tr>
@@ -293,7 +315,7 @@
             <h1 class="text-regular-medium text-g12" x-text="activeDept.name"></h1>
             <p class="mt-0.5 text-mini text-g9" x-text="MN[cM]+' '+cY+' — CW'+CW"></p>
           </div>
-          <div class="overflow-x-auto rounded-8">
+          <div class="kg-wrap rounded-8">
             <div :style="'min-width:'+(sw?'1560':'1060')+'px'">
               <table class="kg text-sm">
                 <thead><tr>
@@ -383,7 +405,7 @@
             <h1 class="text-regular-medium text-g12" x-text="activeCh.name + ' — Full Funnel'"></h1>
             <p class="mt-0.5 text-mini text-g9" x-text="activeDept.name + ' · ' + MN[cM]+' '+cY"></p>
           </div>
-          <div class="overflow-x-auto rounded-8">
+          <div class="kg-wrap rounded-8">
             <div :style="'min-width:'+(sw?'1560':'1060')+'px'">
             <table class="kg text-sm">
               <thead><tr>
@@ -440,7 +462,7 @@
         </div>
         <button class="rounded-6 px-4 py-1.5 text-sm text-white shadow-xs transition-colors" :class="icS?'bg-s9 hover:bg-s10':'bg-a9 hover:bg-a10'" @click="icS=true;setTimeout(()=>icS=false,2000)" x-text="icS?'Saved!':'Save'"></button>
       </div>
-      <div class="overflow-x-auto rounded-8">
+      <div class="kg-wrap rounded-8">
         <div style="min-width:1130px">
         <table class="kg text-sm">
           <thead><tr>
@@ -677,48 +699,54 @@
   <!-- Detail Records Modal -->
   <template x-teleport="body">
     <div x-show="dtl.open" x-transition:enter="transition ease-out duration-slow" x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="dtl-modal bg-alpha-48" @click.self="closeDtl()" @keydown.escape.window="if(dtl.open&&!cellPop.open)closeDtl()">
-      <div class="dtl-inner" @click.stop x-show="dtl.open" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
-        <div class="flex items-center justify-between px-5 py-3.5 border-b border-g4">
-          <div>
-            <h2 class="text-regular-medium text-g12" x-text="(dtl.kpi?.name||'')+' — Source Records'"></h2>
-            <div class="flex items-center gap-2 mt-0.5">
-              <p class="text-mini text-g9" x-text="dtlWeekLabel()"></p>
-              <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro-medium bg-a3 text-a11">
-                <svg class="h-2.5 w-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
-                <span x-text="dtl.kpi?.db||dtl.kpi?.source"></span>
-              </span>
+      <div class="dtl-inner" @click="dtlSt=null" x-show="dtl.open" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100">
+        <div class="px-5 py-3.5 border-b border-g4">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <h2 class="text-regular-medium text-g12" x-text="dtl.kpi?.name||''"></h2>
+              <span class="text-g8">·</span>
+              <span class="text-sm tabular-nums" :class="dtlExcludedCount>0?'text-y11 font-medium':'text-g10'" x-text="dtlIncludedCount+(dtlExcludedCount>0?' of '+dtlData.length:'')+' record'+(dtlData.length!==1?'s':'')"></span>
+            </div>
+            <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5">
+                <span class="text-mini text-g9" x-text="dtlWeekLabel()"></span>
+                <span class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-micro bg-a3 text-a11">
+                  <svg class="h-2.5 w-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+                  <span x-text="dtl.kpi?.db||dtl.kpi?.source"></span>
+                </span>
+              </div>
+              <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="closeDtl()">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
             </div>
           </div>
-          <div class="flex items-center gap-3">
-            <span class="text-mini text-g9" x-text="dtlRecs.length+' records'"></span>
-            <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="closeDtl()">
-              <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
+          <p class="text-mini text-g9 mt-1.5">Something not right? Correct the data directly, or deselect records that shouldn't count toward this KPI.</p>
         </div>
-        <div class="flex-1 overflow-y-auto" style="min-height:0" @click="dtlSt=null">
-          <template x-if="dtlRecs.length>0">
+        <div class="flex-1 overflow-y-auto" style="min-height:0">
+          <template x-if="dtlData.length>0">
             <table class="dtl-table">
               <thead><tr>
-                <template x-for="col in dtlCols" :key="col"><th x-text="col"></th></template>
-                <th style="width:48px"></th>
+                <template x-for="col in dtlSmartCols" :key="col"><th x-text="col"></th></template>
+                <th style="width:44px;text-align:center;padding-right:14px">Include</th>
               </tr></thead>
               <tbody>
-                <template x-for="(rec,ri) in dtlRecs" :key="ri">
-                  <tr>
-                    <template x-for="(col,ci) in dtlCols" :key="col">
+                <template x-for="(rec,ri) in dtlData" :key="ri">
+                  <tr :class="!rec._included?'excluded':''">
+                    <template x-for="(col,ci) in dtlSmartCols" :key="col">
                       <td>
                         <template x-if="col==='Status'||col==='Stage'||col==='Outcome'">
-                          <div class="relative" x-data="{open:false}">
-                            <button class="st-badge" :class="stBadgeClass(rec[col])" @click="open=!open" x-text="rec[col]||'—'"></button>
-                            <div x-show="open" @click.away="open=false" x-transition class="absolute left-0 bottom-full mb-1 rounded-8 bg-p1 shadow-lg border border-g4 z-20 p-1 min-w-28">
-                              <template x-for="st in ['Won','Pending','Lost','Active','Cancelled']" :key="st">
-                                <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini text-g11 hover:bg-g3 transition-colors" @click="rec[col]=st;open=false" x-text="st"></button>
-                              </template>
-                            </div>
+                          <button class="st-badge" :class="stBadgeClass(rec[col])" @click.stop="if(dtlSt===ri){dtlSt=null}else{let r=$el.getBoundingClientRect();dtlStPos={x:r.left,y:r.bottom+4};dtlSt=ri;dtlStRec=rec;dtlStCol=col}" x-text="rec[col]||'—'"></button>
+                        </template>
+                        <template x-if="ci===0&&col!=='Status'&&col!=='Stage'&&col!=='Outcome'">
+                          <span class="text-g12 font-medium" x-text="rec[col]||'—'"></span>
+                        </template>
+                        <template x-if="ci!==0&&isDateCol(col)&&col!=='Status'&&col!=='Stage'&&col!=='Outcome'">
+                          <div x-data="{editing:false}">
+                            <span x-show="!editing" class="cursor-pointer hover:text-g12 transition-colors" x-text="rec[col]||'—'" @dblclick="editing=true"></span>
+                            <input x-show="editing" x-ref="edt" type="date" class="rounded-4 bg-g2 px-2 py-0.5 text-sm text-g12 outline-none focus:ring-2 focus:ring-a9" :value="toISODate(rec[col])" @blur="rec[col]=fromISODate($el.value);editing=false" @keydown.escape="editing=false" x-effect="if(editing)$nextTick(()=>$refs.edt?.showPicker?.())">
                           </div>
                         </template>
-                        <template x-if="col!=='Status'&&col!=='Stage'&&col!=='Outcome'">
+                        <template x-if="ci!==0&&!isDateCol(col)&&col!=='Status'&&col!=='Stage'&&col!=='Outcome'">
                           <div x-data="{editing:false}">
                             <span x-show="!editing" class="cursor-pointer hover:text-g12 transition-colors" x-text="rec[col]||'—'" @dblclick="editing=true"></span>
                             <input x-show="editing" x-ref="edt" type="text" class="w-full rounded-4 bg-g2 px-2 py-0.5 text-sm text-g12 outline-none focus:ring-2 focus:ring-a9" :value="rec[col]" @blur="rec[col]=$el.value;editing=false" @keydown.enter="$el.blur()" @keydown.escape="editing=false" x-effect="if(editing)$nextTick(()=>{$refs.edt?.focus();$refs.edt?.select()})">
@@ -726,17 +754,13 @@
                         </template>
                       </td>
                     </template>
-                    <td class="text-center">
-                      <button class="rounded-4 p-1 text-g8 hover:text-d11 hover:bg-d3 transition-colors opacity-0 group-hover:opacity-100" style="opacity:0" @mouseenter="$el.style.opacity=1" @mouseleave="$el.style.opacity=0" @click="dtlRecs.splice(ri,1)" title="Remove record">
-                        <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                      </button>
-                    </td>
+                    <td style="text-align:center;width:44px;padding-right:14px"><input type="checkbox" class="h-3.5 w-3.5" :checked="rec._included" @change="rec._included=!rec._included"></td>
                   </tr>
                 </template>
               </tbody>
             </table>
           </template>
-          <template x-if="dtlRecs.length===0">
+          <template x-if="dtlData.length===0">
             <div class="px-6 py-16 text-center">
               <div class="w-10 h-10 rounded-8 bg-g2 flex items-center justify-center mx-auto mb-3">
                 <svg class="h-5 w-5 text-g8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/></svg>
@@ -746,9 +770,46 @@
             </div>
           </template>
         </div>
+        <div x-show="dtlSt!==null" x-transition class="fixed rounded-8 bg-p1 shadow-lg border border-g4 z-[80] p-1 min-w-28" :style="'top:'+dtlStPos.y+'px;left:'+dtlStPos.x+'px'" @click.stop>
+          <template x-for="st in dtlStatusOpts" :key="st">
+            <button class="w-full text-left rounded-6 px-3 py-1.5 text-mini text-g11 hover:bg-g3 transition-colors" @click="if(dtlStRec&&dtlStCol)dtlStRec[dtlStCol]=st;dtlSt=null" x-text="st"></button>
+          </template>
+        </div>
+        <div x-show="dtlSearch" x-transition class="dtl-search px-5 py-3" x-data="{q:''}">
+          <div class="flex items-center gap-2">
+            <svg class="h-4 w-4 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <input type="text" x-ref="dbSearch" x-model="q" class="flex-1 bg-transparent text-sm text-g12 outline-none placeholder:text-g8" placeholder="Search records in database..." x-effect="if(dtlSearch)$nextTick(()=>$refs.dbSearch?.focus())">
+            <button class="rounded-4 p-1 text-g8 hover:text-g11 transition-colors" @click="dtlSearch=false;q=''"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+          </div>
+          <template x-if="q.length===0">
+            <p class="text-micro text-g8 mt-1.5 ml-6">Search your connected database to find and add missing records.</p>
+          </template>
+          <template x-if="q.length>0">
+            <div class="mt-2 ml-6 space-y-1">
+              <template x-for="(sr,si) in dtlSearchResults(q)" :key="si">
+                <div class="flex items-center justify-between rounded-6 px-3 py-2 bg-p1 border border-g4 hover:border-a6 transition-colors group">
+                  <div class="min-w-0">
+                    <p class="text-sm text-g12 font-medium truncate" x-text="sr.name"></p>
+                    <p class="text-micro text-g9" x-text="sr.detail"></p>
+                  </div>
+                  <button class="rounded-6 px-2.5 py-1 text-micro-medium text-a11 bg-a3 hover:bg-a4 transition-colors shrink-0 ml-3 opacity-0 group-hover:opacity-100" @click="addSearchResult(sr);q=''">
+                    + Add
+                  </button>
+                </div>
+              </template>
+              <template x-if="dtlSearchResults(q).length===0">
+                <p class="text-micro text-g8 py-2">No matching records found for "<span x-text="q"></span>"</p>
+              </template>
+            </div>
+          </template>
+        </div>
         <div class="flex items-center justify-between px-5 py-3 border-t border-g4">
-          <p class="text-mini text-g9">Double-click any value to edit · Click status to change</p>
-          <button class="rounded-6 bg-a9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="closeDtl()">Done</button>
+          <button x-show="!dtlSearch" class="rounded-6 px-3 py-1.5 text-mini text-g9 hover:bg-g3 hover:text-g11 transition-colors flex items-center gap-1.5" @click="dtlSearch=true">
+            <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            Search database
+          </button>
+          <span x-show="dtlSearch"></span>
+          <button class="rounded-6 bg-a9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="updateDtl()">Update</button>
         </div>
       </div>
     </div>
@@ -766,27 +827,27 @@
 
   <!-- Cell Detail Popover -->
   <div x-show="cellPop.open" x-transition:enter="transition ease-out duration-fast" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="cd-pop" :style="'top:'+cellPop.pos.y+'px;left:'+cellPop.pos.x+'px'" @click.stop @keydown.escape.window="closeCellPop()">
-    <div class="flex items-center justify-between px-3 py-2.5 border-b border-g4">
-      <div class="min-w-0">
-        <p class="text-sm-medium text-g12 truncate" x-text="cellPop.kpi?.name"></p>
-        <p class="text-micro text-g9" x-text="cpWeekLabel()"></p>
+    <div class="px-3 py-2.5 border-b border-g4">
+      <div class="flex items-center justify-between">
+        <p class="text-sm text-g12 truncate min-w-0"><span class="font-medium" x-text="cellPop.kpi?.name"></span> <span class="text-g8">·</span> <span class="text-g9" x-text="cpRecs.length+' record'+(cpRecs.length!==1?'s':'')"></span></p>
+        <button class="rounded-4 p-1 text-g8 hover:bg-g3 hover:text-g11 transition-colors shrink-0 ml-2" @click="closeCellPop()">
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
       </div>
-      <div class="flex items-center gap-1.5 shrink-0 ml-2">
-        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro-medium bg-a3 text-a11">
+      <div class="flex items-center gap-2 mt-0.5">
+        <span class="text-micro text-g9" x-text="cpWeekLabel()"></span>
+        <span class="inline-flex items-center gap-1 rounded-full px-1.5 py-0.5 text-micro bg-a3 text-a11">
           <svg class="h-2.5 w-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
           <span x-text="cellPop.kpi?.db||cellPop.kpi?.source"></span>
         </span>
-        <button class="rounded-4 p-1 text-g8 hover:bg-g3 hover:text-g11 transition-colors" @click="closeCellPop()">
-          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-        </button>
       </div>
     </div>
     <div class="cd-pop-body">
       <template x-if="cpRecs.length>0">
         <table>
-          <thead><tr><template x-for="col in cpCols" :key="col"><th x-text="col"></th></template></tr></thead>
-          <tbody><template x-for="(rec,ri) in cpRecs.slice(0,5)" :key="ri">
-            <tr><template x-for="col in cpCols" :key="col"><td x-text="rec[col]||'—'"></td></template></tr>
+          <thead><tr><template x-for="col in cpSmartCols" :key="col"><th x-text="col"></th></template></tr></thead>
+          <tbody><template x-for="(rec,ri) in cpRecs.slice(0,8)" :key="ri">
+            <tr><template x-for="col in cpSmartCols" :key="col"><td x-text="rec[col]||'—'"></td></template></tr>
           </template></tbody>
         </table>
       </template>
@@ -798,9 +859,9 @@
       </template>
     </div>
     <div class="flex items-center justify-between px-3 py-2 border-t border-g4 bg-g2">
-      <span class="text-micro text-g9" x-text="cpRecs.length+' record'+(cpRecs.length!==1?'s':'')+(cpRecs.length>5?' · showing first 5':'')"></span>
+      <span class="text-micro text-g9" x-text="cpRecs.length>8?'Showing 8 of '+cpRecs.length:''"></span>
       <button class="rounded-6 px-2.5 py-1 text-mini-medium text-a11 hover:bg-a3 transition-colors flex items-center gap-1" @click="openDtl()">
-        View all
+        Edit records
         <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </button>
     </div>
@@ -1014,7 +1075,7 @@
       selId:null,showHelp:false,_v:0,toast:'',
       modal:{open:false,kpi:null,editing:false,editName:'',editFmt:'number',editAgg:'total',editPeriod:'resets',editOwner:'',editMode:'manual',editDb:'',editFilters:[],editDateScope:'week',editConfidence:'review',viewCW:10,editCW:10,viewExpanded:false,editExpanded:false},
       cellPop:{open:false,kpi:null,week:null,pos:{x:0,y:0}},
-      dtl:{open:false,kpi:null,week:null},dtlSt:null,
+      dtl:{open:false,kpi:null,week:null},dtlData:[],dtlSearch:false,dtlSt:null,dtlStPos:{x:0,y:0},dtlStRec:null,dtlStCol:null,
 
       get flat(){this._v;return flatList(this.tree,0);},
       get selNode(){if(!this.selId)return null;return findNode(this.selId,this.tree);},
@@ -1144,18 +1205,87 @@
       openCellPop(kpi,week,el){
         if(!this.isConn(kpi))return;this.openSt=null;this.openOwn=null;
         const r=el.getBoundingClientRect();const pw=340;const rx=window.innerWidth-r.right;
-        this.cellPop.kpi=kpi;this.cellPop.week=week;this.cellPop.pos={x:rx>pw+16?r.right+8:r.left-pw-8,y:Math.min(Math.max(r.top-4,8),window.innerHeight-430)};this.cellPop.open=true;
+        this.cellPop.kpi=kpi;this.cellPop.week=week;this.cellPop.pos={x:rx>pw+16?r.right+8:r.left-pw-8,y:Math.min(Math.max(r.top-4,8),window.innerHeight-510)};this.cellPop.open=true;
       },
       closeCellPop(){
         if(!this.cellPop.open)return;
         this.cellPop.open=false;this.cellPop.kpi=null;this.cellPop.week=null;
       },
-      openDtl(){this.dtl={open:true,kpi:this.cellPop.kpi,week:this.cellPop.week};this.closeCellPop();},
-      closeDtl(){this.dtl={open:false,kpi:null,week:null};this.dtlSt=null;},
+      openDtl(){
+        const recs=getCellRecs(this.cellPop.kpi,this.cellPop.week);
+        this.dtlData=recs.map(r=>({...r,_included:true}));
+        this.dtl={open:true,kpi:this.cellPop.kpi,week:this.cellPop.week};
+        this.dtlSearch=false;this.closeCellPop();
+      },
+      updateDtl(){
+        const k=this.dtl.kpi;const w=this.dtl.week;
+        if(k&&w!==null){
+          const inc=this.dtlData.filter(r=>r._included).length;
+          if(k.weekly)k.weekly[w]=inc;
+          const wks=Object.values(k.weekly||{}).filter(v=>v!==undefined);
+          if(wks.length){k.actual=k.agg==='average'?Math.round(wks.reduce((a,b)=>a+b,0)/wks.length):wks.reduce((a,b)=>a+b,0);}
+          this.reCalc(k);this._v++;
+        } else if(k&&w===null){
+          const inc=this.dtlData.filter(r=>r._included).length;
+          const wks=Object.values(k.weekly||{});const origTotal=wks.reduce((a,b)=>a+(b||0),0);
+          const diff=origTotal-inc;k.actual=Math.max(0,(k.actual||0)-diff);
+          this.reCalc(k);this._v++;
+        }
+        this.toast='KPI updated';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);
+        this.closeDtl();
+      },
+      closeDtl(){this.dtl={open:false,kpi:null,week:null};this.dtlData=[];this.dtlSearch=false;this.dtlSt=null;this.dtlStRec=null;this.dtlStCol=null;},
       get cpRecs(){if(!this.cellPop.open||!this.cellPop.kpi)return[];return getCellRecs(this.cellPop.kpi,this.cellPop.week);},
       get cpCols(){if(!this.cellPop.kpi)return[];return getCellCols(this.cellPop.kpi);},
-      get dtlRecs(){if(!this.dtl.open||!this.dtl.kpi)return[];return getCellRecs(this.dtl.kpi,this.dtl.week);},
-      get dtlCols(){if(!this.dtl.kpi)return[];return getCellCols(this.dtl.kpi);},
+      get cpSmartCols(){if(!this.cellPop.kpi)return[];const cols=getCellCols(this.cellPop.kpi);const k=this.cellPop.kpi;if(k.fmt==='number'&&k.agg==='total'&&cols.includes('Value'))return cols.filter(c=>c!=='Value');return cols;},
+      get dtlSmartCols(){if(!this.dtl.kpi)return[];const cols=getCellCols(this.dtl.kpi);const k=this.dtl.kpi;if(k.fmt==='number'&&k.agg==='total'&&cols.includes('Value'))return cols.filter(c=>c!=='Value');return cols;},
+      get dtlIncludedCount(){return this.dtlData.filter(r=>r._included).length;},
+      get dtlExcludedCount(){return this.dtlData.filter(r=>!r._included).length;},
+      get dtlStatusOpts(){const src=this.dtl.kpi?.db||this.dtl.kpi?.source;if(src==='Marketing Tracking')return['Show','No Show','Pending','Cancelled'];if(src==='Personio')return['Applied','Interview','Offer','Hired','Rejected'];return['Won','Pending','Lost','Active','Cancelled'];},
+      isDateCol(col){return/date|month|day/i.test(col);},
+      toISODate(v){if(!v)return'';const p=v.match(/(\d{2})\/(\d{2})\/(\d{4})/);return p?`${p[3]}-${p[2]}-${p[1]}`:v;},
+      fromISODate(v){if(!v)return'';const p=v.split('-');return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:v;},
+      dtlSearchResults(q){
+        if(!q||q.length<1)return[];const ql=q.toLowerCase();const src=this.dtl.kpi?.db||this.dtl.kpi?.source;
+        const mkt=[
+          {name:'Pfeiffer GmbH',detail:'09/03/2026 · No Show · Paid Ads',_tpl:{Name:'Pfeiffer GmbH','Booking Date':'09/03/2026','UTM Source':'Paid Ads',Status:'No Show',Revenue:'€3.200'}},
+          {name:'Albrecht & Co',detail:'11/03/2026 · Pending · Outbound Mail',_tpl:{Name:'Albrecht & Co','Booking Date':'11/03/2026','UTM Source':'Outbound Mail',Status:'Pending',Revenue:'€7.600'}},
+          {name:'Dietrich Solutions',detail:'07/03/2026 · Show · Organic',_tpl:{Name:'Dietrich Solutions','Booking Date':'07/03/2026','UTM Source':'Organic',Status:'Show',Revenue:'€11.400'}},
+          {name:'Vogt Consulting',detail:'10/03/2026 · Show · Referral',_tpl:{Name:'Vogt Consulting','Booking Date':'10/03/2026','UTM Source':'Referral',Status:'Show',Revenue:'€9.800'}},
+          {name:'Seidel Holding',detail:'12/03/2026 · Cancelled · Paid Ads',_tpl:{Name:'Seidel Holding','Booking Date':'12/03/2026','UTM Source':'Paid Ads',Status:'Cancelled',Revenue:'—'}},
+        ];
+        const plecto=[
+          {name:'Berger GmbH',detail:'10/03/2026 · Won · €8.500',_tpl:{Name:'Berger GmbH',Date:'10/03/2026',Value:'€8.500',Stage:'Won'}},
+          {name:'Lorenz AG',detail:'08/03/2026 · Pending · €4.200',_tpl:{Name:'Lorenz AG',Date:'08/03/2026',Value:'€4.200',Stage:'Pending'}},
+          {name:'Franke & Co',detail:'12/03/2026 · Won · €11.900',_tpl:{Name:'Franke & Co',Date:'12/03/2026',Value:'€11.900',Stage:'Won'}},
+        ];
+        const personio=[
+          {name:'Th. Berger',detail:'Developer · Applied · 08/03/2026',_tpl:{Candidate:'Th. Berger',Date:'08/03/2026',Position:'Developer',Stage:'Applied'}},
+          {name:'L. Maier',detail:'Sales Rep · Interview · 10/03/2026',_tpl:{Candidate:'L. Maier',Date:'10/03/2026',Position:'Sales Rep',Stage:'Interview'}},
+          {name:'S. Krämer',detail:'CSM · Offer · 11/03/2026',_tpl:{Candidate:'S. Krämer',Date:'11/03/2026',Position:'CSM',Stage:'Offer'}},
+        ];
+        const aircall=[
+          {name:'M. Fischer',detail:'Connected · 3:42 · 09/03/2026',_tpl:{Contact:'M. Fischer',Date:'09/03/2026',Duration:'3:42',Outcome:'Connected'}},
+          {name:'K. Weber',detail:'Voicemail · 1:15 · 10/03/2026',_tpl:{Contact:'K. Weber',Date:'10/03/2026',Duration:'1:15',Outcome:'Voicemail'}},
+          {name:'A. Braun',detail:'Connected · 5:20 · 11/03/2026',_tpl:{Contact:'A. Braun',Date:'11/03/2026',Duration:'5:20',Outcome:'Connected'}},
+        ];
+        const generic=[
+          {name:'Meier GmbH',detail:'10/03/2026 · Active',_tpl:{Name:'Meier GmbH',Date:'10/03/2026',Value:'1',Status:'Active'}},
+          {name:'Scholz AG',detail:'11/03/2026 · Active',_tpl:{Name:'Scholz AG',Date:'11/03/2026',Value:'1',Status:'Active'}},
+          {name:'Krüger & Partner',detail:'09/03/2026 · Active',_tpl:{Name:'Krüger & Partner',Date:'09/03/2026',Value:'1',Status:'Active'}},
+        ];
+        let mockDb=mkt;
+        if(src==='Plecto'||src==='CRM Pipeline')mockDb=plecto;
+        else if(src==='Personio')mockDb=personio;
+        else if(src==='Aircall')mockDb=aircall;
+        else if(src!=='Marketing Tracking')mockDb=generic;
+        return mockDb.filter(r=>r.name.toLowerCase().includes(ql)||r.detail.toLowerCase().includes(ql)).slice(0,3);
+      },
+      addSearchResult(sr){
+        const rec={...sr._tpl,_included:true};
+        this.dtlData.push(rec);
+        this.toast='Record added';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);
+      },
       cpWeekLabel(){const w=this.cellPop.week;if(w===null)return MN[this.cM]+' '+this.cY;return 'CW'+w+' · '+(WR[w]||'');},
       dtlWeekLabel(){const w=this.dtl.week;if(w===null)return MN[this.cM]+' '+this.cY;return 'CW'+w+' · '+(WR[w]||'');},
       stBadgeClass(val){const v=(val||'').toLowerCase();if(['won','show','connected','hired','replied','qualified','completed','active','booked'].includes(v))return'st-won';if(['no show','no answer','bounced','disqualified','lost','cancelled'].includes(v))return'st-bad';return'st-pending';},

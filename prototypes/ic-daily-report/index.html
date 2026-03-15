@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IC Daily Report — DXR</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+      --color-p0: oklch(0.982 0 0); --color-p1: oklch(1 0 0);
+      --color-g0: oklch(1 0 0); --color-g1: oklch(0.991 0 0); --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0); --color-g4: oklch(0.931 0 0); --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0); --color-g7: oklch(0.851 0 0); --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0); --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228); --color-g12: oklch(0.21 0.004 286.059);
+      --color-a1: oklch(0.994 0.001 286.376); --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09); --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198); --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675); --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643); --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713); --color-a12: oklch(0.312 0.107 271.681);
+      --color-y1: oklch(0.994 0.003 84.559); --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943); --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209); --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55); --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907); --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633); --color-y12: oklch(0.353 0.053 69.99);
+      --color-d1: oklch(0.993 0.003 17.212); --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81); --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206); --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189); --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103); --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228); --color-d12: oklch(0.34 0.115 26.406);
+      --color-s1: oklch(0.994 0.006 137.773); --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807); --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615); --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63); --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544); --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444); --color-s12: oklch(0.326 0.058 136.282);
+      --color-alpha-2: oklch(0 0 0 / 0.02); --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06); --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1); --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16); --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36); --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+      --text-micro: 10px; --text-micro--font-weight: 450; --text-micro--line-height: 14px;
+      --text-micro-medium: 10px; --text-micro-medium--font-weight: 500; --text-micro-medium--line-height: 14px;
+      --text-mini: 12px; --text-mini--font-weight: 450; --text-mini--line-height: 15px;
+      --text-mini-medium: 12px; --text-mini-medium--font-weight: 500; --text-mini-medium--line-height: 15px;
+      --text-sm: 13px; --text-sm--font-weight: 450; --text-sm--line-height: 18px; --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px; --text-sm-medium--font-weight: 500; --text-sm-medium--line-height: 18px; --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px; --text-regular--font-weight: 450; --text-regular--line-height: 20px; --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px; --text-regular-medium--font-weight: 500; --text-regular-medium--line-height: 20px; --text-regular-medium--letter-spacing: -0.13px;
+      --radius-0: 0px; --radius-2: 2px; --radius-4: 4px; --radius-6: 6px; --radius-8: 8px; --radius-10: 10px; --radius-12: 12px; --radius-full: 999px;
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0,0,0,.27), 0px 4px 6px -1px rgba(0,0,0,.1), 0px 2px 4px -2px rgba(0,0,0,.1);
+      --shadow-lg: 0px 0px 1px 0px rgba(0,0,0,.20), 0px 10px 15px -3px rgba(0,0,0,.1), 0px 4px 6px -4px rgba(0,0,0,.1);
+      --duration-fast: 120ms; --duration-normal: 200ms; --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak]{display:none!important}
+    input[type=number]::-webkit-inner-spin-button,input[type=number]::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+    input[type=number]{-moz-appearance:textfield}
+
+    .kg{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;border-left:1px solid var(--color-g11);border-top:1px solid var(--color-g11)}
+    .kg th,.kg td{border-right:1px solid var(--color-g11);border-bottom:1px solid var(--color-g11);padding:0 10px;text-align:center;vertical-align:middle;height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .kg th{background:var(--color-g11);color:var(--color-g7);height:32px}
+    .kg td{background:var(--color-g12);color:var(--color-g3)}
+    .kg td:first-child,.kg th:first-child{text-align:left;overflow:visible}
+    .kg td.st-cell{overflow:visible}
+    .kg .dh td{background:var(--color-a9);color:white;font-weight:600;border-color:var(--color-a10);letter-spacing:.3px}
+    .kg .ch td{background:var(--color-a11);color:var(--color-a5);font-weight:500;border-color:var(--color-a12)}
+    .pc-g{background:var(--color-s6)!important;color:var(--color-s12)!important;font-weight:500}
+    .pc-y{background:var(--color-y6)!important;color:var(--color-y12)!important;font-weight:500}
+    .pc-r{background:var(--color-d6)!important;color:var(--color-d12)!important;font-weight:500}
+    .sc-g{background:var(--color-s7)!important;color:var(--color-s12)!important}
+    .sc-y{background:var(--color-y7)!important;color:var(--color-y12)!important}
+    .sc-r{background:var(--color-d8)!important;color:var(--color-d12)!important}
+    .wk{color:var(--color-g6)}
+    .kg input.ei{border:none;padding:0;margin:0;height:100%;background:transparent;font:inherit;color:inherit;text-align:center;outline:none;width:100%;cursor:default}
+    .kg input.ei:focus{cursor:text;background:var(--color-g11);border-radius:2px}
+    .pace-cell{position:relative;cursor:default}
+    .pace-tip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--color-g11);color:var(--color-g3);padding:5px 10px;border-radius:var(--radius-4);font-size:11px;font-weight:400;white-space:nowrap;z-index:30;pointer-events:none;box-shadow:var(--shadow-md)}
+    .pace-tip::after{content:'';position:absolute;top:100%;left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--color-g11)}
+    .pace-cell:hover .pace-tip{display:block}
+    .st-drop{background:var(--color-g12);border:1px solid var(--color-g10)}
+    .st-drop button:hover{background:var(--color-g11)}
+    .kg td.cell-conn{cursor:pointer;position:relative}
+    .kg td.cell-conn::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--color-a8);opacity:0;transition:opacity 120ms}
+    .kg td.cell-conn:hover::after{opacity:1}
+    .seg{display:flex;border-radius:var(--radius-6);background:var(--color-g2);padding:2px;gap:2px}
+    .seg button{flex:1;border-radius:var(--radius-4);padding:4px 10px;font-size:12px;line-height:15px;font-weight:450;transition:all 120ms;white-space:nowrap;color:var(--color-g9)}
+    .seg button:hover{color:var(--color-g11)}
+    .seg button.on{background:var(--color-p1);color:var(--color-g12);font-weight:500;box-shadow:var(--shadow-xs)}
+
+    .cd-pop{position:fixed;z-index:60;width:340px;max-height:420px;background:var(--color-p1);border:1px solid var(--color-g4);border-radius:var(--radius-8);box-shadow:var(--shadow-lg);overflow:hidden;display:flex;flex-direction:column}
+    .cd-pop-body{overflow-y:auto;flex:1;min-height:0}
+    .cd-pop table{width:100%;border-collapse:collapse}
+    .cd-pop th{text-align:left;padding:6px 10px;font-size:11px;font-weight:500;color:var(--color-g10);border-bottom:1px solid var(--color-g4);background:var(--color-g2)}
+    .cd-pop td{padding:5px 10px;font-size:12px;color:var(--color-g11);border-bottom:1px solid var(--color-g3)}
+    .cd-pop tr:last-child td{border-bottom:0}
+    .cd-pop tr:hover td{background:var(--color-g2)}
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased" x-data="app()" x-cloak>
+
+  <header class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+    <div class="flex items-center gap-3">
+      <div class="flex h-7 w-7 items-center justify-center rounded-6 bg-a9 text-mini-medium text-white">D</div>
+      <span class="text-regular-medium text-g12">IC Daily Report</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="relative" x-data="{open:false}">
+        <button @click="open=!open" class="flex items-center gap-2 rounded-6 bg-g2 px-3 py-1.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">
+          <svg class="h-4 w-4 text-g8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          <span x-text="userName(uid)"></span>
+          <svg class="h-3.5 w-3.5 text-g8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+        </button>
+        <div x-show="open" @click.away="open=false" x-transition class="absolute right-0 top-full mt-1 w-64 rounded-8 bg-p1 shadow-lg border border-g4 z-40 p-1 max-h-72 overflow-y-auto">
+          <template x-for="u in users" :key="u.id">
+            <button class="w-full text-left rounded-6 px-3 py-2 text-sm transition-colors flex items-center justify-between" :class="uid===u.id?'bg-a3 text-a11':'text-g11 hover:bg-g3'" @click="uid=u.id;submitted=null;open=false">
+              <div class="flex items-center gap-2">
+                <span x-text="u.name"></span>
+                <span class="inline-flex rounded-full px-1.5 py-0.5 text-micro-medium whitespace-nowrap" :class="deptChipClass(u.dept)" x-text="u.role"></span>
+              </div>
+              <svg x-show="uid===u.id" class="h-4 w-4 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+          </template>
+        </div>
+      </div>
+      <div class="flex items-center gap-1">
+        <button class="rounded-4 p-1 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="cM===0?(cM=11,cY--):cM--"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg></button>
+        <span class="min-w-24 text-center text-sm-medium text-g11" x-text="MN[cM]+' '+cY"></span>
+        <button class="rounded-4 p-1 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="cM===11?(cM=0,cY++):cM++"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+      </div>
+    </div>
+  </header>
+
+  <main class="mx-auto px-6 py-5" style="max-width:1400px" @click="openSt=null;closePop()">
+
+    <div class="mb-5 flex items-end justify-between">
+      <div>
+        <h1 class="text-regular-medium text-g12"><span x-text="userName(uid)"></span> — My KPIs</h1>
+        <p class="mt-0.5 text-mini text-g9">
+          <span x-text="MN[cM]+' '+cY+' · CW'+CW"></span>
+          <span class="mx-1.5 text-g7">·</span>
+          <span x-text="myKpis.length+' KPI'+(myKpis.length!==1?'s':'')"></span>
+          <span x-show="manualCount>0" class="ml-0.5" x-text="'· '+manualCount+' need'+(manualCount!==1?'':'s')+' your input'"></span>
+        </p>
+      </div>
+      <button class="rounded-6 px-4 py-1.5 text-sm shadow-xs transition-all flex items-center gap-2"
+        :class="submitted ? 'bg-s9 text-white hover:bg-s10' : 'bg-a9 text-white hover:bg-a10'"
+        @click="submitReport()">
+        <template x-if="submitted">
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        </template>
+        <span x-text="submitted ? 'Submitted at '+submitted : 'Submit EOD Report'"></span>
+      </button>
+    </div>
+
+    <!-- Empty state -->
+    <template x-if="myKpis.length===0">
+      <div class="rounded-8 bg-p1 shadow-xs py-20 text-center">
+        <div class="w-12 h-12 rounded-10 bg-g2 flex items-center justify-center mx-auto mb-4">
+          <svg class="h-6 w-6 text-g8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+        </div>
+        <p class="text-sm text-g11">No KPIs assigned to you</p>
+        <p class="text-mini text-g9 mt-1">Talk to your team lead to get set up.</p>
+      </div>
+    </template>
+
+    <!-- Grouped KPI sections -->
+    <template x-if="myKpis.length>0">
+      <div class="space-y-4">
+        <template x-for="grp in grouped" :key="grp.path">
+          <div>
+            <!-- Daily KPI section: period selector -->
+            <div x-show="grp.hasDaily" class="flex items-center justify-between mb-2">
+              <span class="text-mini-medium text-g10 uppercase tracking-wider" x-text="grp.path"></span>
+              <div class="seg" style="width:auto">
+                <button :class="grp.dailyRange==='week'?'on':''" @click="grp.dailyRange='week'">This week</button>
+                <button :class="grp.dailyRange==='7d'?'on':''" @click="grp.dailyRange='7d'">Last 7 days</button>
+                <button :class="grp.dailyRange==='14d'?'on':''" @click="grp.dailyRange='14d'">Last 14 days</button>
+              </div>
+            </div>
+
+            <div class="overflow-x-auto rounded-8">
+              <div :style="'min-width:'+(grp.hasDaily?'1100':'1100')+'px'">
+                <table class="kg text-sm">
+                  <thead><tr>
+                    <th style="width:220px" class="sc"><span class="text-mini-medium text-g7" x-text="grp.path"></span></th>
+                    <th style="width:100px" class="text-mini-medium text-g7">Target</th>
+                    <th style="width:100px" class="text-mini-medium text-g7">Actual</th>
+                    <th style="width:110px" class="text-mini-medium text-g7">Pace</th>
+                    <th style="width:130px" class="text-mini-medium text-g7">Status</th>
+                    <template x-if="!grp.hasDaily">
+                      <template x-for="(w,wi) in WK" :key="w">
+                        <th style="width:90px" class="text-mini-medium" :class="w===CW?'text-a7':'text-g7'" :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')"><div x-text="'W'+(wi+1)"></div><div class="text-micro font-normal" :class="w===CW?'text-a7':'text-g8'" x-text="WR[w]"></div></th>
+                      </template>
+                    </template>
+                    <template x-if="grp.hasDaily">
+                      <template x-for="(d,di) in dayColumns(grp.dailyRange)" :key="d.key">
+                        <th style="width:80px" class="text-mini-medium" :class="d.isToday?'text-a7':'text-g7'" :style="(di===0?'border-left:2px solid var(--color-a8)':'')+(d.isToday?';background:var(--color-a12)':'')"><div x-text="d.label"></div><div class="text-micro font-normal" :class="d.isToday?'text-a7':'text-g8'" x-text="d.date"></div></th>
+                      </template>
+                    </template>
+                  </tr></thead>
+                  <tbody>
+                    <template x-for="k in grp.kpis" :key="k.id">
+                      <tr>
+                        <td class="sc" style="background:var(--color-g12)">
+                          <div class="text-g3"><span x-text="k.name"></span> <span class="text-micro text-g8" x-text="aggLabel(k.agg)"></span></div>
+                          <div class="mt-0.5">
+                            <input type="text" class="w-full rounded-4 bg-g11 px-2 py-0.5 text-micro text-g7 outline-none placeholder:text-g9 focus:bg-g10 focus:text-g3" :value="k._ctx||''" @input="k._ctx=$event.target.value" placeholder="Add context...">
+                          </div>
+                        </td>
+                        <td class="tabular-nums text-g5"><span x-text="F(k.target,k.fmt)"></span></td>
+                        <td class="tabular-nums font-medium text-g2" :class="isConnected(k)?'cell-conn':''" @click.stop="if(isConnected(k))openPop(k,$event.currentTarget)"><span x-text="k.actual!==null?F(k.actual,k.fmt):'—'"></span></td>
+                        <td class="tabular-nums font-medium" :class="(k.pv!==null?pcC(k.pr):'')+' '+(k.pv!==null?'pace-cell':'')">
+                          <span x-text="k.pv!==null?F(k.pv,k.fmt):'—'"></span>
+                          <template x-if="k.pv!==null"><span class="pace-tip">Projected end-of-month at current pace</span></template>
+                        </td>
+                        <td :class="scC(k._so||k.status)+' st-cell'" class="relative">
+                          <template x-if="k.actual!==null"><div>
+                            <button class="w-full flex items-center justify-center gap-1" @click.stop="openSt=openSt===k.id?null:k.id"><span x-text="scL(k._so||k.status)"></span><svg class="h-3 w-3 opacity-40 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button>
+                            <div x-show="openSt===k.id" x-transition.opacity class="absolute left-1/2 -translate-x-1/2 top-full mt-0.5 z-20 w-40 rounded-8 p-1 st-drop shadow-md">
+                              <template x-for="s in STS" :key="s"><button class="flex w-full items-center gap-2 rounded-6 px-3 py-1.5 text-sm text-g3 transition-colors" @click.stop="k._so=s;openSt=null"><span class="inline-block h-3 w-6 rounded-2" :class="scC(s)"></span><span x-text="scL(s)"></span></button></template>
+                            </div>
+                          </div></template>
+                          <template x-if="k.actual===null"><span class="text-g9">—</span></template>
+                        </td>
+
+                        <!-- Weekly columns -->
+                        <template x-if="!grp.hasDaily">
+                          <template x-for="(w,wi) in WK" :key="w">
+                            <td :style="(wi===0?'border-left:2px solid var(--color-a8)':'')+(w===CW?';background:var(--color-a12)':'')" :class="isConnected(k)&&k.weekly?.[w]!==undefined?'cell-conn':''">
+                              <template x-if="w===CW && !isConnected(k)">
+                                <input type="number" class="w-full bg-transparent text-center text-sm tabular-nums text-g2 outline-none font-medium" :value="k.weekly?.[w]??''" @input="uWeekly(k,w,$event.target.value)" placeholder="—">
+                              </template>
+                              <template x-if="w===CW && isConnected(k)">
+                                <span class="tabular-nums font-medium text-g2" @click.stop="openPop(k,$event.currentTarget)" x-text="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):'—'"></span>
+                              </template>
+                              <template x-if="w!==CW">
+                                <span class="tabular-nums text-mini" :class="k.weekly?.[w]!==undefined?'wk':'text-g9'" x-text="k.weekly?.[w]!==undefined?F(k.weekly[w],k.fmt):''"></span>
+                              </template>
+                            </td>
+                          </template>
+                        </template>
+
+                        <!-- Daily columns -->
+                        <template x-if="grp.hasDaily">
+                          <template x-for="(d,di) in dayColumns(grp.dailyRange)" :key="d.key">
+                            <td :style="(di===0?'border-left:2px solid var(--color-a8)':'')+(d.isToday?';background:var(--color-a12)':'')" :class="isConnected(k)&&k._daily?.[d.key]!==undefined?'cell-conn':''">
+                              <template x-if="d.isToday && !isConnected(k)">
+                                <input type="number" class="w-full bg-transparent text-center text-sm tabular-nums text-g2 outline-none font-medium" :value="k._daily?.[d.key]??''" @input="uDaily(k,d.key,$event.target.value)" placeholder="—">
+                              </template>
+                              <template x-if="d.isToday && isConnected(k)">
+                                <span class="tabular-nums font-medium text-g2" x-text="k._daily?.[d.key]!==undefined?F(k._daily[d.key],k.fmt):'—'"></span>
+                              </template>
+                              <template x-if="!d.isToday">
+                                <span class="tabular-nums text-mini" :class="k._daily?.[d.key]!==undefined?'wk':'text-g9'" x-text="k._daily?.[d.key]!==undefined?F(k._daily[d.key],k.fmt):''"></span>
+                              </template>
+                            </td>
+                          </template>
+                        </template>
+                      </tr>
+                    </template>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </template>
+      </div>
+    </template>
+  </main>
+
+  <!-- Source detail popover -->
+  <div x-show="pop.open" x-transition:enter="transition ease-out duration-fast" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="cd-pop" :style="'top:'+pop.y+'px;left:'+pop.x+'px'" @click.stop @keydown.escape.window="closePop()">
+    <div class="flex items-center justify-between px-3 py-2.5 border-b border-g4">
+      <div class="min-w-0">
+        <p class="text-sm-medium text-g12 truncate" x-text="pop.kpi?.name"></p>
+        <p class="text-micro text-g9">CW<span x-text="CW"></span> · <span x-text="pop.kpi?.db||pop.kpi?.source"></span></p>
+      </div>
+      <div class="flex items-center gap-1.5 shrink-0 ml-2">
+        <span class="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-micro-medium bg-a3 text-a11">
+          <svg class="h-2.5 w-2.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          <span x-text="pop.kpi?.db||pop.kpi?.source"></span>
+        </span>
+        <button class="rounded-4 p-1 text-g8 hover:bg-g3 hover:text-g11 transition-colors" @click="closePop()">
+          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="cd-pop-body">
+      <template x-if="pop.recs.length>0">
+        <table>
+          <thead><tr><template x-for="col in pop.cols" :key="col"><th x-text="col"></th></template></tr></thead>
+          <tbody><template x-for="(rec,ri) in pop.recs.slice(0,5)" :key="ri">
+            <tr><template x-for="col in pop.cols" :key="col"><td x-text="rec[col]||'—'"></td></template></tr>
+          </template></tbody>
+        </table>
+      </template>
+      <template x-if="pop.recs.length===0">
+        <div class="px-4 py-6 text-center">
+          <p class="text-sm text-g9">No records for this period</p>
+        </div>
+      </template>
+    </div>
+    <div class="flex items-center justify-between px-3 py-2 border-t border-g4 bg-g2">
+      <span class="text-micro text-g9" x-text="pop.recs.length+' record'+(pop.recs.length!==1?'s':'')"></span>
+    </div>
+  </div>
+
+  <div x-show="toast" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full bg-g12 text-p1 px-4 py-2 text-sm shadow-lg" x-text="toast"></div>
+
+  <script>
+  function app() {
+    const users=[
+      {id:'u1',name:'Philipp Epping',dept:'Leadership',role:'CEO'},
+      {id:'u2',name:'Anton Wieprecht',dept:'Marketing',role:'Marketing Lead'},
+      {id:'u3',name:'Robert Meier',dept:'Sales',role:'Closer'},
+      {id:'u4',name:'Lisa König',dept:'Sales',role:'Setter'},
+      {id:'u5',name:'Mira Schuster',dept:'People & Culture',role:'HR Lead'},
+      {id:'u6',name:'Klara Engel',dept:'Finance',role:'Finance Lead'},
+    ];
+    const deptColors={'Sales':'bg-s3 text-s11','Marketing':'bg-a3 text-a11','Finance':'bg-y3 text-y11','People & Culture':'bg-d2 text-d11','Leadership':'bg-g3 text-g10'};
+
+    const WK=[9,10,11,12,13], CW=10, DE=10, DM=31;
+    const WR={9:'1–5 Mar',10:'6–12 Mar',11:'13–19 Mar',12:'20–27 Mar',13:'28–31 Mar'};
+    const STS=['green','yellow','red'];
+    const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const DN=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+    function K(id,nm,p){
+      const k={id,name:nm,fmt:'number',agg:'total',ownerId:'',sourceMode:'manual',db:'',source:'',target:null,actual:null,status:null,weekly:{},cadence:'weekly',_daily:{},_ctx:'',_so:null,pv:null,pr:0,...p};
+      if(k.actual&&k.target){const pc=k.actual/DE*DM;k.pv=k.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);k.pr=pc/k.target;}
+      return k;
+    }
+
+    const allKpis=[
+      // COMPANY OVERVIEW
+      K('sc1','Total Revenue',{path:'COMPANY OVERVIEW',fmt:'currency',ownerId:'u1',target:240000,actual:171900,status:'green',sourceMode:'auto',db:'CRM Pipeline',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}}),
+      K('sc2','Active Clients',{path:'COMPANY OVERVIEW',ownerId:'u1',target:30,actual:22,status:'yellow',weekly:{9:23,10:22}}),
+      K('sc3','Revenue per Employee',{path:'COMPANY OVERVIEW',fmt:'currency',agg:'average',ownerId:'u1',target:20000,actual:17190,status:'yellow'}),
+      K('sc4','CAC',{path:'COMPANY OVERVIEW',fmt:'currency',agg:'average',ownerId:'u1',target:2000,actual:1580,status:'green'}),
+      K('sc5','Cash Position',{path:'COMPANY OVERVIEW',fmt:'currency',ownerId:'u6',target:380000,actual:420000,status:'green',weekly:{9:410000,10:420000}}),
+
+      // MARKETING
+      K('m1','Total Bookings',{path:'MARKETING',ownerId:'u2',target:50,actual:55,status:'green',sourceMode:'review',db:'Marketing Tracking',weekly:{9:12,10:6,11:13,12:15,13:9}}),
+      K('m2','Adspend',{path:'MARKETING',fmt:'currency',ownerId:'u2',target:25000,actual:23711,status:'green',sourceMode:'auto',db:'Marketing Tracking',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689}}),
+      K('m3','Cost per Booking',{path:'MARKETING',fmt:'currency',agg:'average',ownerId:'u2',target:500,actual:431,status:'green'}),
+      K('pa1','Adspend',{path:'MARKETING / PAID ADS',fmt:'currency',ownerId:'u2',target:25000,actual:23711,status:'green',sourceMode:'auto',db:'Marketing Tracking',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689}}),
+      K('pa2','Impressions',{path:'MARKETING / PAID ADS',ownerId:'u2',target:300000,actual:245000,status:'yellow',weekly:{9:52000,10:61000,11:48000,12:50000,13:34000}}),
+      K('pa3','CTR',{path:'MARKETING / PAID ADS',fmt:'percentage',agg:'average',ownerId:'u2',target:3.0,actual:2.8,status:'yellow',weekly:{9:2.5,10:3.1,11:2.8,12:2.9,13:2.7}}),
+      K('pa4','CPC',{path:'MARKETING / PAID ADS',fmt:'currency',agg:'average',ownerId:'u2',target:2.00,actual:1.82,status:'green',weekly:{9:1.95,10:1.78,11:1.85,12:1.72,13:1.80}}),
+      K('pa5','Leads from Ads',{path:'MARKETING / PAID ADS',ownerId:'u2',target:200,actual:189,status:'green',weekly:{9:38,10:42,11:40,12:41,13:28}}),
+      K('pa6','Bookings from Ads',{path:'MARKETING / PAID ADS',ownerId:'u2',target:40,actual:42,status:'green',weekly:{9:9,10:5,11:10,12:12,13:6}}),
+      K('oe1','Emails Sent',{path:'MARKETING / OUTBOUND EMAIL',ownerId:'u1',target:5000,actual:4200,status:'yellow',source:'Instantly',weekly:{9:900,10:850,11:820,12:880,13:750}}),
+      K('oe2','Reply Rate',{path:'MARKETING / OUTBOUND EMAIL',fmt:'percentage',agg:'average',ownerId:'u1',target:4.0,actual:3.2,status:'yellow',source:'Instantly',weekly:{9:2.8,10:3.5,11:3.1,12:3.4,13:3.2}}),
+      K('oe3','Bookings from Mails',{path:'MARKETING / OUTBOUND EMAIL',ownerId:'u1',target:12,actual:8,status:'red',source:'Instantly',weekly:{9:2,10:1,11:2,12:2,13:1}}),
+      K('oy1','Watchtime AW',{path:'MARKETING / ORGANIC',ownerId:'u2',target:200,actual:80,status:'red',source:'YouTube',weekly:{9:33,10:47}}),
+      K('oy2','Watchtime PEA',{path:'MARKETING / ORGANIC',ownerId:'u1',target:50,actual:85,status:'green',source:'YouTube',weekly:{9:12,10:23,11:50}}),
+      K('oy3','Bookings from Organic',{path:'MARKETING / ORGANIC',ownerId:'u2',target:5,actual:3,status:'yellow',source:'YouTube'}),
+
+      // SETTING
+      K('s1','Leads',{path:'SETTING',ownerId:'u2',target:750,actual:253,status:'yellow',source:'Airtable',weekly:{9:98,10:155}}),
+      K('s2','Sets',{path:'SETTING',ownerId:'u1',target:35,actual:22,status:'red',source:'Plecto',weekly:{9:6,10:2,11:4,12:10}}),
+      K('s3','Set Rate',{path:'SETTING',fmt:'percentage',agg:'average',ownerId:'u1',target:2,actual:0.6,status:'red',source:'Plecto',weekly:{9:1.0,10:0.5,11:0.5,12:0.8}}),
+      K('hc1','Dials',{path:'SETTING / HUMAN CALLING',ownerId:'u3',target:3500,actual:2800,status:'yellow',source:'Aircall',weekly:{9:580,10:620,11:560,12:600,13:440}}),
+      K('hc2','Connect Rate',{path:'SETTING / HUMAN CALLING',fmt:'percentage',agg:'average',ownerId:'u3',target:20,actual:18,status:'yellow',source:'Aircall',weekly:{9:16,10:19,11:17,12:20,13:18}}),
+      K('hc3','Sets from Calls',{path:'SETTING / HUMAN CALLING',ownerId:'u3',target:25,actual:16,status:'red',source:'Plecto',weekly:{9:4,10:2,11:3,12:5,13:2}}),
+      K('ai1','Conversations',{path:'SETTING / AI SETTING',ownerId:'u2',target:1500,actual:1200,status:'yellow',source:'AI Tool',weekly:{9:250,10:280,11:240,12:260,13:170}}),
+      K('ai2','Qualified Leads',{path:'SETTING / AI SETTING',ownerId:'u2',target:60,actual:45,status:'yellow',source:'AI Tool',weekly:{9:10,10:12,11:9,12:8,13:6}}),
+      K('ai3','Sets from AI',{path:'SETTING / AI SETTING',ownerId:'u2',target:8,actual:5,status:'red',source:'AI Tool',weekly:{9:1,10:0,11:1,12:1,13:2}}),
+
+      // SETTING — Lisa's daily KPIs
+      K('lk1','Dials',{path:'SETTING / DAILY CALLING',ownerId:'u4',target:700,actual:380,status:'yellow',cadence:'daily',source:'Aircall',weekly:{9:420,10:380},_daily:{'9_mon':82,'9_tue':88,'9_wed':76,'9_thu':94,'9_fri':80,'10_mon':92,'10_tue':85,'10_wed':78,'10_thu':68,'10_fri':57}}),
+      K('lk2','Conversations',{path:'SETTING / DAILY CALLING',ownerId:'u4',target:120,actual:64,status:'yellow',cadence:'daily',weekly:{9:72,10:64},_daily:{'9_mon':14,'9_tue':16,'9_wed':12,'9_thu':18,'9_fri':12,'10_mon':16,'10_tue':14,'10_wed':13,'10_thu':12,'10_fri':9}}),
+      K('lk3','Sets',{path:'SETTING / DAILY CALLING',ownerId:'u4',target:8,actual:3,status:'red',cadence:'daily',source:'Plecto',weekly:{9:4,10:3},_daily:{'9_mon':1,'9_tue':0,'9_wed':1,'9_thu':1,'9_fri':1,'10_mon':1,'10_tue':1,'10_wed':0,'10_thu':1,'10_fri':0}}),
+      K('lk4','Set Rate',{path:'SETTING / DAILY CALLING',fmt:'percentage',agg:'average',ownerId:'u4',target:6.5,actual:4.7,status:'yellow',cadence:'daily',weekly:{9:5.6,10:4.7},_daily:{'9_mon':7.1,'9_tue':0,'9_wed':8.3,'9_thu':5.6,'9_fri':6.3,'10_mon':6.3,'10_tue':7.1,'10_wed':0,'10_thu':8.3,'10_fri':0}}),
+
+      // CLOSING — reassigned to Robert (Closer)
+      K('c1','FE-Deals',{path:'CLOSING',ownerId:'u3',target:10,actual:5,status:'red',source:'Plecto',weekly:{9:0,10:1,11:0,12:1,13:3}}),
+      K('c2','FE-Dealvolumen',{path:'CLOSING',fmt:'currency',ownerId:'u3',target:120000,actual:68500,status:'red',source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:37900}}),
+      K('c3','Avg. Dealsize',{path:'CLOSING',fmt:'currency',agg:'average',ownerId:'u3',target:12000,actual:13700,status:'green',source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:10600}}),
+      K('c4','Call-Close Rate',{path:'CLOSING',fmt:'percentage',agg:'manual',ownerId:'u3',target:35,actual:14,status:'red',source:'Plecto',weekly:{9:0,10:10,11:0,12:20,13:33}}),
+
+      // DELIVERY
+      K('d1','BE-Dealvolumen',{path:'DELIVERY',fmt:'currency',ownerId:'u1',target:150000,actual:171900,status:'green',source:'Plecto',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}}),
+      K('d2','Retention Rate',{path:'DELIVERY',fmt:'percentage',agg:'average',ownerId:'u1',target:45,actual:33,status:'yellow',source:'Plecto',weekly:{11:50}}),
+      K('d3','KPI-Collection Rate',{path:'DELIVERY',fmt:'percentage',agg:'max',ownerId:'u1',target:80,actual:58,status:'red',weekly:{10:0,11:58}}),
+      K('dse1','Time-to-First-Milestone',{path:'DELIVERY / DSE',agg:'average',ownerId:'u1',target:7,actual:5,status:'green'}),
+      K('dse2','Projekt Timing (Gesamt)',{path:'DELIVERY / DSE',agg:'average',ownerId:'u1',target:30,actual:28,status:'green'}),
+      K('am1','Portfolio Umsatz (LM)',{path:'DELIVERY / ACCOUNT MGMT',fmt:'currency',ownerId:'u1',target:80000,actual:72000,status:'yellow'}),
+      K('am2','Rekordmonate (LM)',{path:'DELIVERY / ACCOUNT MGMT',ownerId:'u1',target:5,actual:3,status:'yellow'}),
+      K('cs1','Testimonials',{path:'DELIVERY / CLIENT SUCCESS',ownerId:'u1',target:3,actual:2,status:'yellow'}),
+      K('cs2','NPS Score',{path:'DELIVERY / CLIENT SUCCESS',agg:'average',ownerId:'u1',target:70,actual:66,status:'yellow'}),
+
+      // PEOPLE & CULTURE
+      K('p1','eNPS',{path:'PEOPLE & CULTURE',agg:'average',ownerId:'u5',target:50,actual:42,status:'yellow',source:'Personio',weekly:{9:40,10:44}}),
+      K('p2','Open Positions Filled',{path:'PEOPLE & CULTURE',ownerId:'u5',target:4,actual:2,status:'red',source:'Personio',weekly:{9:1,10:1}}),
+      K('hf1','Loom Videos',{path:'PEOPLE & CULTURE / HIRING',ownerId:'u5',target:20,actual:12,status:'yellow',source:'Personio'}),
+      K('hf2','Gruppeninterviews',{path:'PEOPLE & CULTURE / HIRING',ownerId:'u5',target:8,actual:5,status:'yellow',source:'Personio'}),
+      K('hf3','Einstellungen',{path:'PEOPLE & CULTURE / HIRING',ownerId:'u5',target:4,actual:2,status:'red',source:'Personio'}),
+
+      // FINANCE
+      K('f1','Cash Balance',{path:'FINANCE',fmt:'currency',ownerId:'u6',target:380000,actual:420000,status:'green',source:'DATEV',weekly:{9:410000,10:420000}}),
+      K('f2','Burn Rate',{path:'FINANCE',fmt:'currency',agg:'average',ownerId:'u6',target:110000,actual:95000,status:'green',source:'DATEV',weekly:{9:98000,10:92000}}),
+    ];
+
+    const srcNames=['Schmidt GmbH','Hartmann AG','Weber & Partner','Fischer Consulting','Müller Solutions','Koch Industries','Bauer Holding','Wagner Corp','Braun Holding','Lange & Söhne','Huber AG','Richter GmbH'];
+    const srcDays={9:1,10:6,11:13,12:20,13:28};
+    function genRecs(kpi,cw){
+      const val=kpi.weekly?.[cw];if(val===undefined||val===null||val===0)return[];
+      const cnt=Math.min(Math.max(2,Math.ceil(Math.abs(val)/5)),5);const ds=srcDays[cw]||1;const recs=[];const seed=kpi.id.charCodeAt(kpi.id.length-1)+cw;
+      const src=kpi.db||kpi.source;
+      for(let i=0;i<cnt;i++){const day=String(Math.min(ds+Math.floor(i*6/cnt),31)).padStart(2,'0');const d=day+'/03/2026';const nm=srcNames[(seed+i)%srcNames.length];
+        if(src==='Plecto')recs.push({Name:nm,Date:d,Value:kpi.fmt==='currency'?'€'+Math.round(val/cnt).toLocaleString('de-DE'):String(Math.round(val*10/cnt)/10),Stage:['Won','Won','Pending'][i%3]});
+        else if(src==='Aircall')recs.push({Contact:nm,Date:d,Duration:(2+i)+':'+String(10+i*13).padStart(2,'0'),Outcome:['Connected','Voicemail','Connected','No Answer'][i%4]});
+        else if(src==='Instantly')recs.push({Recipient:nm,Date:d,Subject:['Re: Partnership','Intro Call','Follow-up','Proposal'][i%4],Status:['Opened','Replied','Opened','Bounced'][i%4]});
+        else if(src==='YouTube')recs.push({Video:['How to Scale','Client Story','Market Deep-Dive','Team Update'][i%4],Date:d,Views:String(120+i*90),Watchtime:String(Math.round(val/cnt))+'h'});
+        else if(src==='Personio')recs.push({Candidate:['Th. Schmidt','A. Weber','M. Fischer','S. Müller','K. Koch'][i%5],Date:d,Position:['Sales Rep','CSM','Developer','Marketing'][i%4],Stage:['Applied','Interview','Offer','Hired'][Math.min(i,3)]});
+        else if(src==='DATEV')recs.push({Category:['Revenue','Payroll','Marketing','Ops'][i%4],Month:'Mar 2026',Amount:'€'+Math.round(val/cnt).toLocaleString('de-DE'),Type:['Income','Expense'][i%2]});
+        else if(src==='Airtable')recs.push({Name:nm,Date:d,Source:['Website','LinkedIn','Referral','Ads'][i%4],Status:['New','Qualified','Contacted'][i%3]});
+        else if(src==='AI Tool')recs.push({Contact:nm,Date:d,Score:String(55+i*9),Outcome:['Qualified','Nurture','Booked'][i%3]});
+        else recs.push({Name:nm,Date:d,Value:String(Math.round(val*10/cnt)/10),Status:'Active'});
+      }return recs;
+    }
+    function getCols(kpi){
+      const src=kpi.db||kpi.source;
+      if(src==='Plecto')return['Name','Date','Value','Stage'];if(src==='Aircall')return['Contact','Date','Duration','Outcome'];
+      if(src==='Instantly')return['Recipient','Date','Subject','Status'];if(src==='YouTube')return['Video','Date','Views','Watchtime'];
+      if(src==='Personio')return['Candidate','Date','Position','Stage'];if(src==='DATEV')return['Category','Month','Amount','Type'];
+      if(src==='Airtable')return['Name','Date','Source','Status'];if(src==='AI Tool')return['Contact','Date','Score','Outcome'];
+      if(src==='Marketing Tracking')return['Name','Booking Date','UTM Source','Status','Revenue'];
+      return['Name','Date','Value','Status'];
+    }
+
+    const TODAY_KEY='10_thu';
+
+    return {
+      uid:'u4',
+      users,
+      cM:2,cY:2026,MN,WK,CW,WR,STS,DN,
+      openSt:null,
+      submitted:null,
+      toast:'',
+      pop:{open:false,kpi:null,x:0,y:0,recs:[],cols:[]},
+
+      get myKpis(){return allKpis.filter(k=>k.ownerId===this.uid);},
+      get manualCount(){return this.myKpis.filter(k=>k.sourceMode==='manual'&&(k.cadence==='weekly'?(k.weekly?.[CW]===undefined):!k._daily?.[TODAY_KEY])).length;},
+
+      get grouped(){
+        const kpis=this.myKpis;
+        const map=new Map();
+        for(const k of kpis){
+          const p=k.path;
+          if(!map.has(p))map.set(p,{path:p,kpis:[],hasDaily:false,dailyRange:'week'});
+          const g=map.get(p);
+          g.kpis.push(k);
+          if(k.cadence==='daily')g.hasDaily=true;
+        }
+        return Array.from(map.values());
+      },
+
+      userName(id){const u=users.find(u=>u.id===id);return u?u.name:'Unknown';},
+      deptChipClass(dept){return deptColors[dept]||'bg-g3 text-g10';},
+      aggLabel(a){return{total:'Total',average:'Avg',max:'Max',manual:'Manual'}[a]||'Total';},
+      isConnected(k){return k.sourceMode!=='manual'&&(k.db||k.source);},
+
+      dayColumns(range){
+        if(range==='week'){
+          return DN.map((d,i)=>{
+            const key=CW+'_'+d.toLowerCase();
+            return{key,label:d,date:String(6+i)+' Mar',isToday:key===TODAY_KEY};
+          });
+        }
+        if(range==='7d'){
+          const days=[];
+          for(let i=6;i>=0;i--){
+            const realDay=10-i;
+            const cw=realDay<=5?9:10;
+            const dayIdx=realDay<=5?(realDay+4)%7:(realDay-6)%7;
+            const dn=DN[dayIdx];
+            days.push({key:cw+'_'+dn.toLowerCase(),label:dn,date:realDay+' Mar',isToday:cw===10&&dn.toLowerCase()==='thu'});
+          }
+          return days;
+        }
+        const days=[];
+        for(let i=13;i>=0;i--){
+          const realDay=10-i;
+          if(realDay<1)continue;
+          const cw=realDay<=5?9:10;
+          const dayOfWeek=((realDay-1)%7);
+          const dn=DN[dayOfWeek<0?dayOfWeek+7:dayOfWeek];
+          days.push({key:cw+'_'+dn.toLowerCase(),label:dn,date:realDay+' Mar',isToday:cw===10&&dayOfWeek===3});
+        }
+        return days;
+      },
+
+      F(v,fmt){
+        if(v===null||v===undefined)return'—';
+        if(fmt==='currency'){if(Math.abs(v)>=1000)return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v);return new Intl.NumberFormat('de-DE',{style:'currency',currency:'EUR',maximumFractionDigits:2}).format(v);}
+        if(fmt==='percentage'){const r=Math.round(v*10)/10;return(r%1===0?r.toFixed(0):r.toFixed(1).replace('.',','))+'%';}
+        if(typeof v==='number'){if(v>=1000)return new Intl.NumberFormat('de-DE').format(Math.round(v));return String(Math.round(v*10)/10).replace('.',',');}
+        return String(v);
+      },
+      pcC(r){if(!r)return'';if(r>=1)return'pc-g';if(r>=0.8)return'pc-y';return'pc-r';},
+      scC(s){return{green:'sc-g',yellow:'sc-y',red:'sc-r'}[s]||'';},
+      scL(s){return{green:'On-Track',yellow:'Behind',red:'Off Track'}[s]||'—';},
+
+      uWeekly(k,w,v){
+        const val=v===''?undefined:parseFloat(v);
+        if(!k.weekly)k.weekly={};
+        k.weekly[w]=val;
+        const vs=Object.values(k.weekly).filter(x=>x!==undefined);
+        if(!vs.length){k.actual=null;k.pv=null;k.pr=0;return;}
+        k.actual=k.agg==='average'?vs.reduce((a,b)=>a+b,0)/vs.length:vs.reduce((a,b)=>a+b,0);
+        const p=k.actual/DE*DM;k.pv=k.fmt==='percentage'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;
+        k.status=k.pr>=1?'green':k.pr>=0.8?'yellow':'red';
+      },
+
+      uDaily(k,dayKey,v){
+        const val=v===''?undefined:parseFloat(v);
+        if(!k._daily)k._daily={};
+        k._daily[dayKey]=val;
+        const cwKeys=Object.keys(k._daily).filter(dk=>dk.startsWith(CW+'_'));
+        const cwVals=cwKeys.map(dk=>k._daily[dk]).filter(x=>x!==undefined);
+        if(!cwVals.length){k.weekly[CW]=undefined;return;}
+        k.weekly[CW]=k.agg==='average'?cwVals.reduce((a,b)=>a+b,0)/cwVals.length:cwVals.reduce((a,b)=>a+b,0);
+        const allVals=Object.values(k.weekly).filter(x=>x!==undefined);
+        k.actual=k.agg==='average'?allVals.reduce((a,b)=>a+b,0)/allVals.length:allVals.reduce((a,b)=>a+b,0);
+        const p=k.actual/DE*DM;k.pv=k.fmt==='percentage'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;
+        k.status=k.pr>=1?'green':k.pr>=0.8?'yellow':'red';
+      },
+
+      submitReport(){
+        if(this.submitted)return;
+        const now=new Date();
+        this.submitted=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+        this.toast='EOD Report submitted';
+        setTimeout(()=>{this.toast='';},2500);
+      },
+
+      openPop(kpi,el){
+        const r=el.getBoundingClientRect();
+        const recs=genRecs(kpi,CW);
+        const cols=getCols(kpi);
+        this.pop={open:true,kpi,x:Math.min(r.left,window.innerWidth-360),y:r.bottom+6,recs,cols};
+      },
+      closePop(){this.pop.open=false;},
+    };
+  }
+  </script>
+</body>
+</html>
