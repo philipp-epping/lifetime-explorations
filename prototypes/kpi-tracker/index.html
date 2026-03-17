@@ -77,6 +77,7 @@
     .kg .sc{position:sticky;left:0;z-index:10}
     .kg th.sc{z-index:25}
     .kg-wrap{overflow:visible}
+    .stick-l{position:sticky;left:0;width:fit-content}
     .kg .dh td{background:var(--color-a9);color:white;font-weight:600;border-color:var(--color-a10);letter-spacing:.3px}
     .kg .ch td{background:var(--color-a11);color:var(--color-a5);font-weight:500;border-color:var(--color-a12)}
     .pc-g{background:var(--color-s6)!important;color:var(--color-s12)!important;font-weight:500}
@@ -161,7 +162,7 @@
 <body class="bg-p0 font-sans antialiased" x-data="app()" @keydown.window="handleKey($event)" x-cloak>
 
   <!-- ═══════════ TRACKER HEADER ═══════════ -->
-  <header x-show="view==='tracker'" class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+  <header x-show="view==='tracker'" class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
     <div class="flex items-center gap-3">
       <div class="flex h-7 w-7 items-center justify-center rounded-6 bg-a9 text-mini-medium text-white">D</div>
       <span class="text-regular-medium text-g12">DXR KPIs</span>
@@ -184,7 +185,7 @@
   </header>
 
   <!-- ═══════════ SETTINGS HEADER ═══════════ -->
-  <header x-show="view==='settings'" class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+  <header x-show="view==='settings'" class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
     <div class="flex items-center gap-3">
       <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="view='tracker'">
         <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
@@ -218,9 +219,9 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- ═══════════ TRACKER VIEW ═══════════════════════ -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <main x-show="view==='tracker'" class="mx-auto px-6 py-5" style="max-width:1500px" @click="openSt=null;openOwn=null;closeCellPop()" @scroll.window="if(cellPop.open)closeCellPop();if(openOwn&&_ownTrigger){let r=_ownTrigger.getBoundingClientRect();ownPos={x:r.left,y:r.bottom}}">
+  <main x-show="view==='tracker'" class="mx-auto px-6 pb-5" style="max-width:1500px;padding-top:69px" @click="openSt=null;openOwn=null;closeCellPop()" @scroll.window="if(cellPop.open)closeCellPop();if(openOwn&&_ownTrigger){let r=_ownTrigger.getBoundingClientRect();ownPos={x:r.left,y:r.bottom}}">
 
-    <nav class="mb-3 flex items-center gap-1.5 text-sm text-g9" x-show="bc.length>1">
+    <nav class="mb-3 flex items-center gap-1.5 text-sm text-g9 stick-l" x-show="bc.length>1">
       <template x-for="(c,i) in bc" :key="i"><div class="flex items-center gap-1.5">
         <span x-show="i>0" class="text-g7">/</span>
         <button class="rounded-4 px-1.5 py-0.5 transition-colors" :class="i===bc.length-1?'text-g12 font-medium':'text-g9 hover:text-a11 hover:bg-a3'" @click="navTo(i)" x-text="c.l"></button>
@@ -232,7 +233,7 @@
       <!-- ═══ LEVEL 1 ═══ -->
       <template x-if="bc.length===1">
         <div>
-          <div class="mb-4">
+          <div class="mb-4 stick-l">
             <h1 class="text-regular-medium text-g12" x-show="role==='ceo'">Company KPIs</h1>
             <div x-show="role==='lead'" class="flex items-center gap-2">
               <h1 class="text-regular-medium text-g12" x-text="leadDeptName"></h1>
@@ -262,7 +263,14 @@
                 <template x-if="role==='ceo'&&focusDept&&focusKpiNodes.length">
                   <template x-for="(frow,fri) in [{_t:'hdr'},...focusKpiNodes]" :key="frow._t==='hdr'?'fk_h':('fk_'+frow.id)">
                     <tr :class="frow._t==='hdr'?'dh':''">
-                      <template x-if="frow._t==='hdr'"><td :colspan="sw?5+WK.length+2:7" class="sc" style="text-align:left">FOCUS KPIs</td></template>
+                      <template x-if="frow._t==='hdr'"><td class="sc" style="text-align:left">FOCUS KPIs</td></template>
+                      <template x-if="frow._t==='hdr'"><td></td></template>
+                      <template x-if="frow._t==='hdr'"><td></td></template>
+                      <template x-if="frow._t==='hdr'"><td></td></template>
+                      <template x-if="frow._t==='hdr'"><td></td></template>
+                      <template x-if="frow._t==='hdr'&&sw"><template x-for="(w,wi) in WK" :key="'fkh_'+w"><td :style="wi===0?'border-left:2px solid var(--color-a8)':''"></td></template></template>
+                      <template x-if="frow._t==='hdr'"><td :style="sw?'border-left:2px solid var(--color-a8)':''"></td></template>
+                      <template x-if="frow._t==='hdr'"><td></td></template>
                       <template x-if="frow._t!=='hdr'">
                         <td class="sc" style="background:var(--color-g12);text-align:left"><span class="text-g3" x-text="frow.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(frow.agg)"></span></td>
                       </template>
@@ -324,7 +332,7 @@
       <!-- ═══ LEVEL 2 ═══ -->
       <template x-if="bc.length===2&&activeDept">
         <div>
-          <div class="mb-4">
+          <div class="mb-4 stick-l">
             <h1 class="text-regular-medium text-g12" x-text="activeDept.name"></h1>
             <p class="mt-0.5 text-mini text-g9" x-text="MN[cM]+' '+cY+' — CW'+CW"></p>
           </div>
@@ -414,7 +422,7 @@
       <!-- ═══ LEVEL 3 ═══ -->
       <template x-if="bc.length===3&&activeCh">
         <div>
-          <div class="mb-4">
+          <div class="mb-4 stick-l">
             <h1 class="text-regular-medium text-g12" x-text="activeCh.name + ' — Full Funnel'"></h1>
             <p class="mt-0.5 text-mini text-g9" x-text="activeDept.name + ' · ' + MN[cM]+' '+cY"></p>
           </div>
@@ -434,7 +442,7 @@
                 <th style="width:130px" class="text-mini-medium text-g7">Source</th>
               </tr></thead>
               <tbody>
-                <template x-for="k in activeCh.children.filter(c=>!c.children.length)" :key="k.id">
+                <template x-for="k in chKpis(activeCh)" :key="k.id">
                   <tr>
                     <td class="sc" style="background:var(--color-g12)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span></td>
                     <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
@@ -468,7 +476,7 @@
 
     <!-- ═══ IC VIEW ═══ -->
     <div x-show="role==='ic'">
-      <div class="mb-4 flex items-end justify-between">
+      <div class="mb-4 flex items-end justify-between stick-l">
         <div>
           <h1 class="text-regular-medium text-g12">Robert Meier — My KPIs</h1>
           <p class="mt-0.5 text-mini text-g9">Fill in CW<span x-text="CW"></span> · <span x-text="MN[cM]+' '+cY"></span></p>
@@ -518,13 +526,13 @@
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- ═══════════ SETTINGS VIEW ═════════════════════ -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <main x-show="view==='settings'" class="flex" style="height:calc(100vh - 45px)">
+  <main x-show="view==='settings'" class="flex" style="height:calc(100vh - 49px);margin-top:49px">
 
     <!-- TREE PANEL -->
     <div class="flex-1 shrink-0 border-r border-g4 bg-p1 flex flex-col" style="min-width:320px;max-width:480px">
       <div class="px-4 py-3 border-b border-g4"><p class="text-mini-medium text-g10">Outline</p></div>
       <div class="flex-1 overflow-y-auto py-1">
-        <template x-for="item in flat" :key="item.n.id">
+        <template x-for="item in flat" :key="item.placed ? item.n.id+'_in_'+item.placedIn : item.n.id">
           <div class="tr px-2 py-0.5" :class="selId===item.n.id?'sel':''" :style="'padding-left:'+(item.d*20+8)+'px'" :data-nid="item.n.id" @click="selectNode(item.n)">
             <button x-show="item.hc" class="flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-g11 hover:bg-g3 transition-colors" @click.stop="item.n.exp=!item.n.exp;_v++">
               <svg class="h-3 w-3 transition-transform duration-fast" :class="item.n.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
@@ -532,10 +540,13 @@
             <span x-show="!item.hc" class="w-5 shrink-0 flex items-center justify-center"><span class="w-1.5 h-1.5 rounded-full" :class="selId===item.n.id?'bg-a9':'bg-g6'"></span></span>
             <span class="flex-1 truncate ml-1 text-sm" :class="item.hc?(item.d===0?'text-g12 font-semibold':'text-g12 font-medium'):'text-g11'" x-text="item.n.refId?refName(item.n.refId):item.n.name"></span>
             <span x-show="item.n.refId" class="tag bg-y3 text-y11 ml-1">Focus</span>
-            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-a11 hover:bg-a3 transition-colors ml-1" @click.stop="addChildOf(item.n.id)" title="Add child" x-show="!item.n.refId">
+            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-a11 hover:bg-a3 transition-colors ml-1" @click.stop="addChildOf(item.n.id)" title="Add child" x-show="!item.n.refId && !item.placed">
               <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
             </button>
-            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" @click.stop="deleteNode(item.n.id)" title="Delete">
+            <button x-show="!item.placed" class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" @click.stop="deleteNode(item.n.id)" title="Delete">
+              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <button x-show="item.placed" class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" @click.stop="item.n.visibleIn=item.n.visibleIn.filter(v=>v!==item.placedIn);_v++" title="Remove from view">
               <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
             </button>
           </div>
@@ -569,10 +580,44 @@
         <div class="max-w-lg mx-auto px-8 py-6">
           <h2 class="text-regular-medium text-g12 mb-5" x-text="selNode.name"></h2>
           <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Name</label><input data-name-input type="text" class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="selNode?.name" @input="if(selNode){selNode.name=$event.target.value;_v++}" placeholder="KPI name..."></div>
+
+          <div class="mb-5">
+            <label class="block text-mini-medium text-g10 mb-1.5">Shown in</label>
+            <div class="relative" x-data="{open:false}">
+              <button class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm shadow-xs transition-colors hover:bg-g2" @click="open=!open">
+                <span class="text-g11 truncate" x-text="(() => { const home = kpiHomeView(selNode.id); const all = [...new Set([...(home ? [home] : []), ...(selNode.visibleIn||[]), ...(selNode.focusKpi ? ['fk'] : [])])]; return all.length ? all.map(v=>viewLabel(v)).join(', ') : 'Select views...'; })()"></span>
+                <svg class="h-4 w-4 text-g8 shrink-0 ml-2 transition-transform" :class="open?'rotate-180':''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+              </button>
+              <div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-lg border border-g4 z-30 overflow-hidden">
+                <div class="max-h-64 overflow-y-auto p-1">
+                  <template x-for="v in availableViews()" :key="v.id">
+                    <button class="w-full text-left rounded-6 px-3 py-2 text-sm transition-colors flex items-center gap-3 hover:bg-g3"
+                      :class="v.id===kpiHomeView(selNode.id) ? 'opacity-60 cursor-default' : 'cursor-pointer'"
+                      @click="if(v.id!==kpiHomeView(selNode.id))toggleView(v.id)"
+                    >
+                      <div class="flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors"
+                        :class="isInView(v.id)||v.id===kpiHomeView(selNode.id) ? 'bg-a9 border-a9' : 'border-g6'">
+                        <svg x-show="isInView(v.id)||v.id===kpiHomeView(selNode.id)" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
+                      </div>
+                      <div class="flex items-center gap-1.5 min-w-0">
+                        <svg x-show="v.id===kpiHomeView(selNode.id)" class="h-3.5 w-3.5 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
+                        <span class="truncate" :class="isInView(v.id)||v.id===kpiHomeView(selNode.id)?'text-g12':'text-g11'" x-text="v.path"></span>
+                      </div>
+                    </button>
+                  </template>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Owner</label><div class="relative" x-data="{op:false}"><button @click="op=!op" class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm shadow-xs transition-colors hover:bg-g2 cursor-pointer" :class="selNode.ownerId?'text-g12':'text-g9'"><span class="flex items-center gap-2"><template x-if="selNode.ownerId && ownerUser(selNode.ownerId)"><span class="flex items-center gap-2"><span x-text="ownerName(selNode.ownerId)"></span><span class="inline-flex rounded-full px-2 py-0.5 text-micro-medium" :class="deptChipClass(ownerUser(selNode.ownerId).dept)" x-text="ownerUser(selNode.ownerId).role"></span></span></template><template x-if="!selNode.ownerId"><span>No owner</span></template></span><svg class="h-4 w-4 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button><div x-show="op" @click.away="op=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1 max-h-64 overflow-y-auto"><button class="w-full text-left rounded-6 px-3 py-2 text-sm text-g9 hover:bg-g3 transition-colors" @click="selNode.ownerId='';_v++;op=false">No owner</button><template x-for="g in grpUsers()" :key="g.dept"><div><div class="px-3 pt-2.5 pb-1 text-micro-medium text-g9 uppercase tracking-wider" x-text="g.dept"></div><template x-for="u in g.users" :key="u.id"><button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors flex items-center gap-2" @click="selNode.ownerId=u.id;_v++;op=false"><span x-text="u.name"></span><span class="inline-flex rounded-full px-2 py-0.5 text-micro-medium" :class="deptChipClass(u.dept)" x-text="u.role"></span></button></template></div></template></div></div></div>
+
+          <div class="border-t border-g4 pt-5 mb-5">
+            <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">KPI Definition</p>
           <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Format</label><div class="seg"><button :class="selNode.fmt==='number'?'on':''" @click="selNode.fmt='number';_v++">Number</button><button :class="selNode.fmt==='currency'?'on':''" @click="selNode.fmt='currency';_v++">Currency</button><button :class="selNode.fmt==='percentage'?'on':''" @click="selNode.fmt='percentage';_v++">Percentage (%)</button></div></div>
           <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Aggregation</label><div class="seg"><button :class="selNode.agg==='total'?'on':''" @click="selNode.agg='total';_v++">Total</button><button :class="selNode.agg==='average'?'on':''" @click="selNode.agg='average';_v++">Average</button><button :class="selNode.agg==='max'?'on':''" @click="selNode.agg='max';_v++">Max</button><button :class="selNode.agg==='manual'?'on':''" @click="selNode.agg='manual';_v++">Manual</button></div></div>
           <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Period behavior</label><div class="seg"><button :class="selNode.period==='resets'?'on':''" @click="selNode.period='resets';_v++">Resets monthly</button><button :class="selNode.period==='carries_over'?'on':''" @click="selNode.period='carries_over';_v++">Carries over</button></div><p class="text-micro text-g8 mt-1.5" x-text="selNode.period==='resets'?'Starts at 0 each month (e.g. Bookings, Adspend)':'Starts from last month\'s end value (e.g. Followers, Cash Position)'"></p></div>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Owner</label><div class="relative" x-data="{op:false}"><button @click="op=!op" class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm shadow-xs transition-colors hover:bg-g2 cursor-pointer" :class="selNode.ownerId?'text-g12':'text-g9'"><span class="flex items-center gap-2"><template x-if="selNode.ownerId && ownerUser(selNode.ownerId)"><span class="flex items-center gap-2"><span x-text="ownerName(selNode.ownerId)"></span><span class="inline-flex rounded-full px-2 py-0.5 text-micro-medium" :class="deptChipClass(ownerUser(selNode.ownerId).dept)" x-text="ownerUser(selNode.ownerId).role"></span></span></template><template x-if="!selNode.ownerId"><span>No owner</span></template></span><svg class="h-4 w-4 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button><div x-show="op" @click.away="op=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1 max-h-64 overflow-y-auto"><button class="w-full text-left rounded-6 px-3 py-2 text-sm text-g9 hover:bg-g3 transition-colors" @click="selNode.ownerId='';_v++;op=false">No owner</button><template x-for="g in grpUsers()" :key="g.dept"><div><div class="px-3 pt-2.5 pb-1 text-micro-medium text-g9 uppercase tracking-wider" x-text="g.dept"></div><template x-for="u in g.users" :key="u.id"><button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors flex items-center gap-2" @click="selNode.ownerId=u.id;_v++;op=false"><span x-text="u.name"></span><span class="inline-flex rounded-full px-2 py-0.5 text-micro-medium" :class="deptChipClass(u.dept)" x-text="u.role"></span></button></template></div></template></div></div></div>
+          </div>
 
           <div class="border-t border-g4 pt-5 mb-5">
             <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">Source Configuration</p>
@@ -584,13 +629,6 @@
             <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4"><label class="block text-mini-medium text-g10 mb-2">Data entry</label><div class="space-y-2"><label class="flex items-start gap-3 rounded-8 border px-4 py-3 cursor-pointer transition-colors" :class="selNode.sourceMode==='review'?'bg-a3 border-a5':'border-g4 hover:bg-g2'" @click="selNode.sourceMode='review';_v++"><div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors" :class="selNode.sourceMode==='review'?'border-a9':'border-g6'"><div class="h-2 w-2 rounded-full transition-colors" :class="selNode.sourceMode==='review'?'bg-a9':''"></div></div><div><p class="text-sm-medium text-g12">Prefill for review</p><p class="text-mini text-g9 mt-0.5">Value is prefilled. A person reviews each period.</p></div></label><label class="flex items-start gap-3 rounded-8 border px-4 py-3 cursor-pointer transition-colors" :class="selNode.sourceMode==='auto'?'bg-a3 border-a5':'border-g4 hover:bg-g2'" @click="selNode.sourceMode='auto';_v++"><div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors" :class="selNode.sourceMode==='auto'?'border-a9':'border-g6'"><div class="h-2 w-2 rounded-full transition-colors" :class="selNode.sourceMode==='auto'?'bg-a9':''"></div></div><div><p class="text-sm-medium text-g12">Auto-fill</p><p class="text-mini text-g9 mt-0.5">Value is written automatically. No review needed.</p></div></label></div></div>
           </div>
 
-          <div class="border-t border-g4 pt-5 mb-5">
-            <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">Visibility</p>
-            <div class="space-y-4">
-              <div class="flex items-start gap-3 cursor-pointer group" @click="selNode.companyDashboard=!selNode.companyDashboard;_v++"><div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors" :class="selNode.companyDashboard?'bg-a9 border-a9':'border-g6 group-hover:border-g8'"><svg x-show="selNode.companyDashboard" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><div><p class="text-sm text-g12">Show on company dashboard</p><p class="text-mini text-g9 mt-0.5">Display this KPI on the top-level CEO overview</p></div></div>
-              <div class="flex items-start gap-3 cursor-pointer group" @click="toggleFocus()"><div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors" :class="selNode.focusKpi?'bg-y9 border-y9':'border-g6 group-hover:border-g8'"><svg x-show="selNode.focusKpi" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg></div><div><p class="text-sm text-g12">Focus KPI</p><p class="text-mini text-g9 mt-0.5">Quarterly priority — highlighted on the company dashboard</p></div></div>
-            </div>
-          </div>
           <div class="border-t border-g4 pt-5"><button class="rounded-6 px-3 py-1.5 text-sm text-d11 hover:bg-d3 transition-colors" @click="deleteNode(selId)">Delete this KPI</button></div>
         </div>
       </template>
@@ -924,32 +962,32 @@
 
     let _nid=200;
     function N(id,nm,ch,p){
-      const n={id,name:nm,exp:true,children:ch||[],fmt:'number',agg:'total',period:'resets',ownerId:'',sourceMode:'manual',db:'',filters:[],dateScope:'week',companyDashboard:false,focusKpi:false,refId:'',target:null,actual:null,status:null,weekly:{},source:'',pv:null,pr:0,...p};
+      const n={id,name:nm,exp:true,children:ch||[],fmt:'number',agg:'total',period:'resets',ownerId:'',sourceMode:'manual',db:'',filters:[],dateScope:'week',companyDashboard:false,focusKpi:false,refId:'',visibleIn:[],target:null,actual:null,status:null,weekly:{},source:'',pv:null,pr:0,...p};
       if(n.actual&&n.target){const pc=n.actual/DE*DM;n.pv=n.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);n.pr=pc/n.target;}
       return n;
     }
 
     const tree=[
       N('sc','COMPANY OVERVIEW',[
-        N('sc1','Total Revenue',[],{fmt:'currency',ownerId:'u1',target:240000,actual:171900,status:'green',companyDashboard:true,sourceMode:'auto',db:'CRM Pipeline',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}}),
-        N('sc2','Active Clients',[],{period:'carries_over',ownerId:'u1',target:30,actual:22,status:'yellow',companyDashboard:true,weekly:{9:23,10:22}}),
-        N('sc3','Revenue per Employee',[],{fmt:'currency',agg:'average',ownerId:'u1',target:20000,actual:17190,status:'yellow',companyDashboard:true}),
-        N('sc4','CAC',[],{fmt:'currency',agg:'average',ownerId:'u1',target:2000,actual:1580,status:'green',companyDashboard:true}),
-        N('sc5','Cash Position',[],{fmt:'currency',period:'carries_over',ownerId:'u6',target:380000,actual:420000,status:'green',companyDashboard:true,weekly:{9:410000,10:420000}}),
+        N('sc1','Total Revenue',[],{fmt:'currency',ownerId:'u1',target:240000,actual:171900,status:'green',companyDashboard:true,visibleIn:['company'],sourceMode:'auto',db:'CRM Pipeline',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}}),
+        N('sc2','Active Clients',[],{period:'carries_over',ownerId:'u1',target:30,actual:22,status:'yellow',companyDashboard:true,visibleIn:['company'],weekly:{9:23,10:22}}),
+        N('sc3','Revenue per Employee',[],{fmt:'currency',agg:'average',ownerId:'u1',target:20000,actual:17190,status:'yellow',companyDashboard:true,visibleIn:['company']}),
+        N('sc4','CAC',[],{fmt:'currency',agg:'average',ownerId:'u1',target:2000,actual:1580,status:'green',companyDashboard:true,visibleIn:['company']}),
+        N('sc5','Cash Position',[],{fmt:'currency',period:'carries_over',ownerId:'u6',target:380000,actual:420000,status:'green',companyDashboard:true,visibleIn:['company'],weekly:{9:410000,10:420000}}),
       ]),
       N('fk','FOCUS KPIs',[N('fkr1','',[],{refId:'m1'}),N('fkr2','',[],{refId:'s2'}),N('fkr3','',[],{refId:'c4'})]),
       N('mkt','MARKETING',[
         N('m1','Total Bookings',[
           N('m1a','Direct Bookings',[],{ownerId:'u2',target:30,actual:32,status:'green',weekly:{9:7,10:3,11:8,12:9,13:5}}),
           N('m1b','AI-Setting Bookings',[],{ownerId:'u2',target:20,actual:23,status:'green',weekly:{9:5,10:3,11:5,12:6,13:4}}),
-        ],{ownerId:'u2',target:50,actual:55,status:'green',companyDashboard:true,focusKpi:true,sourceMode:'review',db:'Marketing Tracking',filters:[{field:'UTM Source',operator:'is',value:'Paid Ads'},{field:'Status',operator:'is',value:'Show'}],dateScope:'week',weekly:{9:12,10:6,11:13,12:15,13:9},exp:true}),
+        ],{ownerId:'u2',target:50,actual:55,status:'green',companyDashboard:true,visibleIn:['company'],focusKpi:true,sourceMode:'review',db:'Marketing Tracking',filters:[{field:'UTM Source',operator:'is',value:'Paid Ads'},{field:'Status',operator:'is',value:'Show'}],dateScope:'week',weekly:{9:12,10:6,11:13,12:15,13:9},exp:true}),
         N('m2','Adspend',[
           N('m2a','Impressions',[],{ownerId:'u2',target:300000,actual:245000,status:'yellow',weekly:{9:52000,10:61000,11:48000,12:50000,13:34000}}),
           N('m2b','CPM',[],{fmt:'currency',agg:'average',ownerId:'u2',target:83,actual:97,status:'red',weekly:{9:105,10:91,11:110,12:94,13:79}}),
           N('m2c','Clicks',[],{ownerId:'u2',target:8500,actual:6980,status:'yellow',weekly:{9:1300,10:1580,11:1240,12:1420,13:1440}}),
           N('m2d','CTR',[],{fmt:'percentage',agg:'average',ownerId:'u2',target:2.8,actual:2.85,status:'green',weekly:{9:2.5,10:2.6,11:2.6,12:2.8,13:4.2}}),
-        ],{fmt:'currency',ownerId:'u2',target:25000,actual:23711,status:'green',companyDashboard:true,sourceMode:'auto',db:'Marketing Tracking',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689},exp:false}),
-        N('m3','Cost per Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',target:500,actual:431,status:'green',companyDashboard:true}),
+        ],{fmt:'currency',ownerId:'u2',target:25000,actual:23711,status:'green',companyDashboard:true,visibleIn:['company'],sourceMode:'auto',db:'Marketing Tracking',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689},exp:false}),
+        N('m3','Cost per Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',target:500,actual:431,status:'green',companyDashboard:true,visibleIn:['company']}),
         N('pa','Paid Ads',[
           N('pa1','Adspend',[],{fmt:'currency',ownerId:'u2',target:25000,actual:23711,status:'green',sourceMode:'auto',db:'Marketing Tracking',weekly:{9:5489,10:5540,11:5277,12:4716,13:2689}}),
           N('pa2','Impressions',[],{ownerId:'u2',target:300000,actual:245000,status:'yellow',weekly:{9:52000,10:61000,11:48000,12:50000,13:34000}}),
@@ -970,13 +1008,13 @@
         ],{exp:false}),
       ]),
       N('set','SETTING',[
-        N('s1','Leads',[],{ownerId:'u2',target:750,actual:253,status:'yellow',companyDashboard:true,source:'Airtable',weekly:{9:98,10:155}}),
+        N('s1','Leads',[],{ownerId:'u2',target:750,actual:253,status:'yellow',companyDashboard:true,visibleIn:['company'],source:'Airtable',weekly:{9:98,10:155}}),
         N('s2','Sets',[
           N('s2a','Sets from Calls',[],{ownerId:'u3',target:25,actual:16,status:'red',source:'Plecto',weekly:{9:4,10:2,11:3,12:5,13:2}}),
           N('s2b','Sets from AI',[],{ownerId:'u2',target:8,actual:5,status:'red',source:'AI Tool',weekly:{9:1,10:0,11:1,12:1,13:2}}),
           N('s2c','Direct Sets',[],{ownerId:'u1',target:2,actual:1,status:'yellow',source:'Plecto',weekly:{9:1,10:0}}),
-        ],{ownerId:'u1',target:35,actual:22,status:'red',companyDashboard:true,focusKpi:true,source:'Plecto',weekly:{9:6,10:2,11:4,12:10},exp:false}),
-        N('s3','Set Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:2,actual:0.6,status:'red',companyDashboard:true,source:'Plecto',weekly:{9:1.0,10:0.5,11:0.5,12:0.8}}),
+        ],{ownerId:'u1',target:35,actual:22,status:'red',companyDashboard:true,visibleIn:['company'],focusKpi:true,source:'Plecto',weekly:{9:6,10:2,11:4,12:10},exp:false}),
+        N('s3','Set Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:2,actual:0.6,status:'red',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{9:1.0,10:0.5,11:0.5,12:0.8}}),
         N('hc','Human Calling',[
           N('hc1','Dials',[],{ownerId:'u3',target:3500,actual:2800,status:'yellow',source:'Aircall',weekly:{9:580,10:620,11:560,12:600,13:440}}),
           N('hc2','Connect Rate',[],{fmt:'percentage',agg:'average',ownerId:'u3',target:20,actual:18,status:'yellow',source:'Aircall',weekly:{9:16,10:19,11:17,12:20,13:18}}),
@@ -989,15 +1027,15 @@
         ],{exp:false}),
       ]),
       N('cls','CLOSING',[
-        N('c1','FE-Deals',[],{ownerId:'u1',target:10,actual:5,status:'red',companyDashboard:true,source:'Plecto',weekly:{9:0,10:1,11:0,12:1,13:3}}),
-        N('c2','FE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',target:120000,actual:68500,status:'red',companyDashboard:true,source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:37900}}),
-        N('c3','Avg. Dealsize',[],{fmt:'currency',agg:'average',ownerId:'u1',target:12000,actual:13700,status:'green',companyDashboard:true,source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:10600}}),
-        N('c4','Call-Close Rate',[],{fmt:'percentage',agg:'manual',ownerId:'u1',target:35,actual:14,status:'red',companyDashboard:true,focusKpi:true,source:'Plecto',weekly:{9:0,10:10,11:0,12:20,13:33}}),
+        N('c1','FE-Deals',[],{ownerId:'u1',target:10,actual:5,status:'red',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{9:0,10:1,11:0,12:1,13:3}}),
+        N('c2','FE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',target:120000,actual:68500,status:'red',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:37900}}),
+        N('c3','Avg. Dealsize',[],{fmt:'currency',agg:'average',ownerId:'u1',target:12000,actual:13700,status:'green',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{9:0,10:19800,11:0,12:10800,13:10600}}),
+        N('c4','Call-Close Rate',[],{fmt:'percentage',agg:'manual',ownerId:'u1',target:35,actual:14,status:'red',companyDashboard:true,visibleIn:['company'],focusKpi:true,source:'Plecto',weekly:{9:0,10:10,11:0,12:20,13:33}}),
       ]),
       N('del','DELIVERY',[
-        N('d1','BE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',target:150000,actual:171900,status:'green',companyDashboard:true,source:'Plecto',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}}),
-        N('d2','Retention Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:45,actual:33,status:'yellow',companyDashboard:true,source:'Plecto',weekly:{11:50}}),
-        N('d3','KPI-Collection Rate',[],{fmt:'percentage',agg:'max',ownerId:'u1',target:80,actual:58,status:'red',companyDashboard:true,weekly:{10:0,11:58}}),
+        N('d1','BE-Dealvolumen',[],{fmt:'currency',ownerId:'u1',target:150000,actual:171900,status:'green',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{9:0,10:33000,11:77700,12:36000,13:25200}}),
+        N('d2','Retention Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:45,actual:33,status:'yellow',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{11:50}}),
+        N('d3','KPI-Collection Rate',[],{fmt:'percentage',agg:'max',ownerId:'u1',target:80,actual:58,status:'red',companyDashboard:true,visibleIn:['company'],weekly:{10:0,11:58}}),
         N('dse','DSE',[
           N('dse1','Time-to-First-Milestone',[],{agg:'average',ownerId:'u1',target:7,actual:5,status:'green'}),
           N('dse2','Projekt Timing (Gesamt)',[],{agg:'average',ownerId:'u1',target:30,actual:28,status:'green'}),
@@ -1012,8 +1050,8 @@
         ],{exp:false}),
       ]),
       N('ppl','PEOPLE & CULTURE',[
-        N('p1','eNPS',[],{agg:'average',period:'carries_over',ownerId:'u5',target:50,actual:42,status:'yellow',companyDashboard:true,source:'Personio',weekly:{9:40,10:44}}),
-        N('p2','Open Positions Filled',[],{ownerId:'u5',target:4,actual:2,status:'red',companyDashboard:true,source:'Personio',weekly:{9:1,10:1}}),
+        N('p1','eNPS',[],{agg:'average',period:'carries_over',ownerId:'u5',target:50,actual:42,status:'yellow',companyDashboard:true,visibleIn:['company'],source:'Personio',weekly:{9:40,10:44}}),
+        N('p2','Open Positions Filled',[],{ownerId:'u5',target:4,actual:2,status:'red',companyDashboard:true,visibleIn:['company'],source:'Personio',weekly:{9:1,10:1}}),
         N('hf','Hiring Funnel',[
           N('hf1','Loom Videos',[],{ownerId:'u5',target:20,actual:12,status:'yellow',source:'Personio'}),
           N('hf2','Gruppeninterviews',[],{ownerId:'u5',target:8,actual:5,status:'yellow',source:'Personio'}),
@@ -1021,8 +1059,8 @@
         ],{exp:false}),
       ]),
       N('fin','FINANCE',[
-        N('f1','Cash Balance',[],{fmt:'currency',period:'carries_over',ownerId:'u6',target:380000,actual:420000,status:'green',companyDashboard:true,source:'DATEV',weekly:{9:410000,10:420000}}),
-        N('f2','Burn Rate',[],{fmt:'currency',agg:'average',ownerId:'u6',target:110000,actual:95000,status:'green',companyDashboard:true,source:'DATEV',weekly:{9:98000,10:92000}}),
+        N('f1','Cash Balance',[],{fmt:'currency',period:'carries_over',ownerId:'u6',target:380000,actual:420000,status:'green',companyDashboard:true,visibleIn:['company'],source:'DATEV',weekly:{9:410000,10:420000}}),
+        N('f2','Burn Rate',[],{fmt:'currency',agg:'average',ownerId:'u6',target:110000,actual:95000,status:'green',companyDashboard:true,visibleIn:['company'],source:'DATEV',weekly:{9:98000,10:92000}}),
       ]),
     ];
     const defaultTree=JSON.parse(JSON.stringify(tree));
@@ -1104,12 +1142,95 @@
 
       init(){
         const saved=localStorage.getItem('aren-kpi-tree');
-        if(saved){try{this.tree=JSON.parse(saved);this.tree.forEach(function recalcTree(n){if(!n.children)n.children=[];if(!n.weekly)n.weekly={};if(!n.filters)n.filters=[];if(n.actual&&n.target){const pc=n.actual/DE*DM;n.pv=n.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);n.pr=pc/n.target;}n.children.forEach(recalcTree);});}catch(e){this.tree=JSON.parse(JSON.stringify(defaultTree));}}
+        if(saved){try{this.tree=JSON.parse(saved);this.tree.forEach(function recalcTree(n){if(!n.children)n.children=[];if(!n.weekly)n.weekly={};if(!n.filters)n.filters=[];if(!n.visibleIn){n.visibleIn=[];if(n.companyDashboard)n.visibleIn.push('company');}if(n.actual&&n.target){const pc=n.actual/DE*DM;n.pv=n.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);n.pr=pc/n.target;}n.children.forEach(recalcTree);});}catch(e){this.tree=JSON.parse(JSON.stringify(defaultTree));}}
         this.$watch('_v',()=>{clearTimeout(this._saveTimer);this._saveTimer=setTimeout(()=>{localStorage.setItem('aren-kpi-tree',JSON.stringify(this.tree));},500);});
       },
       resetTree(){localStorage.removeItem('aren-kpi-tree');this.tree=JSON.parse(JSON.stringify(defaultTree));this._v++;this.toast='Reset to defaults';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);},
 
-      get flat(){this._v;return flatList(this.tree,0);},
+      availableViews(){
+        this._v;
+        const views=[{id:'company',label:'Company Overview',path:'Company Overview'},{id:'fk',label:'Focus KPIs',path:'Focus KPIs'}];
+        for(const dept of this.tree){
+          if(!dept.children.length||dept.id==='sc'||dept.id==='fk')continue;
+          views.push({id:dept.id,label:dept.name,path:dept.name});
+          for(const grp of dept.children){
+            if(grp.children.length>0&&grp.target===null)
+              views.push({id:grp.id,label:grp.name,path:dept.name+' › '+grp.name});
+          }
+        }
+        return views;
+      },
+      kpiHomeView(kpiId){
+        if(!kpiId)return null;
+        for(const dept of this.tree){
+          if(dept.id===kpiId)return null;
+          for(const child of dept.children){
+            if(child.id===kpiId)return dept.id;
+            if(child.children){
+              for(const gc of child.children){
+                if(gc.id===kpiId)return child.target===null?child.id:dept.id;
+              }
+            }
+          }
+        }
+        return null;
+      },
+      viewLabel(viewId){
+        const v=this.availableViews().find(x=>x.id===viewId);
+        return v?v.label:viewId;
+      },
+      toggleView(viewId){
+        if(!this.selNode)return;
+        if(viewId==='fk'){this.toggleFocus();return;}
+        if(!this.selNode.visibleIn)this.selNode.visibleIn=[];
+        const idx=this.selNode.visibleIn.indexOf(viewId);
+        const home=this.kpiHomeView(this.selNode.id);
+        if(idx>=0){
+          if(viewId===home)return;
+          this.selNode.visibleIn.splice(idx,1);
+          if(viewId==='company')this.selNode.companyDashboard=false;
+        }else{
+          this.selNode.visibleIn.push(viewId);
+          if(viewId==='company')this.selNode.companyDashboard=true;
+        }
+        this._v++;
+      },
+      isInView(viewId){
+        if(!this.selNode)return false;
+        if(viewId==='fk')return !!this.selNode.focusKpi;
+        return (this.selNode.visibleIn||[]).includes(viewId);
+      },
+      extraKpisForView(viewId){
+        this._v;
+        const ownIds=new Set();
+        const vn=findNode(viewId,this.tree);
+        if(vn)(function collectIds(n){ownIds.add(n.id);(n.children||[]).forEach(collectIds);})(vn);
+        const extras=[];
+        (function walk(nodes){for(const n of nodes){if(!ownIds.has(n.id)&&(n.visibleIn||[]).includes(viewId)&&!n.refId)extras.push(n);if(n.children)walk(n.children);}})(this.tree);
+        return extras;
+      },
+      chKpis(ch){
+        this._v;
+        const result=[...ch.children.filter(c=>!c.children.length),...this.extraKpisForView(ch.id)];
+        return result;
+      },
+
+      get flat(){
+        this._v;
+        const base=flatList(this.tree,0);
+        const result=[];
+        for(let i=0;i<base.length;i++){
+          result.push(base[i]);
+          const node=base[i].n;
+          if(node.children.length>0&&node.target===null&&node.exp){
+            const extras=this.extraKpisForView(node.id);
+            for(const ex of extras){
+              result.push({n:ex,d:base[i].d+1,hc:false,placed:true,placedIn:node.id});
+            }
+          }
+        }
+        return result;
+      },
       get selNode(){if(!this.selId)return null;return findNode(this.selId,this.tree);},
       get selIsLeaf(){return this.selNode&&this.selNode.children.length===0;},
       get stats(){this._v;return countStats(this.tree);},
@@ -1154,7 +1275,7 @@
       reCalc(k){if(!k.actual||!k.target){k.pv=null;k.pr=0;this._v++;return;}const p=k.actual/DE*DM;k.pv=k.fmt==='percentage'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;this._v++;},
 
       deptLeafKpis(dept){return dept.children.filter(c=>(!c.children.length||c.target!==null)&&!c.refId);},
-      deptKpiRows(dept){this._v;const rows=[];for(const c of dept.children){if(c.refId)continue;if(c.children.length>0&&c.target===null)continue;c._hasChildren=c.children.length>0;c._isChild=false;rows.push(c);if(c._hasChildren&&c.exp){for(const ch of c.children){ch._isChild=true;ch._hasChildren=false;rows.push(ch);}}}return rows;},
+      deptKpiRows(dept){this._v;const rows=[];const seen=new Set();for(const c of dept.children){if(c.refId)continue;if(c.children.length>0&&c.target===null)continue;c._hasChildren=c.children.length>0;c._isChild=false;rows.push(c);seen.add(c.id);if(c._hasChildren&&c.exp){for(const ch of c.children){ch._isChild=true;ch._hasChildren=false;rows.push(ch);seen.add(ch.id);}}}for(const x of this.extraKpisForView(dept.id)){if(!seen.has(x.id)){x._hasChildren=x.children&&x.children.length>0;x._isChild=false;rows.push(x);}}return rows;},
       deptChannels(dept){return dept.children.filter(c=>c.children.length>0&&c.target===null);},
       get focusKpiNodes(){const fk=this.focusDept;if(!fk||!fk.children.length)return[];return fk.children.map(ref=>ref.refId?findNode(ref.refId,this.tree):null).filter(Boolean);},
 
@@ -1167,7 +1288,7 @@
         return r;
       },
 
-      toggleW(e){const sc=e.target.closest('.overflow-x-auto');const expanding=!this.sw;this.sw=!this.sw;this.$nextTick(()=>{if(!sc)return;setTimeout(()=>{const ths=sc.querySelectorAll('th');const lastWeekTh=ths.length>=3?ths[ths.length-3]:null;const target=lastWeekTh?lastWeekTh.offsetLeft+lastWeekTh.offsetWidth-sc.clientWidth:0;sc.scrollTo({left:expanding?Math.max(0,target):0,behavior:'smooth'});},20);});},
+      toggleW(e){const expanding=!this.sw;this.sw=!this.sw;this.$nextTick(()=>{setTimeout(()=>{if(expanding){const tbl=e.target.closest('table')||document.querySelector('.kg');if(!tbl)return;const ths=tbl.querySelectorAll('thead th');const lastWeekTh=ths.length>=3?ths[ths.length-3]:null;if(lastWeekTh){const r=lastWeekTh.getBoundingClientRect();window.scrollTo({left:window.scrollX+r.right-window.innerWidth,behavior:'smooth'});}}else{window.scrollTo({left:0,behavior:'smooth'});}},30);});},
       switchRole(r){this.role=r;this.bc=[{l:r==='ceo'?'Company KPIs':r==='lead'?this.leadDeptName:'My KPIs'}];this.activeDept=null;this.activeCh=null;this.icS=false;this.openSt=null;},
       drillDept(dept){this.activeDept=dept;this.activeCh=null;this.bc=[{l:this.role==='ceo'?'Company KPIs':this.leadDeptName},{l:dept.name}];this.openSt=null;},
       drillCh(ch){this.activeCh=ch;this.bc=[...this.bc.slice(0,2),{l:ch.name}];this.openSt=null;},
@@ -1196,7 +1317,7 @@
       toggleFocus(){
         if(!this.selNode)return;const fk=findNode('fk',this.tree);if(!fk)return;
         if(this.selNode.focusKpi){const ri=fk.children.findIndex(c=>c.refId===this.selId);if(ri>=0)fk.children.splice(ri,1);this.selNode.focusKpi=false;}
-        else{const ref=N('fkr'+(++_nid),'',[],{refId:this.selId});fk.children.push(ref);fk.exp=true;this.selNode.focusKpi=true;this.selNode.companyDashboard=true;}
+        else{const ref=N('fkr'+(++_nid),'',[],{refId:this.selId});fk.children.push(ref);fk.exp=true;this.selNode.focusKpi=true;this.selNode.companyDashboard=true;if(!this.selNode.visibleIn)this.selNode.visibleIn=[];if(!this.selNode.visibleIn.includes('company'))this.selNode.visibleIn.push('company');}
         this._v++;
       },
       removeFocusRef(refNodeId){const refNode=findNode(refNodeId,this.tree);if(refNode&&refNode.refId){const orig=findNode(refNode.refId,this.tree);if(orig)orig.focusKpi=false;}removeFromTree(refNodeId,this.tree);this.selId=null;this._v++;},
@@ -1347,6 +1468,7 @@
     };
   }
   </script>
+
 
 </body>
 </html>
