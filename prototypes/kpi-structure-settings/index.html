@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KPI Structure — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+      --color-p0: oklch(0.982 0 0); --color-p1: oklch(1 0 0);
+      --color-g0: oklch(1 0 0); --color-g1: oklch(0.991 0 0); --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0); --color-g4: oklch(0.931 0 0); --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0); --color-g7: oklch(0.851 0 0); --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0); --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228); --color-g12: oklch(0.21 0.004 286.059);
+      --color-a1: oklch(0.994 0.001 286.376); --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09); --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198); --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675); --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643); --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713); --color-a12: oklch(0.312 0.107 271.681);
+      --color-y1: oklch(0.994 0.003 84.559); --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943); --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209); --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55); --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907); --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633); --color-y12: oklch(0.353 0.053 69.99);
+      --color-d1: oklch(0.993 0.003 17.212); --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81); --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206); --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189); --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103); --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228); --color-d12: oklch(0.34 0.115 26.406);
+      --color-s1: oklch(0.994 0.006 137.773); --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807); --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615); --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63); --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544); --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444); --color-s12: oklch(0.326 0.058 136.282);
+      --color-alpha-2: oklch(0 0 0 / 0.02); --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06); --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1); --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16); --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36); --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+      --text-micro: 10px; --text-micro--font-weight: 450; --text-micro--line-height: 14px;
+      --text-micro-medium: 10px; --text-micro-medium--font-weight: 500; --text-micro-medium--line-height: 14px;
+      --text-mini: 12px; --text-mini--font-weight: 450; --text-mini--line-height: 15px;
+      --text-mini-medium: 12px; --text-mini-medium--font-weight: 500; --text-mini-medium--line-height: 15px;
+      --text-sm: 13px; --text-sm--font-weight: 450; --text-sm--line-height: 18px; --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px; --text-sm-medium--font-weight: 500; --text-sm-medium--line-height: 18px; --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px; --text-regular--font-weight: 450; --text-regular--line-height: 20px; --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px; --text-regular-medium--font-weight: 500; --text-regular-medium--line-height: 20px; --text-regular-medium--letter-spacing: -0.13px;
+      --radius-0: 0px; --radius-2: 2px; --radius-4: 4px; --radius-6: 6px; --radius-8: 8px; --radius-10: 10px; --radius-12: 12px; --radius-full: 999px;
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0,0,0,.27), 0px 4px 6px -1px rgba(0,0,0,.1), 0px 2px 4px -2px rgba(0,0,0,.1);
+      --shadow-lg: 0px 0px 1px 0px rgba(0,0,0,.20), 0px 10px 15px -3px rgba(0,0,0,.1), 0px 4px 6px -4px rgba(0,0,0,.1);
+      --duration-fast: 120ms; --duration-normal: 200ms; --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1); --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak]{display:none!important}
+    .hier-item{display:flex;align-items:center;cursor:pointer;transition:background 80ms;user-select:none}
+    .hier-item:hover{background:var(--color-g3)}
+    .hier-item.active{background:var(--color-a3)}
+    .hier-item .act{opacity:0;transition:opacity 80ms}
+    .hier-item:hover .act{opacity:1}
+    .kpi-row{display:flex;align-items:center;transition:background 80ms}
+    .kpi-row:hover{background:var(--color-g2)}
+    .kpi-row .act{opacity:0;transition:opacity 80ms}
+    .kpi-row:hover .act{opacity:1}
+    .drag-handle{cursor:grab;color:var(--color-g7)}
+    .drag-handle:hover{color:var(--color-g10)}
+    .pill{display:inline-flex;align-items:center;padding:1px 6px;border-radius:999px;font-size:10px;font-weight:500;line-height:14px;white-space:nowrap}
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased" x-data="app()" x-cloak>
+
+  <!-- ===== HEADER ===== -->
+  <header class="sticky top-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+    <div class="flex items-center gap-3">
+      <a href="#" class="flex items-center gap-1 text-sm text-g9 hover:text-g11 transition-colors duration-fast">
+        <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path d="M15 19l-7-7 7-7"/></svg>
+        Settings
+      </a>
+      <span class="text-g4">/</span>
+      <span class="text-regular-medium text-g12">KPI Structure</span>
+    </div>
+    <span class="text-mini text-g9" x-text="totalKpiCount + ' KPIs across ' + totalViewCount + ' views'"></span>
+  </header>
+
+  <!-- ===== MAIN LAYOUT ===== -->
+  <div class="flex" style="height:calc(100vh - 45px)">
+
+    <!-- ===== LEFT: HIERARCHY ===== -->
+    <div class="w-72 shrink-0 border-r border-g4 bg-p1 flex flex-col">
+      <div class="px-4 py-3 border-b border-g4">
+        <p class="text-mini-medium text-g10 uppercase tracking-wider">Views</p>
+      </div>
+
+      <div class="flex-1 overflow-y-auto py-1">
+
+        <!-- Company Overview -->
+        <div class="hier-item px-4 py-2" :class="selectedView === 'company' ? 'active' : ''" @click="selectView('company')">
+          <svg class="w-3.5 h-3.5 text-g8 mr-2 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>
+          <span class="text-sm-medium text-g12 flex-1">Company Overview</span>
+          <span class="text-micro text-g8" x-text="companyView.kpis.length"></span>
+        </div>
+
+        <!-- Departments -->
+        <template x-for="dept in departments" :key="dept.id">
+          <div>
+            <!-- Department header -->
+            <div class="hier-item px-4 py-2 mt-1" @click="dept.expanded = !dept.expanded">
+              <button class="flex items-center justify-center w-4 h-4 shrink-0 mr-1">
+                <svg class="h-3 w-3 text-g8 transition-transform duration-fast" :class="dept.expanded ? 'rotate-90' : ''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+              </button>
+              <span class="text-sm-medium text-g12 flex-1" x-text="dept.name"></span>
+              <span class="text-micro text-g8" x-text="dept.groups.length + ' groups'"></span>
+            </div>
+
+            <!-- Groups -->
+            <template x-if="dept.expanded">
+              <div>
+                <template x-for="group in dept.groups" :key="group.id">
+                  <div class="hier-item pl-9 pr-4 py-1.5" :class="selectedView === group.id ? 'active' : ''" @click="selectView(group.id)">
+                    <span class="text-sm text-g11 flex-1 truncate" x-text="group.name"></span>
+                    <span class="text-micro text-g8 shrink-0 ml-2" x-text="group.kpis.length"></span>
+                    <button class="act ml-1 rounded-4 p-0.5 text-g8 hover:text-d11 hover:bg-d3 transition-colors shrink-0" @click.stop="removeGroup(dept, group)" title="Remove group">
+                      <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                    </button>
+                  </div>
+                </template>
+                <!-- Add group -->
+                <div class="pl-9 pr-4 py-1">
+                  <button class="text-mini text-a11 hover:underline" @click="addGroup(dept)">+ Add group</button>
+                </div>
+              </div>
+            </template>
+          </div>
+        </template>
+      </div>
+
+      <!-- Add department -->
+      <div class="px-4 py-3 border-t border-g4">
+        <button class="w-full rounded-6 px-3 py-1.5 text-sm text-a11 hover:bg-a3 transition-colors text-left" @click="addDepartment()">+ Add department</button>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT: VIEW COMPOSER ===== -->
+    <div class="flex-1 overflow-y-auto bg-p0">
+
+      <!-- Empty state: no view selected -->
+      <div x-show="!selectedView" class="flex flex-col items-center justify-center py-20 text-center">
+        <div class="w-10 h-10 rounded-8 bg-g2 flex items-center justify-center mb-3">
+          <svg class="h-5 w-5 text-g8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6z"/><path d="M3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25z"/><path d="M13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6z"/><path d="M13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z"/></svg>
+        </div>
+        <p class="text-sm text-g10">Select a view to edit its KPIs</p>
+        <p class="text-mini text-g9 mt-1">Pick a group from the left sidebar</p>
+      </div>
+
+      <!-- Company Overview composer -->
+      <div x-show="selectedView === 'company'" class="max-w-2xl mx-auto px-8 py-6">
+        <div class="flex items-center gap-3 mb-1">
+          <svg class="w-4 h-4 text-g9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0h4"/></svg>
+          <h2 class="text-regular-medium text-g12">Company Overview</h2>
+        </div>
+        <p class="text-sm text-g9 mb-6">The top-level CEO dashboard. Shows headline KPIs from across all departments.</p>
+
+        <!-- KPI list -->
+        <div class="rounded-8 bg-p1 shadow-xs" x-show="companyView.kpis.length > 0">
+          <template x-for="(kpiId, idx) in companyView.kpis" :key="kpiId + '-' + idx">
+            <div class="kpi-row px-4 py-3 gap-3" :class="idx > 0 ? 'border-t border-g4' : ''">
+              <svg class="drag-handle w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                <circle cx="5" cy="3" r="1.2"/><circle cx="11" cy="3" r="1.2"/>
+                <circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/>
+                <circle cx="5" cy="13" r="1.2"/><circle cx="11" cy="13" r="1.2"/>
+              </svg>
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="text-sm-medium text-g12" x-text="catalogById(kpiId)?.name"></span>
+                  <span x-show="catalogById(kpiId)?.children.length > 0" class="text-micro text-g8" x-text="catalogById(kpiId)?.children.length + ' sub-KPIs'"></span>
+                </div>
+                <div class="flex items-center gap-1 mt-1 flex-wrap" x-show="appearsIn(kpiId, 'company').length > 0">
+                  <span class="text-micro text-g8">Also in:</span>
+                  <template x-for="loc in appearsIn(kpiId, 'company')" :key="loc">
+                    <span class="pill bg-g2 text-g9" x-text="loc"></span>
+                  </template>
+                </div>
+              </div>
+              <button class="act rounded-4 p-1 text-g8 hover:text-d11 hover:bg-d3 transition-colors shrink-0" @click="removeKpiFromView('company', idx)" title="Remove">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+              </button>
+            </div>
+          </template>
+        </div>
+
+        <!-- Empty state -->
+        <div x-show="companyView.kpis.length === 0" class="rounded-8 bg-p1 shadow-xs px-5 py-8 text-center">
+          <p class="text-sm text-g9">No KPIs in this view yet</p>
+        </div>
+
+        <!-- Add KPI -->
+        <div class="mt-3" x-data="{ open: false, search: '' }">
+          <button x-show="!open" @click="open = true; search = ''; $nextTick(() => $refs.companySearch.focus())" class="rounded-6 px-3 py-1.5 text-sm text-a11 hover:bg-a3 transition-colors">+ Add KPI</button>
+          <div x-show="open" class="relative">
+            <input x-ref="companySearch" type="text" x-model="search" @keydown.escape="open = false" @click.away="open = false" placeholder="Search KPI catalog..." class="w-full rounded-6 bg-p1 px-3 py-2 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9">
+            <div class="absolute top-full left-0 right-0 mt-1 rounded-8 bg-p1 shadow-md border border-g4 overflow-hidden z-10 max-h-64 overflow-y-auto">
+              <template x-for="kpi in filteredCatalog(search, 'company')" :key="kpi.id">
+                <button @click="addKpiToView('company', kpi.id); open = false" class="w-full text-left px-4 py-2.5 text-sm hover:bg-g3 transition-colors flex items-center justify-between gap-2" :class="isInView('company', kpi.id) ? 'text-g8' : 'text-g11'" :disabled="isInView('company', kpi.id)">
+                  <div class="flex items-center gap-2 min-w-0">
+                    <span x-text="kpi.name" class="truncate"></span>
+                    <span x-show="kpi.children.length > 0" class="text-micro text-g8 shrink-0" x-text="kpi.children.length + ' sub'"></span>
+                  </div>
+                  <svg x-show="isInView('company', kpi.id)" class="w-3.5 h-3.5 text-s11 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                </button>
+              </template>
+              <div x-show="filteredCatalog(search, 'company').length === 0" class="px-4 py-3 text-sm text-g9">No matching KPIs</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Group view composer -->
+      <template x-for="dept in departments" :key="dept.id">
+        <template x-for="group in dept.groups" :key="group.id">
+          <div x-show="selectedView === group.id" class="max-w-2xl mx-auto px-8 py-6">
+
+            <!-- Group header -->
+            <div class="flex items-center gap-2 mb-1">
+              <span class="text-sm text-g9" x-text="dept.name"></span>
+              <svg class="w-3 h-3 text-g7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+              <input type="text" x-model="group.name" class="text-regular-medium text-g12 bg-transparent outline-none border-b border-transparent hover:border-g4 focus:border-a9 transition-colors pb-0.5 -mb-0.5" style="max-width: 300px">
+            </div>
+
+            <!-- Filter rule -->
+            <div class="flex items-center gap-2 mt-2 mb-6">
+              <template x-if="group.filter">
+                <div class="flex items-center gap-1.5">
+                  <svg class="w-3 h-3 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                  <span class="pill bg-a3 text-a11 py-0.5 px-2" style="font-size:11px" x-text="group.filter"></span>
+                  <button class="text-micro text-g8 hover:text-g11 transition-colors" @click="editFilter(group)">Edit</button>
+                  <button class="text-micro text-g8 hover:text-d11 transition-colors" @click="group.filter = ''">Remove</button>
+                </div>
+              </template>
+              <template x-if="!group.filter">
+                <button class="flex items-center gap-1.5 text-mini text-g9 hover:text-a11 transition-colors" @click="editFilter(group)">
+                  <svg class="w-3 h-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/></svg>
+                  Add filter rule
+                </button>
+              </template>
+            </div>
+
+            <!-- KPI list -->
+            <div class="rounded-8 bg-p1 shadow-xs" x-show="group.kpis.length > 0">
+              <template x-for="(kpiId, idx) in group.kpis" :key="kpiId + '-' + idx">
+                <div class="kpi-row px-4 py-3 gap-3" :class="idx > 0 ? 'border-t border-g4' : ''"
+                  draggable="true"
+                  @dragstart="dragState = { viewId: group.id, fromIdx: idx }; $event.dataTransfer.effectAllowed = 'move'"
+                  @dragend="dragState = null; dropTarget = null"
+                  @dragover.prevent
+                  @dragenter.prevent="dropTarget = { viewId: group.id, toIdx: idx }"
+                  @drop.prevent="handleDrop(group.id, idx)"
+                  :class="[
+                    idx > 0 ? 'border-t border-g4' : '',
+                    dragState?.viewId === group.id && dragState?.fromIdx === idx ? 'opacity-40' : '',
+                    dropTarget?.viewId === group.id && dropTarget?.toIdx === idx && dragState?.fromIdx !== idx ? 'ring-2 ring-a9 ring-inset' : ''
+                  ]">
+                  <svg class="drag-handle w-4 h-4 shrink-0" viewBox="0 0 16 16" fill="currentColor">
+                    <circle cx="5" cy="3" r="1.2"/><circle cx="11" cy="3" r="1.2"/>
+                    <circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/>
+                    <circle cx="5" cy="13" r="1.2"/><circle cx="11" cy="13" r="1.2"/>
+                  </svg>
+                  <div class="flex-1 min-w-0">
+                    <div class="flex items-center gap-2">
+                      <span class="text-sm-medium text-g12" x-text="catalogById(kpiId)?.name"></span>
+                      <span x-show="catalogById(kpiId)?.children.length > 0" class="text-micro text-g8" x-text="catalogById(kpiId)?.children.length + ' sub-KPIs'"></span>
+                    </div>
+                    <!-- Children preview -->
+                    <div x-show="catalogById(kpiId)?.children.length > 0" class="flex items-center gap-1 mt-1">
+                      <template x-for="(child, ci) in (catalogById(kpiId)?.children || []).slice(0, 4)" :key="ci">
+                        <span class="text-micro text-g8" x-text="ci < 3 ? child + (ci < Math.min(catalogById(kpiId)?.children.length, 4) - 1 ? ' ·' : '') : '+ ' + (catalogById(kpiId)?.children.length - 3) + ' more'"></span>
+                      </template>
+                    </div>
+                    <!-- Appears in -->
+                    <div class="flex items-center gap-1 mt-1 flex-wrap" x-show="appearsIn(kpiId, group.id).length > 0">
+                      <span class="text-micro text-g8">Also in:</span>
+                      <template x-for="loc in appearsIn(kpiId, group.id)" :key="loc">
+                        <span class="pill bg-g2 text-g9" x-text="loc"></span>
+                      </template>
+                    </div>
+                  </div>
+                  <button class="act rounded-4 p-1 text-g8 hover:text-d11 hover:bg-d3 transition-colors shrink-0" @click="removeKpiFromView(group.id, idx)" title="Remove from this view">
+                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                  </button>
+                </div>
+              </template>
+            </div>
+
+            <!-- Empty state -->
+            <div x-show="group.kpis.length === 0" class="rounded-8 bg-p1 shadow-xs px-5 py-8 text-center">
+              <p class="text-sm text-g9 mb-3">No KPIs in this view yet</p>
+              <p class="text-mini text-g8">Add KPIs from the catalog to build this view</p>
+            </div>
+
+            <!-- Add KPI -->
+            <div class="mt-3" x-data="{ open: false, search: '' }">
+              <button x-show="!open" @click="open = true; search = ''; $nextTick(() => { const el = $el.parentElement.querySelector('[data-search]'); if(el) el.focus(); })" class="rounded-6 px-3 py-1.5 text-sm text-a11 hover:bg-a3 transition-colors">+ Add KPI</button>
+              <div x-show="open" class="relative">
+                <input data-search type="text" x-model="search" @keydown.escape="open = false" @click.away="open = false" placeholder="Search KPI catalog..." class="w-full rounded-6 bg-p1 px-3 py-2 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9">
+                <div class="absolute top-full left-0 right-0 mt-1 rounded-8 bg-p1 shadow-md border border-g4 overflow-hidden z-10 max-h-64 overflow-y-auto">
+                  <template x-for="kpi in filteredCatalog(search, group.id)" :key="kpi.id">
+                    <button @click="if(!isInView(group.id, kpi.id)) { addKpiToView(group.id, kpi.id); }" class="w-full text-left px-4 py-2.5 text-sm hover:bg-g3 transition-colors flex items-center justify-between gap-2" :class="isInView(group.id, kpi.id) ? 'text-g8' : 'text-g11'">
+                      <div class="flex items-center gap-2 min-w-0">
+                        <span x-text="kpi.name" class="truncate"></span>
+                        <span x-show="kpi.children.length > 0" class="text-micro text-g8 shrink-0" x-text="kpi.children.length + ' sub'"></span>
+                      </div>
+                      <svg x-show="isInView(group.id, kpi.id)" class="w-3.5 h-3.5 text-s11 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
+                    </button>
+                  </template>
+                  <div x-show="filteredCatalog(search, group.id).length === 0" class="px-4 py-3 text-sm text-g9">No matching KPIs</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </template>
+      </template>
+    </div>
+  </div>
+
+  <!-- ===== FILTER RULE MODAL ===== -->
+  <template x-teleport="body">
+    <div x-show="filterModal" x-cloak class="fixed inset-0 z-50 flex items-center justify-center" @keydown.escape.window="filterModal = null">
+      <div class="absolute inset-0 bg-alpha-48" @click="filterModal = null"></div>
+      <div x-show="filterModal" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100 scale-100" x-transition:leave-end="opacity-0 scale-95" class="relative bg-p1 rounded-12 shadow-md w-full max-w-md p-6">
+        <h3 class="text-regular-medium text-g12 mb-1">Filter Rule</h3>
+        <p class="text-sm text-g9 mb-4">KPI data in this group will be scoped by this filter.</p>
+        <input type="text" x-model="filterValue" @keydown.enter="applyFilter()" placeholder="e.g. utm_source = paid" class="w-full rounded-6 bg-p0 px-3 py-2 text-sm text-g12 outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9 mb-2">
+        <p class="text-mini text-g8 mb-5">Common filters: utm_source = paid, channel = outbound, source = organic</p>
+        <div class="flex items-center justify-end gap-3">
+          <button @click="filterModal = null" class="rounded-6 px-4 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors duration-fast">Cancel</button>
+          <button @click="applyFilter()" class="rounded-6 bg-a9 px-4 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors duration-fast">Apply</button>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  function app() {
+    const catalog = [
+      { id: 'total-revenue', name: 'Total Revenue', children: [] },
+      { id: 'active-clients', name: 'Active Clients', children: [] },
+      { id: 'rev-per-employee', name: 'Revenue per Employee', children: [] },
+      { id: 'available-cash', name: 'Available Cash', children: [] },
+      { id: 'qual-bookings', name: 'Qualified Bookings', children: ['Direct Bookings (VSL)', 'Direct Booking (Mail)', 'Human Setting', 'AI-Setting', 'Organic', 'Other'] },
+      { id: 'cpqb', name: 'Cost per Qualified Booking', children: ['Cost per Direct Booking'] },
+      { id: 'cac', name: 'CAC', children: [] },
+      { id: 'fe-roi', name: 'FE-ROI', children: ['CAC', 'Units Closed', 'FE Revenue Closed', 'FE Cash Closed', 'FE DV-ROAS', 'FE Cash-ROAS'] },
+      { id: 'adspend', name: 'Adspend', children: ['CPM', 'Clicks', 'CPC'] },
+      { id: 'leads', name: 'Leads', children: [] },
+      { id: 'cpl', name: 'Cost per Lead', children: [] },
+      { id: 'creatives', name: 'Winner Creatives Live', children: ['Produced Video Creatives', 'Launched Static Creatives', 'Launched Video Creatives'] },
+      { id: 'emails-sent', name: 'Emails Sent', children: ['Open-Rate'] },
+      { id: 'pos-reply-rate', name: 'Positive Reply Rate', children: ['Negative Replies', 'Positive Replies'] },
+      { id: 'booking-rate', name: 'Booking Rate', children: [] },
+      { id: 'follower', name: 'Follower', children: [] },
+      { id: 'videos-pub', name: 'Videos Published', children: ['Videos Produced'] },
+      { id: 'yt-watchtime', name: 'Total YouTube Watchtime', children: [] },
+      { id: 'cost-per-booking', name: 'Cost per Booking', children: [] },
+      { id: 'unique-visitors', name: 'Unique Visitors', children: [] },
+      { id: 'visit-optin', name: 'Visit to Opt-In Rate', children: [] },
+      { id: 'visit-vsl', name: 'Visit to VSL Starts', children: [] },
+      { id: 'vsl-completion', name: 'VSL Completion Rate', children: [] },
+      { id: 'visit-booking-start', name: 'Visit to Booking Start', children: [] },
+      { id: 'visit-booking-complete', name: 'Visit to Booking Complete', children: [] },
+      { id: 'bookings', name: 'Bookings', children: ['Direct Bookings', 'AI-Setter Bookings', 'Human Setter Bookings'] },
+      { id: 'cpb-direct', name: 'Cost per Direct Booking', children: [] },
+      { id: 'fe-deals', name: 'FE-Deals', children: [] },
+      { id: 'fe-dealvolumen', name: 'FE-Dealvolumen', children: [] },
+      { id: 'avg-dealsize', name: 'Avg. Dealsize', children: [] },
+      { id: 'close-rate', name: 'Call-Close Rate', children: [] },
+      { id: 'sets', name: 'Sets', children: [] },
+      { id: 'set-rate', name: 'Set Rate', children: [] },
+      { id: 'dials', name: 'Dials', children: [] },
+      { id: 'pickups', name: 'Pickups', children: [] },
+      { id: 'connect-rate', name: 'Connect Rate', children: [] },
+    ];
+
+    return {
+      catalog,
+      selectedView: 'company',
+      dragState: null,
+      dropTarget: null,
+      filterModal: null,
+      filterValue: '',
+      _v: 0,
+
+      companyView: {
+        kpis: ['total-revenue', 'active-clients', 'rev-per-employee', 'available-cash', 'qual-bookings']
+      },
+
+      departments: [
+        {
+          id: 'dept-mkt', name: 'Marketing', expanded: true,
+          groups: [
+            { id: 'mkt-overview', name: 'Overview', filter: '', kpis: ['qual-bookings', 'cpqb', 'cac', 'fe-roi'] },
+            { id: 'mkt-paid', name: 'Paid Ads', filter: 'utm_source = paid', kpis: ['creatives', 'adspend', 'leads', 'cpl', 'qual-bookings', 'cpqb', 'fe-roi'] },
+            { id: 'mkt-funnel', name: 'Funnel', filter: 'utm_source = paid', kpis: ['adspend', 'unique-visitors', 'leads', 'cpl', 'bookings', 'cpqb', 'fe-roi'] },
+            { id: 'mkt-outbound', name: 'Outbound Mail', filter: 'channel = outbound', kpis: ['emails-sent', 'pos-reply-rate', 'qual-bookings', 'booking-rate', 'cpqb', 'fe-roi'] },
+            { id: 'mkt-organic', name: 'Organic', filter: 'source = organic', kpis: ['follower', 'videos-pub', 'yt-watchtime', 'qual-bookings', 'cost-per-booking', 'fe-roi'] },
+          ]
+        },
+        {
+          id: 'dept-sales', name: 'Sales', expanded: false,
+          groups: [
+            { id: 'sales-overview', name: 'Overview', filter: '', kpis: ['leads', 'sets', 'set-rate'] },
+            { id: 'sales-closing', name: 'Closing', filter: '', kpis: ['fe-deals', 'fe-dealvolumen', 'avg-dealsize', 'close-rate'] },
+          ]
+        },
+        {
+          id: 'dept-delivery', name: 'Delivery', expanded: false,
+          groups: []
+        },
+      ],
+
+      get totalKpiCount() {
+        return this.catalog.length;
+      },
+      get totalViewCount() {
+        let c = 1;
+        for (const d of this.departments) c += d.groups.length;
+        return c;
+      },
+
+      selectView(viewId) {
+        this.selectedView = viewId;
+      },
+
+      catalogById(id) {
+        return this.catalog.find(k => k.id === id);
+      },
+
+      filteredCatalog(search, viewId) {
+        if (!search) return this.catalog;
+        const q = search.toLowerCase();
+        return this.catalog.filter(k => k.name.toLowerCase().includes(q));
+      },
+
+      isInView(viewId, kpiId) {
+        if (viewId === 'company') return this.companyView.kpis.includes(kpiId);
+        for (const d of this.departments) {
+          const g = d.groups.find(g => g.id === viewId);
+          if (g) return g.kpis.includes(kpiId);
+        }
+        return false;
+      },
+
+      addKpiToView(viewId, kpiId) {
+        if (viewId === 'company') {
+          if (!this.companyView.kpis.includes(kpiId)) this.companyView.kpis.push(kpiId);
+          return;
+        }
+        for (const d of this.departments) {
+          const g = d.groups.find(g => g.id === viewId);
+          if (g && !g.kpis.includes(kpiId)) { g.kpis.push(kpiId); return; }
+        }
+      },
+
+      removeKpiFromView(viewId, idx) {
+        if (viewId === 'company') { this.companyView.kpis.splice(idx, 1); return; }
+        for (const d of this.departments) {
+          const g = d.groups.find(g => g.id === viewId);
+          if (g) { g.kpis.splice(idx, 1); return; }
+        }
+      },
+
+      appearsIn(kpiId, currentViewId) {
+        const locs = [];
+        if (currentViewId !== 'company' && this.companyView.kpis.includes(kpiId)) {
+          locs.push('Company');
+        }
+        for (const d of this.departments) {
+          for (const g of d.groups) {
+            if (g.id !== currentViewId && g.kpis.includes(kpiId)) {
+              locs.push(g.name);
+            }
+          }
+        }
+        return locs;
+      },
+
+      handleDrop(viewId, toIdx) {
+        if (!this.dragState || this.dragState.viewId !== viewId) return;
+        const fromIdx = this.dragState.fromIdx;
+        if (fromIdx === toIdx) return;
+        let kpis;
+        if (viewId === 'company') { kpis = this.companyView.kpis; }
+        else {
+          for (const d of this.departments) {
+            const g = d.groups.find(g => g.id === viewId);
+            if (g) { kpis = g.kpis; break; }
+          }
+        }
+        if (!kpis) return;
+        const item = kpis.splice(fromIdx, 1)[0];
+        kpis.splice(toIdx, 0, item);
+        this.dragState = null;
+        this.dropTarget = null;
+      },
+
+      addDepartment() {
+        const id = 'dept-' + Date.now();
+        this.departments.push({ id, name: 'New Department', expanded: true, groups: [] });
+      },
+
+      addGroup(dept) {
+        const id = 'grp-' + Date.now();
+        dept.groups.push({ id, name: 'New Group', filter: '', kpis: [] });
+        dept.expanded = true;
+        this.selectedView = id;
+      },
+
+      removeGroup(dept, group) {
+        const idx = dept.groups.indexOf(group);
+        if (idx >= 0) dept.groups.splice(idx, 1);
+        if (this.selectedView === group.id) this.selectedView = null;
+      },
+
+      editFilter(group) {
+        this.filterModal = group;
+        this.filterValue = group.filter || '';
+      },
+
+      applyFilter() {
+        if (this.filterModal) {
+          this.filterModal.filter = this.filterValue.trim();
+          this.filterModal = null;
+        }
+      },
+    };
+  }
+  </script>
+
+</body>
+</html>
