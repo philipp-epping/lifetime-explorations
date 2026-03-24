@@ -157,26 +157,77 @@
         <div class="w-16 h-16 rounded-full bg-y3 mx-auto mb-5 flex items-center justify-center">
           <svg class="w-8 h-8 text-y11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
         </div>
-        <h1 class="text-lg font-semibold text-g12 tracking-tight"><span x-text="deferredCount"></span> items still need attention</h1>
-        <p class="text-sm text-g9 mt-2">You reviewed <span class="text-g11 font-medium" x-text="resolvedCount"></span> items. What about the rest?</p>
+        <h1 class="text-lg font-semibold text-g12 tracking-tight">Almost there</h1>
+        <p class="text-sm text-g9 mt-2">You reviewed <span class="text-g11 font-medium" x-text="resolvedCount"></span> of <span x-text="filteredItems.length"></span> items.</p>
+
+        <div class="mt-4 space-y-2 text-left">
+          <div x-show="deferredMissingCategories > 0" class="flex items-start gap-2.5 rounded-8 bg-g2 px-3.5 py-2.5">
+            <div class="w-5 h-5 rounded-full bg-y4 flex items-center justify-center shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-y11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z"/></svg>
+            </div>
+            <div>
+              <p class="text-sm text-g12"><span class="font-medium" x-text="deferredMissingCategories"></span> <span x-text="deferredMissingCategories === 1 ? 'transaction needs a category' : 'transactions need a category'"></span></p>
+              <p class="text-mini text-g9 mt-0.5" x-text="'Your ' + (monthFilter !== 'all' ? monthFilter + ' ' : '') + 'dashboard won\'t reflect these until categorized.'"></p>
+            </div>
+          </div>
+          <div x-show="deferredMissingReceipts > 0" class="flex items-start gap-2.5 rounded-8 bg-g2 px-3.5 py-2.5">
+            <div class="w-5 h-5 rounded-full bg-y4 flex items-center justify-center shrink-0 mt-0.5">
+              <svg class="w-3 h-3 text-y11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </div>
+            <div>
+              <p class="text-sm text-g12"><span class="font-medium" x-text="deferredMissingReceipts"></span> <span x-text="deferredMissingReceipts === 1 ? 'transaction missing a receipt' : 'transactions missing receipts'"></span></p>
+              <p class="text-mini text-g9 mt-0.5">Your tax export will flag these as incomplete.</p>
+            </div>
+          </div>
+        </div>
+
         <div class="flex flex-col items-center gap-2 mt-6 w-full">
-          <button @click="reviewDeferred()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">Review now</button>
+          <button @click="reviewDeferred()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Finish the last ' + deferredCount"></button>
           <button @click="markWaitingOnOthers()" class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Waiting on others</button>
-          <button @click="completionState = 'done'" class="text-sm text-g9 hover:text-g11 transition-colors mt-1">Skip for now</button>
+          <p class="text-mini text-g9 -mt-0.5">We'll remind you when documents arrive</p>
+          <button @click="skipToComplete()" class="text-sm text-g9 hover:text-g11 transition-colors mt-1">Skip for now</button>
         </div>
       </div>
     </div>
 
     <!-- ===== COMPLETION: done ===== -->
     <div x-show="completionState === 'done'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center">
-      <!-- Full celebration: everything resolved, no deferred/blocked -->
-      <div x-show="isFullyComplete" class="text-center max-w-sm">
-        <div class="w-16 h-16 rounded-full bg-s3 mx-auto mb-5 flex items-center justify-center">
-          <svg class="w-8 h-8 text-s11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      <!-- Full completion: everything resolved -->
+      <div x-show="isFullyComplete" class="text-center max-w-sm w-full">
+        <div x-show="_revealStep >= 1"
+             x-transition:enter="transition ease-out duration-700"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="w-16 h-16 rounded-full bg-s3 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-s9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h1 class="text-lg font-semibold text-g12 tracking-tight" x-text="monthFilter !== 'all' ? monthFilter + ' — done!' : 'All done!'"></h1>
-        <p class="text-sm text-g9 mt-2"><span class="text-g11 font-medium" x-text="resolvedCount"></span> items reviewed — ready for export.</p>
-        <div class="flex flex-col items-center gap-2 mt-6 w-full">
+        <h1 x-show="_revealStep >= 2"
+            x-transition:enter="transition ease-out duration-500"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            class="text-lg font-semibold text-g12 tracking-tight"
+            x-text="completionHeadline"></h1>
+        <p x-show="_revealStep >= 2"
+           x-transition:enter="transition ease-out duration-500"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
+           class="text-sm text-g9 mt-2">
+          <span class="text-g11 font-medium" x-text="resolvedCount"></span> items categorized and matched.
+        </p>
+        <p x-show="_revealStep === 3"
+           x-transition:enter="transition ease-out duration-700"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
+           x-transition:leave="transition ease-in duration-500"
+           x-transition:leave-start="opacity-100"
+           x-transition:leave-end="opacity-0"
+           class="text-sm text-g9 mt-8"
+           x-text="breathingText"></p>
+        <div x-show="_revealStep >= 4"
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="flex flex-col items-center gap-2 mt-6 w-full">
           <button class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">View Dashboard</button>
           <div class="flex items-center gap-2 w-full">
             <button class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Export to Tax Advisor</button>
@@ -184,18 +235,34 @@
           </div>
         </div>
       </div>
-      <!-- Partial: good progress, but some items blocked/deferred -->
-      <div x-show="!isFullyComplete" class="text-center max-w-sm">
-        <div class="w-16 h-16 rounded-full bg-a3 mx-auto mb-5 flex items-center justify-center">
-          <svg class="w-8 h-8 text-a11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+      <!-- Partial: good progress, some items on hold -->
+      <div x-show="!isFullyComplete" class="text-center max-w-sm w-full">
+        <div x-show="_revealStep >= 1"
+             x-transition:enter="transition ease-out duration-700"
+             x-transition:enter-start="opacity-0 scale-90"
+             x-transition:enter-end="opacity-100 scale-100"
+             class="w-16 h-16 rounded-full bg-a3 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-a9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
         </div>
-        <h1 class="text-lg font-semibold text-g12 tracking-tight">Nice work!</h1>
-        <p class="text-sm text-g9 mt-2">
+        <h1 x-show="_revealStep >= 2"
+            x-transition:enter="transition ease-out duration-500"
+            x-transition:enter-start="opacity-0 translate-y-1"
+            x-transition:enter-end="opacity-100 translate-y-0"
+            class="text-lg font-semibold text-g12 tracking-tight">Nice progress</h1>
+        <p x-show="_revealStep >= 2"
+           x-transition:enter="transition ease-out duration-500"
+           x-transition:enter-start="opacity-0"
+           x-transition:enter-end="opacity-100"
+           class="text-sm text-g9 mt-2">
           <span class="text-g11 font-medium" x-text="resolvedCount"></span> of <span x-text="filteredItems.length"></span> items reviewed.
-          <span x-show="blockedCount > 0" class="text-g9" x-text="blockedCount + ' waiting on others.'"></span>
-          <span x-show="blockedCount === 0 && deferredCount > 0" class="text-g9" x-text="deferredCount + ' skipped for now.'"></span>
+          <span x-show="blockedCount > 0" x-text="blockedCount + ' waiting on others.'"></span>
+          <span x-show="blockedCount === 0 && deferredCount > 0" x-text="deferredCount + ' on hold.'"></span>
         </p>
-        <div class="flex flex-col items-center gap-2 mt-6 w-full">
+        <div x-show="_revealStep >= 4"
+             x-transition:enter="transition ease-out duration-500"
+             x-transition:enter-start="opacity-0 translate-y-2"
+             x-transition:enter-end="opacity-100 translate-y-0"
+             class="flex flex-col items-center gap-2 mt-6 w-full">
           <button x-show="nextMonth" @click="goToNextMonth()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Continue to ' + nextMonth"></button>
           <button class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Exit</button>
         </div>
@@ -477,6 +544,8 @@
                              class="absolute left-0 right-0 top-full mt-1 z-20 max-h-48 overflow-y-auto rounded-8 bg-p1 shadow-md py-1">
                           <template x-for="(doc, idx) in receiptSearchResults" :key="doc.name">
                             <button @click="selectReceipt(doc)"
+                                    @mouseenter="previewDoc = doc"
+                                    @mouseleave="previewDoc = null"
                                     class="flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-g3 transition-colors">
                               <div class="w-8 h-8 rounded-6 bg-g3 flex items-center justify-center shrink-0">
                                 <svg class="w-4 h-4 text-g10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
@@ -495,6 +564,8 @@
                       <div x-show="currentItem.receiptSuggestions?.length > 0 && receiptSearch.length === 0" class="rounded-8 shadow-xs overflow-hidden mb-3">
                         <template x-for="(doc, idx) in currentItem.receiptSuggestions" :key="doc.name">
                           <button @click="selectReceipt(doc)"
+                                  @mouseenter="previewDoc = doc"
+                                  @mouseleave="previewDoc = null"
                                   class="flex items-center gap-3 w-full px-3 py-2.5 bg-a2 hover:bg-a3 text-left transition-colors border-b border-g4 last:border-b-0">
                             <span class="w-5 h-5 rounded-4 bg-g3 flex items-center justify-center text-micro-medium text-g10 shrink-0" x-text="idx + 1"></span>
                             <div class="w-7 h-7 rounded-6 bg-g3 flex items-center justify-center shrink-0">
@@ -558,8 +629,40 @@
                     <p class="text-mini text-g9 mt-1">No receipt required</p>
                   </div>
 
-                  <!-- Receipt preview -->
-                  <div x-show="!currentItem.isPrivate && hasReceipt">
+                  <!-- Hover preview of a receipt candidate -->
+                  <div x-show="!currentItem.isPrivate && previewDoc" x-transition.opacity.duration.150ms>
+                    <div class="mb-3 flex items-center gap-2">
+                      <div class="w-2 h-2 rounded-full bg-a9 animate-pulse"></div>
+                      <span class="text-mini text-a11">Preview</span>
+                    </div>
+                    <div class="bg-p1 rounded-8 shadow-xs p-6 max-w-sm mx-auto ring-2 ring-a6">
+                      <div class="text-center mb-4 pb-4 border-b border-g4">
+                        <div class="w-10 h-10 rounded-full bg-a3 mx-auto mb-2 flex items-center justify-center text-sm-medium text-a11" x-text="(previewDoc.name || '').charAt(0)"></div>
+                        <div class="text-sm-medium text-g12" x-text="previewDoc.name"></div>
+                        <div class="text-mini text-g9 mt-0.5" x-text="previewDoc.invoiceNumber || ''"></div>
+                      </div>
+                      <div class="flex justify-between text-sm text-g9 mb-2">
+                        <span>Amount</span>
+                        <span class="text-g11" x-text="formatAmount(previewDoc.amount)"></span>
+                      </div>
+                      <div class="flex justify-between text-sm text-g9">
+                        <span>Transaction</span>
+                        <span class="text-g11" x-text="formatAmount(currentItem.amount)"></span>
+                      </div>
+                      <div x-show="previewDoc.amount === currentItem.amount" class="mt-3 pt-3 border-t border-g4 flex items-center justify-center gap-1.5 text-mini text-s11">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        Amounts match
+                      </div>
+                      <div x-show="previewDoc.amount !== currentItem.amount" class="mt-3 pt-3 border-t border-g4 flex items-center justify-center gap-1.5 text-mini text-y11">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01"/></svg>
+                        Amounts differ
+                      </div>
+                    </div>
+                    <p class="text-center text-mini text-g9 mt-3">Click to match this receipt</p>
+                  </div>
+
+                  <!-- Receipt preview (matched) -->
+                  <div x-show="!currentItem.isPrivate && hasReceipt && !previewDoc">
                     <div class="bg-p1 rounded-8 shadow-xs p-6 max-w-sm mx-auto">
                       <div class="text-center mb-4 pb-4 border-b border-g4">
                         <div class="w-10 h-10 rounded-full bg-g3 mx-auto mb-2 flex items-center justify-center text-sm-medium text-g10" x-text="currentItem.counterparty.charAt(0)"></div>
@@ -582,7 +685,7 @@
                   </div>
 
                   <!-- Empty state: drop zone -->
-                  <div x-show="!currentItem.isPrivate && !hasReceipt" class="flex flex-col items-center justify-center py-16 text-center">
+                  <div x-show="!currentItem.isPrivate && !hasReceipt && !previewDoc" class="flex flex-col items-center justify-center py-16 text-center">
                     <div class="w-14 h-14 rounded-full bg-g3 mb-4 flex items-center justify-center">
                       <svg class="w-7 h-7 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
                     </div>
@@ -688,6 +791,12 @@
       ];
 
       const receiptSuggestionsByItem = {
+        1:  [{ name: 'Spotify Invoice', amount: 9.99, invoiceNumber: 'SP-2026-0115', badge: 'matching counterparty' }],
+        2:  [{ name: 'Amazon Invoice', amount: 247.83, invoiceNumber: 'INV-AWS-938271', badge: 'matching counterparty' }],
+        3:  [{ name: 'Deutsche Bahn Ticket', amount: 89.90, invoiceNumber: 'DB-ICE-794', badge: 'matching counterparty' }],
+        5:  [{ name: 'LinkedIn Invoice', amount: 79.99, invoiceNumber: 'LI-2026-0203', badge: 'matching counterparty' }],
+        6:  [{ name: 'Figma Invoice', amount: 42.00, invoiceNumber: 'FIG-2026-0207', badge: 'matching counterparty' }],
+        7:  [{ name: 'Canva Pro Receipt', amount: 119.99, invoiceNumber: 'CNV-PRO-0214', badge: 'matching counterparty' }],
         8:  [{ name: 'Office Depot Invoice', amount: 156.80, invoiceNumber: 'INV-OD-2026-0112', badge: 'matching counterparty' }, { name: 'OD GmbH Receipt', amount: 158.20, invoiceNumber: 'R-4102', badge: 'matching reference' }],
         9:  [{ name: 'Vapiano Receipt Berlin', amount: 67.20, invoiceNumber: 'REC-VP-0119', badge: 'matching counterparty' }, { name: 'Restaurant Receipt', amount: 67.20, invoiceNumber: 'INV-8847', badge: 'matching reference' }],
         10: [{ name: 'MediaMarkt Invoice', amount: 189.00, invoiceNumber: 'INV-MM-29104', badge: 'matching counterparty' }, { name: 'Electronics Purchase', amount: 189.00, invoiceNumber: 'REC-EL-0128', badge: 'matching reference' }],
@@ -769,9 +878,11 @@
         showCategoryBrowser: false,
         completionState: 'active',
         isDragging: false,
+        previewDoc: null,
         _previousCategory: null,
         _autoAdvanceTimer: null,
         _categoryHighlight: -1,
+        _revealStep: 0,
 
         get filteredItems() {
           let list = this.items;
@@ -804,6 +915,26 @@
 
         get blockedCount() {
           return this.filteredItems.filter(i => i.blocked).length;
+        },
+
+        get deferredMissingCategories() {
+          return this.filteredItems.filter(i => i.deferred && !i.blocked && i.needsCategory && !i.selectedCategory).length;
+        },
+
+        get deferredMissingReceipts() {
+          return this.filteredItems.filter(i => i.deferred && !i.blocked && i.needsReceipt && !i.receiptResolution && !i.isPrivate).length;
+        },
+
+        get completionHeadline() {
+          if (this.monthFilter !== 'all') return 'Finished with ' + this.monthFilter;
+          return 'All finished';
+        },
+
+        get breathingText() {
+          if (this.monthFilter !== 'all') {
+            return 'Take a breath \u2014 ' + this.monthFilter.split(' ')[0] + ' is off your plate.';
+          }
+          return 'Take a breath \u2014 everything\u2019s handled.';
         },
 
         get isFullyComplete() {
@@ -957,6 +1088,7 @@
             this.currentItem.matchedReceiptName = doc.name;
             this.currentItem.matchedReceiptInvoice = doc.invoiceNumber || null;
             this.receiptSearch = '';
+            this.previewDoc = null;
             this.tryAutoAdvance();
           }
         },
@@ -969,26 +1101,16 @@
         handleFileUpload(event) {
           if (event.target.files.length > 0 && this.currentItem) {
             const fileName = event.target.files[0].name;
-            // #region agent log
-            fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:handleFileUpload',message:'Before upload logic',data:{itemId:this.currentItem.id,counterparty:this.currentItem.counterparty,needsReceipt:this.currentItem.needsReceipt,receiptResolution:this.currentItem.receiptResolution,matchedReceiptName:this.currentItem.matchedReceiptName,additionalReceipts:this.currentItem.additionalReceipts?.length,fileName},timestamp:Date.now(),hypothesisId:'A,D'})}).catch(()=>{});
-            // #endregion
             if (this.currentItem.receiptResolution) {
               if (!this.currentItem.additionalReceipts) this.currentItem.additionalReceipts = [];
-              this.currentItem.additionalReceipts.push({ name: fileName, detail: formatAmount(this.currentItem.amount) });
-              // #region agent log
-              fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:handleFileUpload:addAdditional',message:'Added as additional receipt',data:{fileName,additionalCount:this.currentItem.additionalReceipts.length},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
-              // #endregion
+              this.currentItem.additionalReceipts.push({ name: fileName, detail: this.formatAmount(this.currentItem.amount) });
             } else {
               this.currentItem.receiptResolution = 'uploaded';
               this.currentItem.matchedReceiptName = fileName;
-              // #region agent log
-              fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:handleFileUpload:setPrimary',message:'Set as primary receipt',data:{fileName,receiptResolution:'uploaded'},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
-              // #endregion
               this.tryAutoAdvance();
             }
             event.target.value = '';
           }
-          function formatAmount(a) { return '€' + a.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
         },
 
         resolveReceipt(type) {
@@ -1001,9 +1123,6 @@
 
         clearReceipt() {
           if (this.currentItem) {
-            // #region agent log
-            fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:clearReceipt',message:'Clearing receipt',data:{itemId:this.currentItem.id,counterparty:this.currentItem.counterparty,needsReceipt:this.currentItem.needsReceipt,receiptResolutionBefore:this.currentItem.receiptResolution,matchedReceiptNameBefore:this.currentItem.matchedReceiptName,additionalReceiptsBefore:this.currentItem.additionalReceipts?.length,receiptDoneWillBe:!this.currentItem.needsReceipt},timestamp:Date.now(),hypothesisId:'B,C'})}).catch(()=>{});
-            // #endregion
             clearTimeout(this._autoAdvanceTimer);
             this.currentItem.receiptResolution = null;
             this.currentItem.matchedReceiptName = null;
@@ -1047,13 +1166,29 @@
             if (i.deferred) { i.blocked = true; i.deferred = false; }
           });
           this.completionState = 'done';
+          this.startCompletionReveal();
+        },
+
+        skipToComplete() {
+          this.completionState = 'done';
+          this.startCompletionReveal();
+        },
+
+        startCompletionReveal() {
+          this._revealStep = 0;
+          const full = this.isFullyComplete;
+          setTimeout(() => { this._revealStep = 1; }, 100);
+          setTimeout(() => { this._revealStep = 2; }, 600);
+          if (full) {
+            setTimeout(() => { this._revealStep = 3; }, 1200);
+            setTimeout(() => { this._revealStep = 4; }, 3500);
+          } else {
+            setTimeout(() => { this._revealStep = 4; }, 1800);
+          }
         },
 
         removeAdditionalReceipt(idx) {
           if (this.currentItem?.additionalReceipts) {
-            // #region agent log
-            fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:removeAdditionalReceipt',message:'Removing additional receipt',data:{idx,itemId:this.currentItem.id,receiptName:this.currentItem.additionalReceipts[idx]?.name,remainingAfter:this.currentItem.additionalReceipts.length-1},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
-            // #endregion
             this.currentItem.additionalReceipts.splice(idx, 1);
           }
         },
@@ -1071,6 +1206,7 @@
                 this.completionState = 'checkpoint';
               } else {
                 this.completionState = 'done';
+                this.startCompletionReveal();
               }
             }
           }
@@ -1090,6 +1226,7 @@
 
         goToNextMonth() {
           if (this.nextMonth) {
+            this._revealStep = 0;
             this.completionState = 'active';
             this.setMonthFilter(this.nextMonth);
           }
@@ -1104,6 +1241,7 @@
         },
 
         reviewDeferred() {
+          this._revealStep = 0;
           this.filteredItems.forEach(i => { if (i.deferred) i.deferred = false; });
           this.completionState = 'active';
           this.currentIndex = 0;
@@ -1118,6 +1256,7 @@
           this._previousCategory = null;
           this.categorySearch = '';
           this.receiptSearch = '';
+          this.previewDoc = null;
           this._categoryHighlight = -1;
           setTimeout(() => {
             this.currentIndex = newIdx;

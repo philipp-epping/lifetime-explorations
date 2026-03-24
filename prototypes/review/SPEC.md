@@ -86,8 +86,44 @@ Brief transition (item slides out, next slides in). Smooth, fast — reinforces 
 ### Skipped item
 Same transition as submitted but item remains in queue. Visual distinction not needed — the progress counter reflects it.
 
-### Queue complete
-All items resolved. Celebratory but professional: "You're all caught up." Clear next actions: "View dashboard" or "Export to tax advisor." If filtering by month: "January is complete — 8 items remain in February."
+### Queue complete — all resolved
+
+An intentional micro-moment of relief. The user just finished making decisions — the screen honors that by having *no decisions* for a beat.
+
+**Staggered reveal:**
+1. Headline appears immediately: "Finished with January" (warm, personal — avoids "closed" which implies irreversible finality)
+2. Specific acknowledgment fades in: "10 items categorized and matched" — names the work, doesn't just count it
+3. A soft breathing prompt appears (~0.5s after): single line inviting the user to pause ("Take a breath — you earned it" or similar, secondary text, understated)
+4. After ~2.5s, action buttons ease in from below with opacity. The breathing prompt fades as buttons arrive.
+
+**Animation language:** Deceleration curves. Elements arrive with momentum and settle into rest. No bounces, no pulses, no loops.
+
+**Actions:** "View Dashboard" (primary), "Export to Tax Advisor" (secondary). If next month has items: "Continue to [Month]" (secondary, alongside export).
+
+### Queue complete — partial (items deferred or blocked)
+
+Same breathing beat but lighter (~1s). Acknowledges real progress without false celebration.
+
+**Headline:** "Nice progress" or similar — warm but honest.
+**Subline:** Specific: "8 of 10 items reviewed. 2 on hold." — frames remaining items as paused, not failed.
+
+**Actions:** "Continue to [Month]" (primary if next month exists), "Exit" (secondary).
+
+### Checkpoint — deferred items
+
+A decision point, not a celebration — but still warm. Reframes from nagging ("items need attention") to informing (why finishing matters).
+
+**Lead with progress:** "You reviewed 8 of 10 items — almost there."
+
+**Consequence framing by issue type:**
+- Missing categories: "Your [Month] dashboard won't reflect these transactions until they're categorized."
+- Missing receipts: "Your tax export for [Month] will flag these as incomplete."
+- Both: show both consequences, grouped, short and scannable.
+
+**Actions:**
+- "Finish the last 2" (primary — proximity language, inviting not pressuring)
+- "Waiting on others" (secondary — with a one-liner: "We'll remind you when documents arrive")
+- "Skip for now" (tertiary text link)
 
 ### Queue empty on entry
 No items need attention. "Nothing to review — you're all set." Quick link back to wherever they came from.
@@ -112,4 +148,6 @@ No items need attention. "Nothing to review — you're all set." Quick link back
 | Transition between items | Slide animation, fast, reinforces momentum |
 | Keyboard shortcuts | Visually hinted on buttons, not core to prototype |
 | Urgency indicators | None — clean, neutral, trust the user |
-| Completion state | "You're all caught up" with next-action links |
+| Completion state | Breathing moment → staggered reveal → then actions. "Finished with [Month]" not "done!" |
+| Completion emotion | Relief and quiet pride, not gamified celebration |
+| Checkpoint framing | Educational: name the consequence of unresolved items (dashboard accuracy / tax export) |
