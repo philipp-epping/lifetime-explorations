@@ -347,34 +347,40 @@
       }
 
       return {
-        activeTab: 'All',
-        statuses: ['In Exploration', 'In Design', 'Completed', 'Cancelled'],
+        activeTab: 'In Exploration',
+        statuses: ['In Exploration', 'In Design', 'Parked', 'Completed', 'Cancelled'],
         tabs: [
-          { key: 'All', label: 'All' },
           { key: 'In Exploration', label: 'In Exploration' },
           { key: 'In Design', label: 'In Design' },
+          { key: 'Active', label: 'All Active' },
+          { key: 'Parked', label: 'Parked' },
           { key: 'Completed', label: 'Completed' },
           { key: 'Cancelled', label: 'Cancelled' },
         ],
         items,
 
         get filteredItems() {
-          const filtered = this.activeTab === 'All'
-            ? this.items
-            : this.items.filter(i => i.status === this.activeTab);
+          let filtered;
+          if (this.activeTab === 'Active') {
+            filtered = this.items.filter(i => i.status === 'In Exploration' || i.status === 'In Design');
+          } else {
+            filtered = this.items.filter(i => i.status === this.activeTab);
+          }
           return filtered.sort((a, b) => b.started.localeCompare(a.started));
         },
 
         countForTab(key) {
-          return key === 'All'
-            ? this.items.length
-            : this.items.filter(i => i.status === key).length;
+          if (key === 'Active') {
+            return this.items.filter(i => i.status === 'In Exploration' || i.status === 'In Design').length;
+          }
+          return this.items.filter(i => i.status === key).length;
         },
 
         statusStyle(status) {
           const styles = {
             'In Exploration': 'bg-a3 text-a11',
             'In Design': 'bg-y3 text-y11',
+            'Parked': 'bg-g3 text-g10',
             'Completed': 'bg-s3 text-s11',
             'Cancelled': 'bg-g3 text-g9',
           };
@@ -385,6 +391,7 @@
           const dots = {
             'In Exploration': 'bg-a9',
             'In Design': 'bg-y9',
+            'Parked': 'bg-g9',
             'Completed': 'bg-s9',
             'Cancelled': 'bg-g8',
           };
