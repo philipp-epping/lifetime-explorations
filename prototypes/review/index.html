@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Review Queue — Lifetime</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3/dist/cdn.min.js"></script>
+  <style type="text/tailwindcss">
+    @theme {
+      --font-sans: "Inter", system-ui, sans-serif;
+
+      --color-p0: oklch(0.982 0 0);
+      --color-p1: oklch(1 0 0);
+
+      --color-g0: oklch(1 0 0);
+      --color-g1: oklch(0.991 0 0);
+      --color-g2: oklch(0.982 0 0);
+      --color-g3: oklch(0.955 0 0);
+      --color-g4: oklch(0.931 0 0);
+      --color-g5: oklch(0.91 0 0);
+      --color-g6: oklch(0.885 0 0);
+      --color-g7: oklch(0.851 0 0);
+      --color-g8: oklch(0.792 0 0);
+      --color-g9: oklch(0.643 0 0);
+      --color-g10: oklch(0.507 0 0);
+      --color-g11: oklch(0.361 0.003 286.228);
+      --color-g12: oklch(0.21 0.004 286.059);
+
+      --color-a1: oklch(0.994 0.001 286.376);
+      --color-a2: oklch(0.982 0.008 271.33);
+      --color-a3: oklch(0.961 0.018 269.09);
+      --color-a4: oklch(0.933 0.032 266.166);
+      --color-a5: oklch(0.901 0.048 267.198);
+      --color-a6: oklch(0.857 0.07 268.824);
+      --color-a7: oklch(0.804 0.098 270.675);
+      --color-a8: oklch(0.73 0.139 271.732);
+      --color-a9: oklch(0.571 0.235 271.643);
+      --color-a10: oklch(0.526 0.213 271.816);
+      --color-a11: oklch(0.511 0.213 271.713);
+      --color-a12: oklch(0.312 0.107 271.681);
+
+      --color-y1: oklch(0.994 0.003 84.559);
+      --color-y2: oklch(0.981 0.02 84.59);
+      --color-y3: oklch(0.954 0.047 83.943);
+      --color-y4: oklch(0.928 0.065 78.977);
+      --color-y5: oklch(0.902 0.086 77.209);
+      --color-y6: oklch(0.866 0.114 74.958);
+      --color-y7: oklch(0.823 0.122 68.55);
+      --color-y8: oklch(0.755 0.141 68.718);
+      --color-y9: oklch(0.784 0.171 68.907);
+      --color-y10: oklch(0.751 0.141 69.244);
+      --color-y11: oklch(0.575 0.132 62.633);
+      --color-y12: oklch(0.353 0.053 69.99);
+
+      --color-d1: oklch(0.993 0.003 17.212);
+      --color-d2: oklch(0.982 0.009 26.017);
+      --color-d3: oklch(0.955 0.022 27.81);
+      --color-d4: oklch(0.918 0.042 27.012);
+      --color-d5: oklch(0.886 0.06 27.206);
+      --color-d6: oklch(0.853 0.08 26.442);
+      --color-d7: oklch(0.806 0.102 26.189);
+      --color-d8: oklch(0.744 0.129 25.796);
+      --color-d9: oklch(0.631 0.218 26.103);
+      --color-d10: oklch(0.591 0.22 26.112);
+      --color-d11: oklch(0.56 0.218 26.228);
+      --color-d12: oklch(0.34 0.115 26.406);
+
+      --color-s1: oklch(0.994 0.006 137.773);
+      --color-s2: oklch(0.982 0.011 136.559);
+      --color-s3: oklch(0.96 0.025 137.807);
+      --color-s4: oklch(0.934 0.04 137.208);
+      --color-s5: oklch(0.901 0.058 136.615);
+      --color-s6: oklch(0.858 0.079 136.575);
+      --color-s7: oklch(0.798 0.104 136.63);
+      --color-s8: oklch(0.715 0.142 136.47);
+      --color-s9: oklch(0.6 0.155 136.544);
+      --color-s10: oklch(0.555 0.142 136.627);
+      --color-s11: oklch(0.526 0.141 136.444);
+      --color-s12: oklch(0.326 0.058 136.282);
+
+      --color-alpha-2: oklch(0 0 0 / 0.02);
+      --color-alpha-4: oklch(0 0 0 / 0.04);
+      --color-alpha-6: oklch(0 0 0 / 0.06);
+      --color-alpha-8: oklch(0 0 0 / 0.08);
+      --color-alpha-10: oklch(0 0 0 / 0.1);
+      --color-alpha-12: oklch(0 0 0 / 0.12);
+      --color-alpha-16: oklch(0 0 0 / 0.16);
+      --color-alpha-24: oklch(0 0 0 / 0.24);
+      --color-alpha-36: oklch(0 0 0 / 0.36);
+      --color-alpha-48: oklch(0 0 0 / 0.48);
+      --color-alpha-80: oklch(0 0 0 / 0.8);
+
+      --text-micro: 10px;
+      --text-micro--font-weight: 450;
+      --text-micro--line-height: 14px;
+      --text-micro-medium: 10px;
+      --text-micro-medium--font-weight: 500;
+      --text-micro-medium--line-height: 14px;
+      --text-mini: 12px;
+      --text-mini--font-weight: 450;
+      --text-mini--line-height: 15px;
+      --text-mini-medium: 12px;
+      --text-mini-medium--font-weight: 500;
+      --text-mini-medium--line-height: 15px;
+      --text-sm: 13px;
+      --text-sm--font-weight: 450;
+      --text-sm--line-height: 18px;
+      --text-sm--letter-spacing: -0.28px;
+      --text-sm-medium: 13px;
+      --text-sm-medium--font-weight: 500;
+      --text-sm-medium--line-height: 18px;
+      --text-sm-medium--letter-spacing: -0.28px;
+      --text-regular: 14px;
+      --text-regular--font-weight: 450;
+      --text-regular--line-height: 20px;
+      --text-regular--letter-spacing: -0.13px;
+      --text-regular-medium: 14px;
+      --text-regular-medium--font-weight: 500;
+      --text-regular-medium--line-height: 20px;
+      --text-regular-medium--letter-spacing: -0.13px;
+
+      --radius-0: 0px;
+      --radius-2: 2px;
+      --radius-4: 4px;
+      --radius-6: 6px;
+      --radius-8: 8px;
+      --radius-10: 10px;
+      --radius-12: 12px;
+      --radius-full: 999px;
+
+      --shadow-xs: 0 0 0 1px var(--color-alpha-6), 0 1px 3px 0 var(--color-alpha-4);
+      --shadow-md: 0px 0px 1px 0px rgba(0, 0, 0, 0.27), 0px 4px 6px -1px rgba(0, 0, 0, 0.1), 0px 2px 4px -2px rgba(0, 0, 0, 0.1);
+
+      --duration-fast: 120ms;
+      --duration-normal: 200ms;
+      --duration-slow: 300ms;
+      --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+    }
+    [x-cloak] { display: none !important; }
+  </style>
+</head>
+<body class="bg-p0 font-sans antialiased">
+
+  <div x-data="reviewQueue()" x-cloak @keydown.window="handleKeydown($event)" class="h-screen flex flex-col">
+
+    <!-- Hidden file input for upload -->
+    <input type="file" data-file-input class="hidden" accept=".pdf,.png,.jpg,.jpeg" @change="handleFileUpload($event)">
+
+    <!-- ===== CHECKPOINT: deferred items ===== -->
+    <div x-show="completionState === 'checkpoint'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center">
+      <div class="text-center max-w-sm">
+        <div class="w-16 h-16 rounded-full bg-y3 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-y11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+        </div>
+        <h1 class="text-lg font-semibold text-g12 tracking-tight"><span x-text="deferredCount"></span> items still need attention</h1>
+        <p class="text-sm text-g9 mt-2">You reviewed <span class="text-g11 font-medium" x-text="resolvedCount"></span> items. What about the rest?</p>
+        <div class="flex flex-col items-center gap-2 mt-6 w-full">
+          <button @click="reviewDeferred()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">Review now</button>
+          <button @click="markWaitingOnOthers()" class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Waiting on others</button>
+          <button @click="completionState = 'done'" class="text-sm text-g9 hover:text-g11 transition-colors mt-1">Skip for now</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== COMPLETION: done ===== -->
+    <div x-show="completionState === 'done'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center">
+      <!-- Full celebration: everything resolved, no deferred/blocked -->
+      <div x-show="isFullyComplete" class="text-center max-w-sm">
+        <div class="w-16 h-16 rounded-full bg-s3 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-s11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h1 class="text-lg font-semibold text-g12 tracking-tight" x-text="monthFilter !== 'all' ? monthFilter + ' — done!' : 'All done!'"></h1>
+        <p class="text-sm text-g9 mt-2"><span class="text-g11 font-medium" x-text="resolvedCount"></span> items reviewed — ready for export.</p>
+        <div class="flex flex-col items-center gap-2 mt-6 w-full">
+          <button class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">View Dashboard</button>
+          <div class="flex items-center gap-2 w-full">
+            <button class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Export to Tax Advisor</button>
+            <button x-show="nextMonth" @click="goToNextMonth()" class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors" x-text="'Continue to ' + nextMonth"></button>
+          </div>
+        </div>
+      </div>
+      <!-- Partial: good progress, but some items blocked/deferred -->
+      <div x-show="!isFullyComplete" class="text-center max-w-sm">
+        <div class="w-16 h-16 rounded-full bg-a3 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-a11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+        </div>
+        <h1 class="text-lg font-semibold text-g12 tracking-tight">Nice work!</h1>
+        <p class="text-sm text-g9 mt-2">
+          <span class="text-g11 font-medium" x-text="resolvedCount"></span> of <span x-text="filteredItems.length"></span> items reviewed.
+          <span x-show="blockedCount > 0" class="text-g9" x-text="blockedCount + ' waiting on others.'"></span>
+          <span x-show="blockedCount === 0 && deferredCount > 0" class="text-g9" x-text="deferredCount + ' skipped for now.'"></span>
+        </p>
+        <div class="flex flex-col items-center gap-2 mt-6 w-full">
+          <button x-show="nextMonth" @click="goToNextMonth()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Continue to ' + nextMonth"></button>
+          <button class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Exit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== ACTIVE REVIEW ===== -->
+    <template x-if="completionState === 'active' && filteredItems.length > 0">
+      <div class="flex-1 flex flex-col min-h-0">
+
+        <!-- Top bar -->
+        <div class="flex items-center gap-4 px-5 h-13 border-b border-g4 bg-p1 shrink-0">
+          <div class="relative" x-data="{ open: false }">
+            <button @click="open = !open" class="flex items-center gap-1.5 rounded-6 px-2.5 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors">
+              <svg class="w-4 h-4 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+              <span x-text="monthFilter === 'all' ? 'All months' : monthFilter"></span>
+              <svg class="w-3 h-3 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+            </button>
+            <div x-show="open" @click.away="open = false" x-transition.opacity
+                 class="absolute left-0 top-full mt-1 z-30 w-48 rounded-8 bg-p1 shadow-md py-1">
+              <template x-for="m in monthOptions" :key="m.value">
+                <button @click="setMonthFilter(m.value); open = false"
+                        :class="monthFilter === m.value ? 'bg-g3 text-g12' : 'text-g11'"
+                        class="flex items-center justify-between w-full px-3 py-1.5 text-sm hover:bg-g3 transition-colors text-left">
+                  <span x-text="m.label"></span>
+                  <span class="text-mini text-g9" x-text="m.count"></span>
+                </button>
+              </template>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 ml-auto">
+            <span class="text-sm-medium text-g12">Review</span>
+            <span class="text-sm text-g9 tabular-nums">
+              <span class="text-g11" x-text="currentIndex + 1"></span> of <span x-text="filteredItems.length"></span>
+            </span>
+          </div>
+
+          <button class="flex items-center gap-1.5 ml-auto text-sm text-g9 hover:text-g11 transition-colors">
+            <span>Exit</span>
+            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Progress bar -->
+        <div class="h-1 bg-g3 shrink-0">
+          <div class="h-full bg-a9 transition-all duration-slow ease-out" :style="`width: ${progressPercent}%`"></div>
+        </div>
+
+        <!-- Split view -->
+        <div class="flex-1 flex min-h-0">
+          <div x-show="showContent"
+               x-transition:enter="transition ease-out duration-200"
+               x-transition:enter-start="opacity-0 translate-y-1"
+               x-transition:enter-end="opacity-100 translate-y-0"
+               x-transition:leave="transition ease-in duration-150"
+               x-transition:leave-start="opacity-100 translate-y-0"
+               x-transition:leave-end="opacity-0 -translate-y-1"
+               class="flex-1 flex min-h-0">
+
+            <!-- LEFT PANEL -->
+            <div class="w-[55%] border-r border-g4 bg-p1 overflow-y-auto p-6">
+              <template x-if="currentItem">
+                <div>
+                  <!-- Transaction info -->
+                  <div class="mb-5">
+                    <div class="flex items-start justify-between mb-0.5">
+                      <h2 class="text-regular-medium text-g12" x-text="currentItem.counterparty"></h2>
+                      <span class="text-regular-medium text-g12 tabular-nums shrink-0 ml-4" x-text="formatAmount(currentItem.amount)"></span>
+                    </div>
+                    <p class="text-sm text-g9 mb-2" x-text="currentItem.description"></p>
+                    <div class="flex items-center gap-2 text-mini text-g9">
+                      <span x-text="formatDate(currentItem.date)"></span>
+                      <span>·</span>
+                      <span>from</span>
+                      <div class="flex items-center gap-1.5">
+                        <div class="w-4 h-4 rounded-4 bg-d9 flex items-center justify-center">
+                          <svg class="w-2.5 h-2.5 text-white" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6h18v2H3V6zm0 5h18v2H3v-2zm0 5h18v2H3v-2z"/></svg>
+                        </div>
+                        <span class="text-g11" x-text="currentItem.accountName"></span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Private badge -->
+                  <div x-show="currentItem.isPrivate" class="mb-4 flex items-center gap-2 rounded-6 bg-g3 px-3 py-2">
+                    <svg class="w-4 h-4 text-g10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    <span class="text-sm text-g11">Private transaction</span>
+                    <button @click="currentItem.isPrivate = false" class="text-mini text-a11 hover:text-a12 ml-auto">Remove</button>
+                  </div>
+
+                  <!-- ☐/✓ Category -->
+                  <div class="border-t border-g4 pt-4">
+                    <div class="flex items-center gap-2 mb-3">
+                      <div x-show="currentItem.selectedCategory" class="w-4 h-4 rounded-full bg-s9 flex items-center justify-center">
+                        <svg class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <div x-show="!currentItem.selectedCategory" class="w-4 h-4 rounded-full border-2 border-g5"></div>
+                      <h3 class="text-sm-medium" :class="currentItem.selectedCategory ? 'text-g12' : 'text-g11'">Category</h3>
+                    </div>
+
+                    <!-- Selected category card -->
+                    <div x-show="currentItem.selectedCategory && !showCategoryBrowser" class="rounded-8 shadow-xs overflow-hidden">
+                      <div class="flex items-center gap-3 px-3 py-2.5 bg-a3">
+                        <svg class="w-4 h-4 text-a11 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                        <div class="min-w-0 flex-1">
+                          <div class="text-sm text-a12 truncate" x-text="currentItem.selectedCategory"></div>
+                          <div class="text-mini text-a11 truncate" x-text="getCategoryPath(currentItem.selectedCategory)"></div>
+                        </div>
+                        <button @click="openCategoryBrowser()" class="flex items-center gap-1 text-mini text-a11 hover:text-a12 shrink-0">
+                          <kbd class="inline-flex items-center justify-center w-4 h-4 rounded-4 bg-a4 text-micro-medium text-a11">C</kbd>
+                          Change
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Category picker (suggestions + search) -->
+                    <div x-show="!currentItem.selectedCategory || showCategoryBrowser" @click.away="revertCategory()">
+                      <div class="relative mb-3">
+                        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text"
+                               data-category-input
+                               x-model="categorySearch"
+                               @keydown="handleCategoryKeydown($event)"
+                               class="w-full rounded-6 bg-p1 pl-8 pr-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9"
+                               placeholder="Search categories...">
+                        <!-- Search results dropdown -->
+                        <div x-show="categorySearch.length > 0 && categorySearchResults.length > 0" x-transition.opacity
+                             class="absolute left-0 right-0 top-full mt-1 z-20 max-h-48 overflow-y-auto rounded-8 bg-p1 shadow-md py-1">
+                          <template x-for="(cat, idx) in categorySearchResults" :key="cat.name">
+                            <button @click="selectCategory(cat.name)"
+                                    class="flex items-center gap-3 w-full px-3 py-2 text-left transition-colors"
+                                    :class="_categoryHighlight === idx ? 'bg-a3' : 'hover:bg-g3'">
+                              <div class="min-w-0">
+                                <div class="text-sm text-g12 truncate" x-text="cat.name"></div>
+                                <div class="text-mini text-g9 truncate" x-text="cat.path"></div>
+                              </div>
+                            </button>
+                          </template>
+                          <div x-show="categorySearchResults.length === 0" class="px-3 py-2 text-sm text-g9">No categories found</div>
+                        </div>
+                      </div>
+
+                      <!-- AI suggestions (when not searching) -->
+                      <div x-show="currentItem.suggestions.length > 0 && categorySearch.length === 0" class="rounded-8 shadow-xs overflow-hidden">
+                        <template x-for="(sug, idx) in currentItem.suggestions" :key="sug.name">
+                          <button @click="selectCategory(sug.name)"
+                                  class="flex items-center gap-3 w-full px-3 py-2.5 text-left transition-colors border-b border-g4 last:border-b-0"
+                                  :class="_categoryHighlight === idx ? 'bg-a3' : (sug.ai ? 'bg-a2 hover:bg-a3' : 'hover:bg-g3')">
+                            <span class="w-5 h-5 rounded-4 bg-g3 flex items-center justify-center text-micro-medium text-g10 shrink-0" x-text="idx + 1"></span>
+                            <div class="min-w-0 flex-1">
+                              <div class="text-sm text-g12 truncate" x-text="sug.name"></div>
+                              <div class="text-mini text-g9 truncate" x-text="sug.path"></div>
+                            </div>
+                            <template x-if="sug.ai">
+                              <span class="inline-flex items-center gap-1 rounded-full bg-a3 px-1.5 py-0.5 text-micro-medium text-a11 shrink-0">
+                                <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                                AI suggestion
+                              </span>
+                            </template>
+                          </button>
+                        </template>
+                      </div>
+
+                      <!-- Full category browser (Change mode) -->
+                      <div x-show="showCategoryBrowser && categorySearch.length === 0 && currentItem.suggestions.length === 0" class="rounded-8 shadow-xs overflow-hidden max-h-56 overflow-y-auto">
+                        <template x-for="cat in categories" :key="cat.name">
+                          <button @click="selectCategory(cat.name)"
+                                  class="flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-g3 transition-colors border-b border-g4 last:border-b-0">
+                            <div class="min-w-0">
+                              <div class="text-sm text-g12 truncate" x-text="cat.name"></div>
+                              <div class="text-mini text-g9 truncate" x-text="cat.path"></div>
+                            </div>
+                          </button>
+                        </template>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- ☐/✓ Receipt -->
+                  <div x-show="showReceiptSection && !currentItem.isPrivate"
+                       x-transition:enter="transition ease-out duration-300"
+                       x-transition:enter-start="opacity-0 translate-y-2"
+                       x-transition:enter-end="opacity-100 translate-y-0"
+                       class="border-t border-g4 pt-4 mt-4">
+                    <div class="flex items-center gap-2 mb-3">
+                      <div x-show="receiptDone" class="w-4 h-4 rounded-full bg-s9 flex items-center justify-center">
+                        <svg class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <div x-show="!receiptDone" class="w-4 h-4 rounded-full border-2 border-g5"></div>
+                      <h3 class="text-sm-medium" :class="receiptDone ? 'text-g12' : 'text-g11'">Receipt</h3>
+                    </div>
+
+                    <!-- Attached receipts -->
+                    <div x-show="receiptDone">
+                      <!-- Auto-matched receipt (category-only items) -->
+                      <div x-show="!currentItem.needsReceipt && !currentItem.receiptResolution" class="rounded-8 shadow-xs bg-p1 overflow-hidden">
+                        <div class="flex items-center gap-3 px-3 py-2.5 bg-s2">
+                          <div class="w-8 h-8 rounded-6 bg-s3 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-s11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <div class="text-sm text-g12 truncate" x-text="currentItem.counterparty + ' Invoice'"></div>
+                            <div class="text-mini text-g9 truncate" x-text="formatAmount(currentItem.amount) + ' · Auto-matched'"></div>
+                          </div>
+                          <span class="inline-flex items-center gap-1 rounded-full bg-s3 px-1.5 py-0.5 text-micro-medium text-s11 shrink-0">
+                            <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                            AI matched
+                          </span>
+                        </div>
+                      </div>
+
+                      <!-- Primary receipt (user-resolved) -->
+                      <div class="rounded-8 shadow-xs bg-p1 overflow-hidden" x-show="currentItem.receiptResolution === 'uploaded' || currentItem.receiptResolution === 'matched'">
+                        <div class="flex items-center gap-3 px-3 py-2.5">
+                          <div class="w-8 h-8 rounded-6 bg-g3 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-g10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <div class="text-sm text-g12 truncate" x-text="currentItem.matchedReceiptName || (currentItem.counterparty + ' Invoice')"></div>
+                            <div class="text-mini text-g9 truncate" x-text="formatAmount(currentItem.amount) + ' · ' + (currentItem.matchedReceiptInvoice || currentItem.description)"></div>
+                          </div>
+                          <button @click="clearReceipt()" class="text-g9 hover:text-d11 transition-colors p-1 shrink-0" title="Remove receipt">
+                            <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                          </button>
+                        </div>
+                      </div>
+
+                      <!-- Additional receipts -->
+                      <template x-for="(rec, idx) in (currentItem.additionalReceipts || [])" :key="idx">
+                        <div class="rounded-8 shadow-xs bg-p1 overflow-hidden mt-1.5">
+                          <div class="flex items-center gap-3 px-3 py-2.5">
+                            <div class="w-8 h-8 rounded-6 bg-g3 flex items-center justify-center shrink-0">
+                              <svg class="w-4 h-4 text-g10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                              <div class="text-sm text-g12 truncate" x-text="rec.name"></div>
+                              <div class="text-mini text-g9 truncate" x-text="rec.detail || ''"></div>
+                            </div>
+                            <button @click="removeAdditionalReceipt(idx)" class="text-g9 hover:text-d11 transition-colors p-1 shrink-0" title="Remove receipt">
+                              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+                            </button>
+                          </div>
+                        </div>
+                      </template>
+
+                      <!-- Flagged: no receipt -->
+                      <div x-show="currentItem.receiptResolution === 'no_receipt'" class="rounded-8 shadow-xs bg-p1 overflow-hidden">
+                        <div class="flex items-center gap-3 px-3 py-2.5">
+                          <div class="w-8 h-8 rounded-6 bg-y3 flex items-center justify-center shrink-0">
+                            <svg class="w-4 h-4 text-y11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                          </div>
+                          <div class="min-w-0 flex-1">
+                            <div class="text-sm text-g12">No receipt available</div>
+                            <div class="text-mini text-g9">Will be flagged on export</div>
+                          </div>
+                          <button @click="clearReceipt()" class="text-mini text-a11 hover:text-a12 shrink-0">Change</button>
+                        </div>
+                      </div>
+
+                      <button @click="triggerUpload()" class="mt-2 flex items-center gap-1.5 text-mini text-a11 hover:text-a12">
+                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
+                        Add another receipt
+                      </button>
+                    </div>
+
+                    <!-- Needs action: receipt search + suggestions + upload -->
+                    <div x-show="currentItem.needsReceipt && !currentItem.receiptResolution">
+                      <!-- Receipt search -->
+                      <div class="relative mb-3">
+                        <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                        <input type="text"
+                               data-receipt-input
+                               x-model="receiptSearch"
+                               @keydown="handleReceiptKeydown($event)"
+                               class="w-full rounded-6 bg-p1 pl-8 pr-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9"
+                               placeholder="Search receipts...">
+                        <div x-show="receiptSearch.length > 0" x-transition.opacity
+                             class="absolute left-0 right-0 top-full mt-1 z-20 max-h-48 overflow-y-auto rounded-8 bg-p1 shadow-md py-1">
+                          <template x-for="(doc, idx) in receiptSearchResults" :key="doc.name">
+                            <button @click="selectReceipt(doc)"
+                                    class="flex items-center gap-3 w-full px-3 py-2 text-left hover:bg-g3 transition-colors">
+                              <div class="w-8 h-8 rounded-6 bg-g3 flex items-center justify-center shrink-0">
+                                <svg class="w-4 h-4 text-g10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                              </div>
+                              <div class="min-w-0">
+                                <div class="text-sm text-g12 truncate" x-text="doc.name"></div>
+                                <div class="text-mini text-g9 truncate" x-text="formatAmount(doc.amount) + ' · ' + (doc.invoiceNumber || doc.date)"></div>
+                              </div>
+                            </button>
+                          </template>
+                          <div x-show="receiptSearchResults.length === 0" class="px-3 py-2 text-sm text-g9">No documents found</div>
+                        </div>
+                      </div>
+
+                      <!-- AI receipt suggestions -->
+                      <div x-show="currentItem.receiptSuggestions?.length > 0 && receiptSearch.length === 0" class="rounded-8 shadow-xs overflow-hidden mb-3">
+                        <template x-for="(doc, idx) in currentItem.receiptSuggestions" :key="doc.name">
+                          <button @click="selectReceipt(doc)"
+                                  class="flex items-center gap-3 w-full px-3 py-2.5 bg-a2 hover:bg-a3 text-left transition-colors border-b border-g4 last:border-b-0">
+                            <span class="w-5 h-5 rounded-4 bg-g3 flex items-center justify-center text-micro-medium text-g10 shrink-0" x-text="idx + 1"></span>
+                            <div class="w-7 h-7 rounded-6 bg-g3 flex items-center justify-center shrink-0">
+                              <svg class="w-3.5 h-3.5 text-g10" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </div>
+                            <div class="min-w-0 flex-1">
+                              <div class="text-sm text-g12 truncate" x-text="doc.name"></div>
+                              <div class="text-mini text-g9 truncate" x-text="formatAmount(doc.amount) + ' · ' + doc.invoiceNumber"></div>
+                            </div>
+                            <span x-show="doc.badge" class="inline-flex items-center gap-1 rounded-full bg-a3 px-1.5 py-0.5 text-micro-medium text-a11 shrink-0">
+                              <svg class="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"/></svg>
+                              <span x-text="doc.badge"></span>
+                            </span>
+                          </button>
+                        </template>
+                      </div>
+
+                      <!-- Upload + actions -->
+                      <div class="flex items-center gap-2">
+                        <button @click="resolveReceipt('no_receipt')"
+                                class="flex-1 flex items-center justify-center gap-2 rounded-6 bg-p1 px-3 py-2 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">
+                          <svg class="w-4 h-4 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                          I don't have a receipt
+                        </button>
+                        <button @click="triggerUpload()"
+                                class="flex-1 flex items-center justify-center gap-2 rounded-6 bg-p1 px-3 py-2 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">
+                          <svg class="w-4 h-4 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                          Upload
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </template>
+            </div>
+
+            <!-- RIGHT PANEL (preview only) -->
+            <div class="w-[45%] bg-g2 overflow-y-auto p-6 relative"
+                 @dragover.prevent="isDragging = true"
+                 @dragleave.prevent="isDragging = false"
+                 @drop.prevent="handleDrop($event)">
+
+              <!-- Drag overlay -->
+              <div x-show="isDragging" x-transition.opacity
+                   class="absolute inset-3 flex items-center justify-center bg-a2 rounded-12 border-2 border-dashed border-a7 z-10">
+                <div class="text-center">
+                  <svg class="w-10 h-10 text-a9 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                  <p class="text-sm-medium text-a11">Drop receipt here</p>
+                </div>
+              </div>
+
+              <template x-if="currentItem">
+                <div class="h-full">
+                  <!-- Private -->
+                  <div x-show="currentItem.isPrivate" class="flex flex-col items-center justify-center py-16 text-center">
+                    <div class="w-14 h-14 rounded-full bg-g3 mb-4 flex items-center justify-center">
+                      <svg class="w-7 h-7 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+                    </div>
+                    <p class="text-sm-medium text-g12">Private transaction</p>
+                    <p class="text-mini text-g9 mt-1">No receipt required</p>
+                  </div>
+
+                  <!-- Receipt preview -->
+                  <div x-show="!currentItem.isPrivate && hasReceipt">
+                    <div class="bg-p1 rounded-8 shadow-xs p-6 max-w-sm mx-auto">
+                      <div class="text-center mb-4 pb-4 border-b border-g4">
+                        <div class="w-10 h-10 rounded-full bg-g3 mx-auto mb-2 flex items-center justify-center text-sm-medium text-g10" x-text="currentItem.counterparty.charAt(0)"></div>
+                        <div class="text-sm-medium text-g12" x-text="currentItem.counterparty"></div>
+                        <div class="text-mini text-g9 mt-0.5" x-text="'Receipt #REC-2026-' + String(currentItem.id).padStart(4, '0')"></div>
+                      </div>
+                      <div class="flex justify-between text-sm text-g11 mb-2">
+                        <span x-text="currentItem.description"></span>
+                      </div>
+                      <div class="flex justify-between text-sm text-g9">
+                        <span>Amount</span>
+                        <span class="text-g11" x-text="formatAmount(currentItem.amount)"></span>
+                      </div>
+                      <div class="border-t border-g4 mt-3 pt-3 flex justify-between text-sm-medium text-g12">
+                        <span>Total</span>
+                        <span x-text="formatAmount(currentItem.amount)"></span>
+                      </div>
+                      <div class="text-center mt-4 text-mini text-g9" x-text="formatDate(currentItem.date)"></div>
+                    </div>
+                  </div>
+
+                  <!-- Empty state: drop zone -->
+                  <div x-show="!currentItem.isPrivate && !hasReceipt" class="flex flex-col items-center justify-center py-16 text-center">
+                    <div class="w-14 h-14 rounded-full bg-g3 mb-4 flex items-center justify-center">
+                      <svg class="w-7 h-7 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+                    </div>
+                    <p class="text-sm-medium text-g11">No receipt connected</p>
+                    <p class="text-mini text-g9 mt-1 max-w-52">Drop a file here, or use the left panel to upload or search</p>
+                  </div>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shortcut bar -->
+        <div class="flex items-center px-5 h-11 border-t border-g4 bg-p1 shrink-0">
+          <button @click="goBack()" :disabled="currentIndex === 0"
+                  :class="currentIndex === 0 ? 'text-g8 cursor-not-allowed' : 'text-g9 hover:text-g11'"
+                  class="flex items-center gap-1.5 text-mini transition-colors">
+            <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium" :class="currentIndex === 0 ? 'text-g8' : 'text-g10'">B</kbd>
+            <span>Back</span>
+          </button>
+
+          <div class="flex items-center gap-5 mx-auto">
+            <button @click="focusCategory()" class="flex items-center gap-1.5 text-mini text-g9 hover:text-g11 transition-colors">
+              <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium text-g10">C</kbd>
+              <span>Categorize</span>
+            </button>
+            <button disabled class="flex items-center gap-1.5 text-mini text-g8 cursor-not-allowed">
+              <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium text-g8">S</kbd>
+              <span>Split</span>
+            </button>
+            <button @click="focusReceipt()" class="flex items-center gap-1.5 text-mini text-g9 hover:text-g11 transition-colors">
+              <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium text-g10">R</kbd>
+              <span>Receipt</span>
+            </button>
+            <button @click="triggerUpload()" class="flex items-center gap-1.5 text-mini text-g9 hover:text-g11 transition-colors">
+              <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium text-g10">U</kbd>
+              <span>Upload</span>
+            </button>
+            <button @click="togglePrivate()" class="flex items-center gap-1.5 text-mini transition-colors"
+                    :class="currentItem?.isPrivate ? 'text-g12' : 'text-g9 hover:text-g11'">
+              <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 text-micro-medium"
+                   :class="currentItem?.isPrivate ? 'bg-g12 text-white' : 'bg-g3 text-g10'">P</kbd>
+              <span>Private</span>
+            </button>
+            <button @click="deferItem()" class="flex items-center gap-1.5 text-mini text-g9 hover:text-g11 transition-colors">
+              <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium text-g10">L</kbd>
+              <span>Later</span>
+            </button>
+          </div>
+
+          <button @click="goForward()"
+                  :class="'text-g9 hover:text-g11'"
+                  class="flex items-center gap-1.5 text-mini transition-colors">
+            <span>Next</span>
+            <kbd class="inline-flex items-center justify-center w-5 h-5 rounded-4 bg-g3 text-micro-medium text-g10">N</kbd>
+          </button>
+        </div>
+
+      </div>
+    </template>
+
+    <!-- ===== EMPTY STATE ===== -->
+    <div x-show="filteredItems.length === 0 && completionState === 'active'" class="flex-1 flex items-center justify-center">
+      <div class="text-center max-w-sm">
+        <div class="w-16 h-16 rounded-full bg-g3 mx-auto mb-5 flex items-center justify-center">
+          <svg class="w-8 h-8 text-g9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+        </div>
+        <h1 class="text-lg font-semibold text-g12 tracking-tight">Nothing to review</h1>
+        <p class="text-sm text-g9 mt-2">All transactions are categorized and have receipts. You're all set.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function reviewQueue() {
+      const categories = [
+        { name: 'Software & Subscriptions', path: 'Operative Expenditures' },
+        { name: 'Cloud & Hosting', path: 'Operative Expenditures' },
+        { name: 'Travel & Transportation', path: 'Operative Expenditures' },
+        { name: 'Office Supplies', path: 'Operative Expenditures' },
+        { name: 'Hardware & Equipment', path: 'Operative Expenditures' },
+        { name: 'Team Entertainment', path: 'Personnel' },
+        { name: 'Marketing & Advertising', path: 'Sales & Marketing' },
+        { name: 'Legal & Professional Services', path: 'General & Admin' },
+        { name: 'Insurance', path: 'General & Admin' },
+        { name: 'Rent & Facilities', path: 'General & Admin' },
+        { name: 'Telecommunications', path: 'Operative Expenditures' },
+        { name: 'Training & Education', path: 'Personnel' },
+        { name: 'Banking & FX Fees', path: 'General & Admin' },
+        { name: 'Shipping & Logistics', path: 'Operative Expenditures' },
+        { name: 'Consulting', path: 'General & Admin' },
+        { name: 'Freelancers & Contractors', path: 'Personnel' },
+        { name: 'Food & Beverages', path: 'Operative Expenditures' },
+        { name: 'Cleaning & Maintenance', path: 'General & Admin' },
+        { name: 'Vehicle & Fleet', path: 'Operative Expenditures' },
+        { name: 'Taxes & Duties', path: 'General & Admin' },
+        { name: 'Membership & Associations', path: 'General & Admin' },
+        { name: 'Research & Development', path: 'Operative Expenditures' },
+        { name: 'Recruitment & HR', path: 'Personnel' },
+        { name: 'Salaries & Payroll', path: 'Personnel' },
+        { name: 'Sales Software', path: 'Sales & Marketing' },
+      ];
+
+      const receiptSuggestionsByItem = {
+        8:  [{ name: 'Office Depot Invoice', amount: 156.80, invoiceNumber: 'INV-OD-2026-0112', badge: 'matching counterparty' }, { name: 'OD GmbH Receipt', amount: 158.20, invoiceNumber: 'R-4102', badge: 'matching reference' }],
+        9:  [{ name: 'Vapiano Receipt Berlin', amount: 67.20, invoiceNumber: 'REC-VP-0119', badge: 'matching counterparty' }, { name: 'Restaurant Receipt', amount: 67.20, invoiceNumber: 'INV-8847', badge: 'matching reference' }],
+        10: [{ name: 'MediaMarkt Invoice', amount: 189.00, invoiceNumber: 'INV-MM-29104', badge: 'matching counterparty' }, { name: 'Electronics Purchase', amount: 189.00, invoiceNumber: 'REC-EL-0128', badge: 'matching reference' }],
+        11: [{ name: 'DHL Shipping Receipt', amount: 34.50, invoiceNumber: 'INV-DHL-4892', badge: 'matching counterparty' }, { name: 'Express Delivery Invoice', amount: 35.90, invoiceNumber: 'INV-EXP-0204', badge: 'matching reference' }],
+        12: [{ name: 'TÜV Rheinland Invoice', amount: 420.00, invoiceNumber: 'INV-TÜV-2026-841', badge: 'matching counterparty' }],
+        13: [{ name: 'PayPal Transaction', amount: 340.00, invoiceNumber: 'PP-TX-2026-0116', badge: 'matching counterparty' }, { name: 'Vendor Payment Confirmation', amount: 340.00, invoiceNumber: 'VPC-3401', badge: 'matching reference' }],
+        14: [{ name: 'Google Cloud Invoice', amount: 189.50, invoiceNumber: 'GI-928471', badge: 'matching counterparty' }, { name: 'Google Services Receipt', amount: 189.50, invoiceNumber: 'GSR-0121', badge: 'matching reference' }],
+        15: [{ name: 'Stripe Fee Statement', amount: 45.67, invoiceNumber: 'STR-JAN-2026', badge: 'matching counterparty' }],
+        16: [],
+        17: [{ name: 'Hetzner Invoice', amount: 78.90, invoiceNumber: 'INV-H-2026-0209', badge: 'matching counterparty' }, { name: 'Server Hosting Receipt', amount: 78.90, invoiceNumber: 'SHR-0208', badge: 'matching reference' }],
+      };
+
+      const receiptDocuments = [
+        { name: 'Office Depot Invoice', amount: 156.80, invoiceNumber: 'INV-OD-2026-0112' },
+        { name: 'Vapiano Receipt Berlin', amount: 67.20, invoiceNumber: 'REC-VP-0119' },
+        { name: 'MediaMarkt Invoice', amount: 189.00, invoiceNumber: 'INV-MM-29104' },
+        { name: 'DHL Shipping Receipt', amount: 34.50, invoiceNumber: 'INV-DHL-4892' },
+        { name: 'TÜV Rheinland Invoice', amount: 420.00, invoiceNumber: 'INV-TÜV-2026-841' },
+        { name: 'PayPal Transaction', amount: 340.00, invoiceNumber: 'PP-TX-2026-0116' },
+        { name: 'Google Cloud Invoice', amount: 189.50, invoiceNumber: 'GI-928471' },
+        { name: 'Stripe Fee Statement', amount: 45.67, invoiceNumber: 'STR-JAN-2026' },
+        { name: 'Hetzner Invoice', amount: 78.90, invoiceNumber: 'INV-H-2026-0209' },
+        { name: 'Amazon Invoice', amount: 247.83, invoiceNumber: 'INV-AWS-938271' },
+        { name: 'Canva Pro Receipt', amount: 119.99, invoiceNumber: 'CNV-PRO-0214' },
+        { name: 'Deutsche Bahn Ticket', amount: 89.90, invoiceNumber: 'DB-ICE-794' },
+      ];
+
+      const items = [
+        { id: 1, date: '2026-01-15', counterparty: 'Spotify B.V.', description: 'Premium subscription — monthly', amount: 9.99, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: true }, { name: 'Marketing & Advertising', path: 'Sales & Marketing', ai: false }, { name: 'Team Entertainment', path: 'Personnel', ai: false }], selectedCategory: 'Software & Subscriptions', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'Spotify Invoice', matchedReceiptInvoice: 'INV-SP-2026-0115', isPrivate: false, deferred: false, resolved: false },
+        { id: 2, date: '2026-01-18', counterparty: 'Amazon Web Services EMEA', description: 'AWS hosting services — invoice #938271', amount: 247.83, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Cloud & Hosting', path: 'Operative Expenditures', ai: true }, { name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Research & Development', path: 'Operative Expenditures', ai: false }], selectedCategory: 'Cloud & Hosting', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'AWS Invoice #938271', matchedReceiptInvoice: 'INV-AWS-938271', isPrivate: false, deferred: false, resolved: false },
+        { id: 3, date: '2026-01-22', counterparty: 'Deutsche Bahn', description: 'ICE 794 Berlin Hbf → München Hbf', amount: 89.90, type: 'Card payment', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Travel & Transportation', path: 'Operative Expenditures', ai: true }, { name: 'Team Entertainment', path: 'Personnel', ai: false }, { name: 'Consulting', path: 'General & Admin', ai: false }], selectedCategory: 'Travel & Transportation', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'Deutsche Bahn Ticket', matchedReceiptInvoice: 'DB-ICE-794', isPrivate: false, deferred: false, resolved: false },
+        { id: 4, date: '2026-01-25', counterparty: 'Uber B.V.', description: 'Trip — Alexanderplatz to Kreuzberg', amount: 23.40, type: 'Card payment', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: false, aiConfidence: null, suggestions: [{ name: 'Travel & Transportation', path: 'Operative Expenditures', ai: false }, { name: 'Team Entertainment', path: 'Personnel', ai: false }, { name: 'Consulting', path: 'General & Admin', ai: false }], selectedCategory: null, existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'Uber Trip Receipt', matchedReceiptInvoice: 'UBER-2026-0125', isPrivate: false, deferred: false, resolved: false },
+        { id: 5, date: '2026-02-03', counterparty: 'LinkedIn Ireland UC', description: 'Recruiter Lite — monthly plan', amount: 79.99, type: 'Card payment', accountName: 'Business Account', month: 'February 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Marketing & Advertising', path: 'Sales & Marketing', ai: true }, { name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Recruitment & HR', path: 'Personnel', ai: false }], selectedCategory: 'Marketing & Advertising', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'LinkedIn Recruiter Invoice', matchedReceiptInvoice: 'LI-REC-2026-0203', isPrivate: false, deferred: false, resolved: false },
+        { id: 6, date: '2026-02-07', counterparty: 'Figma Inc.', description: 'Professional plan — 3 editors', amount: 42.00, type: 'Card payment', accountName: 'Business Account', month: 'February 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: true }, { name: 'Marketing & Advertising', path: 'Sales & Marketing', ai: false }, { name: 'Research & Development', path: 'Operative Expenditures', ai: false }], selectedCategory: 'Software & Subscriptions', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'Figma Pro Invoice', matchedReceiptInvoice: 'FIG-PRO-2026-0207', isPrivate: false, deferred: false, resolved: false },
+        { id: 7, date: '2026-02-14', counterparty: 'Canva Pty Ltd', description: 'Pro subscription — annual renewal', amount: 119.99, type: 'Card payment', accountName: 'Business Account', month: 'February 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: true }, { name: 'Marketing & Advertising', path: 'Sales & Marketing', ai: false }, { name: 'Research & Development', path: 'Operative Expenditures', ai: false }], selectedCategory: 'Software & Subscriptions', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'Canva Pro Receipt', matchedReceiptInvoice: 'CNV-PRO-0214', isPrivate: false, deferred: false, resolved: false },
+
+        { id: 8, date: '2026-01-12', counterparty: 'Office Depot GmbH', description: 'Desk accessories, notebooks, pens', amount: 156.80, type: 'Card payment', accountName: 'Business Account', month: 'January 2026', needsCategory: false, needsReceipt: true, aiConfidence: null, suggestions: [], selectedCategory: null, existingCategory: 'Office Supplies', receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 9, date: '2026-01-19', counterparty: 'Vapiano SE', description: 'Team lunch — client kickoff meeting', amount: 67.20, type: 'Card payment', accountName: 'Business Account', month: 'January 2026', needsCategory: false, needsReceipt: true, aiConfidence: null, suggestions: [], selectedCategory: null, existingCategory: 'Team Entertainment', receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 10, date: '2026-01-28', counterparty: 'MediaMarkt Berlin', description: 'USB-C hub + MacBook charger', amount: 189.00, type: 'Card payment', accountName: 'Business Account', month: 'January 2026', needsCategory: false, needsReceipt: true, aiConfidence: null, suggestions: [], selectedCategory: null, existingCategory: 'Hardware & Equipment', receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 11, date: '2026-02-05', counterparty: 'DHL Express Germany', description: 'Express parcel to Munich — tracking #4892', amount: 34.50, type: 'Wire transfer', accountName: 'Business Account', month: 'February 2026', needsCategory: false, needsReceipt: true, aiConfidence: null, suggestions: [], selectedCategory: null, existingCategory: 'Shipping & Logistics', receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 12, date: '2026-02-10', counterparty: 'TÜV Rheinland', description: 'Workplace safety inspection', amount: 420.00, type: 'Wire transfer', accountName: 'Business Account', month: 'February 2026', needsCategory: false, needsReceipt: true, aiConfidence: null, suggestions: [], selectedCategory: null, existingCategory: 'Legal & Professional Services', receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+
+        { id: 13, date: '2026-01-16', counterparty: 'PayPal Europe S.à r.l.', description: 'Payment to external vendor', amount: 340.00, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: true, aiConfidence: null, suggestions: [{ name: 'Freelancers & Contractors', path: 'Personnel', ai: false }, { name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Consulting', path: 'General & Admin', ai: false }], selectedCategory: null, existingCategory: null, receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 14, date: '2026-01-21', counterparty: 'Google Ireland Ltd', description: 'Google services — unclear charge', amount: 189.50, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: true, aiConfidence: null, suggestions: [{ name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Cloud & Hosting', path: 'Operative Expenditures', ai: false }, { name: 'Marketing & Advertising', path: 'Sales & Marketing', ai: false }], selectedCategory: null, existingCategory: null, receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 15, date: '2026-01-30', counterparty: 'Stripe Payments Europe', description: 'Processing fees — January batch', amount: 45.67, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: true, aiConfidence: null, suggestions: [{ name: 'Banking & FX Fees', path: 'General & Admin', ai: false }, { name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Consulting', path: 'General & Admin', ai: false }], selectedCategory: null, existingCategory: null, receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 16, date: '2026-02-04', counterparty: 'Wise (TransferWise)', description: 'International transfer fee', amount: 12.50, type: 'Direct debit', accountName: 'Business Account', month: 'February 2026', needsCategory: true, needsReceipt: true, aiConfidence: null, suggestions: [{ name: 'Banking & FX Fees', path: 'General & Admin', ai: false }, { name: 'Travel & Transportation', path: 'Operative Expenditures', ai: false }, { name: 'Consulting', path: 'General & Admin', ai: false }], selectedCategory: null, existingCategory: null, receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+        { id: 17, date: '2026-02-09', counterparty: 'Hetzner Online GmbH', description: 'Dedicated server — monthly', amount: 78.90, type: 'Direct debit', accountName: 'Business Account', month: 'February 2026', needsCategory: true, needsReceipt: true, aiConfidence: 'low', suggestions: [{ name: 'Cloud & Hosting', path: 'Operative Expenditures', ai: true }, { name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Research & Development', path: 'Operative Expenditures', ai: false }], selectedCategory: null, existingCategory: null, receiptResolution: null, matchedReceiptName: null, isPrivate: false, deferred: false, resolved: false },
+      ];
+
+      return {
+        items,
+        categories,
+        receiptDocuments,
+
+        init() {
+          this.items.forEach(i => {
+            if (i.aiConfidence === 'high') i.selectedCategory = null;
+            if (i.existingCategory && !i.selectedCategory) i.selectedCategory = i.existingCategory;
+            i.receiptSuggestions = receiptSuggestionsByItem[i.id] || [];
+            i.blocked = false;
+            i.additionalReceipts = [];
+            i.matchedReceiptInvoice = null;
+          });
+          const months = [...new Set(this.items.map(i => i.month))].sort((a, b) => {
+            const da = new Date('1 ' + a), db = new Date('1 ' + b);
+            return da - db;
+          });
+          const firstUnresolved = months.find(m =>
+            this.items.some(i => i.month === m && !i.resolved && !i.deferred)
+          );
+          if (firstUnresolved) this.monthFilter = firstUnresolved;
+        },
+
+        currentIndex: 0,
+        monthFilter: 'all',
+        showContent: true,
+        categorySearch: '',
+        receiptSearch: '',
+        showCategoryBrowser: false,
+        completionState: 'active',
+        isDragging: false,
+        _previousCategory: null,
+        _autoAdvanceTimer: null,
+        _categoryHighlight: -1,
+
+        get filteredItems() {
+          let list = this.items;
+          if (this.monthFilter !== 'all') {
+            list = list.filter(i => i.month === this.monthFilter);
+          }
+          const typeOrder = (item) => {
+            if (item.needsCategory && item.needsReceipt) return 2;
+            if (item.needsCategory) return 0;
+            return 1;
+          };
+          return [...list].sort((a, b) => {
+            const ta = typeOrder(a), tb = typeOrder(b);
+            if (ta !== tb) return ta - tb;
+            return new Date(a.date) - new Date(b.date);
+          });
+        },
+
+        get currentItem() {
+          return this.filteredItems[this.currentIndex] || null;
+        },
+
+        get resolvedCount() {
+          return this.filteredItems.filter(i => i.resolved).length;
+        },
+
+        get deferredCount() {
+          return this.filteredItems.filter(i => i.deferred && !i.blocked).length;
+        },
+
+        get blockedCount() {
+          return this.filteredItems.filter(i => i.blocked).length;
+        },
+
+        get isFullyComplete() {
+          return this.filteredItems.length > 0 && this.filteredItems.every(i => i.resolved);
+        },
+
+        get progressPercent() {
+          if (this.filteredItems.length === 0) return 0;
+          return (this.resolvedCount / this.filteredItems.length) * 100;
+        },
+
+        get canAdvance() {
+          const item = this.currentItem;
+          if (!item) return false;
+          const catOk = !!item.selectedCategory;
+          const recOk = !item.needsReceipt || item.receiptResolution || item.isPrivate;
+          return catOk && recOk;
+        },
+
+        get showReceiptSection() {
+          const item = this.currentItem;
+          return item && !item.isPrivate;
+        },
+
+        get receiptDone() {
+          const item = this.currentItem;
+          if (!item) return false;
+          return !item.needsReceipt || !!item.receiptResolution;
+        },
+
+        get hasReceipt() {
+          const item = this.currentItem;
+          if (!item) return false;
+          return !item.needsReceipt || item.receiptResolution === 'uploaded' || item.receiptResolution === 'matched';
+        },
+
+        get nextMonth() {
+          if (this.monthFilter === 'all') return null;
+          const months = [...new Set(this.items.map(i => i.month))].sort((a, b) => {
+            const da = new Date('1 ' + a), db = new Date('1 ' + b);
+            return da - db;
+          });
+          const currentIdx = months.indexOf(this.monthFilter);
+          for (let i = currentIdx + 1; i < months.length; i++) {
+            if (this.items.some(it => it.month === months[i] && !it.resolved && !it.deferred && !it.blocked)) {
+              return months[i];
+            }
+          }
+          return null;
+        },
+
+        get nextMonthMessage() {
+          if (!this.nextMonth) return '';
+          const count = this.items.filter(i => i.month === this.nextMonth && !i.resolved && !i.deferred && !i.blocked).length;
+          return `${count} item${count !== 1 ? 's' : ''} need${count === 1 ? 's' : ''} attention in ${this.nextMonth}.`;
+        },
+
+        get monthOptions() {
+          const months = [...new Set(this.items.map(i => i.month))].sort((a, b) => {
+            const da = new Date('1 ' + a), db = new Date('1 ' + b);
+            return da - db;
+          });
+          const opts = [];
+          months.forEach(m => {
+            opts.push({ value: m, label: m, count: this.items.filter(i => i.month === m).length });
+          });
+          opts.push({ value: 'all', label: 'All months', count: this.items.length });
+          return opts;
+        },
+
+        get categorySearchResults() {
+          if (!this.categorySearch) return [];
+          const q = this.categorySearch.toLowerCase();
+          return this.categories.filter(c => c.name.toLowerCase().includes(q)).slice(0, 8);
+        },
+
+        get receiptSearchResults() {
+          if (!this.receiptSearch) return [];
+          const q = this.receiptSearch.toLowerCase();
+          return this.receiptDocuments.filter(d => d.name.toLowerCase().includes(q)).slice(0, 6);
+        },
+
+        getCategoryPath(name) {
+          const cat = this.categories.find(c => c.name === name);
+          return cat ? cat.path : '';
+        },
+
+        selectCategory(catName) {
+          if (this.currentItem) {
+            this.currentItem.selectedCategory = catName;
+            this.showCategoryBrowser = false;
+            this._previousCategory = null;
+            this.categorySearch = '';
+            this.tryAutoAdvance();
+          }
+        },
+
+        openCategoryBrowser() {
+          if (this.currentItem) {
+            clearTimeout(this._autoAdvanceTimer);
+            this._previousCategory = this.currentItem.selectedCategory;
+            this.showCategoryBrowser = true;
+            this.categorySearch = '';
+            this.$nextTick(() => {
+              const input = document.querySelector('[data-category-input]');
+              if (input) input.focus();
+            });
+          }
+        },
+
+        revertCategory() {
+          if (this._previousCategory && this.showCategoryBrowser) {
+            this.currentItem.selectedCategory = this._previousCategory;
+            this.showCategoryBrowser = false;
+            this._previousCategory = null;
+            this.categorySearch = '';
+            this.tryAutoAdvance();
+          }
+        },
+
+        focusCategory() {
+          if (this.currentItem) {
+            if (this.currentItem.selectedCategory) {
+              this.openCategoryBrowser();
+            } else {
+              clearTimeout(this._autoAdvanceTimer);
+              this.$nextTick(() => {
+                const input = document.querySelector('[data-category-input]');
+                if (input) input.focus();
+              });
+            }
+          }
+        },
+
+        focusReceipt() {
+          if (this.currentItem && this.currentItem.needsReceipt && !this.currentItem.isPrivate) {
+            if (this.receiptDone) {
+              this.triggerUpload();
+            } else {
+              this.$nextTick(() => {
+                const input = document.querySelector('[data-receipt-input]');
+                if (input) input.focus();
+              });
+            }
+          }
+        },
+
+        selectReceipt(doc) {
+          if (this.currentItem) {
+            this.currentItem.receiptResolution = 'matched';
+            this.currentItem.matchedReceiptName = doc.name;
+            this.currentItem.matchedReceiptInvoice = doc.invoiceNumber || null;
+            this.receiptSearch = '';
+            this.tryAutoAdvance();
+          }
+        },
+
+        triggerUpload() {
+          const fileInput = document.querySelector('[data-file-input]');
+          if (fileInput) fileInput.click();
+        },
+
+        handleFileUpload(event) {
+          if (event.target.files.length > 0 && this.currentItem) {
+            const fileName = event.target.files[0].name;
+            // #region agent log
+            fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:handleFileUpload',message:'Before upload logic',data:{itemId:this.currentItem.id,counterparty:this.currentItem.counterparty,needsReceipt:this.currentItem.needsReceipt,receiptResolution:this.currentItem.receiptResolution,matchedReceiptName:this.currentItem.matchedReceiptName,additionalReceipts:this.currentItem.additionalReceipts?.length,fileName},timestamp:Date.now(),hypothesisId:'A,D'})}).catch(()=>{});
+            // #endregion
+            if (this.currentItem.receiptResolution) {
+              if (!this.currentItem.additionalReceipts) this.currentItem.additionalReceipts = [];
+              this.currentItem.additionalReceipts.push({ name: fileName, detail: formatAmount(this.currentItem.amount) });
+              // #region agent log
+              fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:handleFileUpload:addAdditional',message:'Added as additional receipt',data:{fileName,additionalCount:this.currentItem.additionalReceipts.length},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
+              // #endregion
+            } else {
+              this.currentItem.receiptResolution = 'uploaded';
+              this.currentItem.matchedReceiptName = fileName;
+              // #region agent log
+              fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:handleFileUpload:setPrimary',message:'Set as primary receipt',data:{fileName,receiptResolution:'uploaded'},timestamp:Date.now(),hypothesisId:'D'})}).catch(()=>{});
+              // #endregion
+              this.tryAutoAdvance();
+            }
+            event.target.value = '';
+          }
+          function formatAmount(a) { return '€' + a.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+        },
+
+        resolveReceipt(type) {
+          if (this.currentItem) {
+            this.currentItem.receiptResolution = type;
+            this.currentItem.matchedReceiptName = null;
+            this.tryAutoAdvance();
+          }
+        },
+
+        clearReceipt() {
+          if (this.currentItem) {
+            // #region agent log
+            fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:clearReceipt',message:'Clearing receipt',data:{itemId:this.currentItem.id,counterparty:this.currentItem.counterparty,needsReceipt:this.currentItem.needsReceipt,receiptResolutionBefore:this.currentItem.receiptResolution,matchedReceiptNameBefore:this.currentItem.matchedReceiptName,additionalReceiptsBefore:this.currentItem.additionalReceipts?.length,receiptDoneWillBe:!this.currentItem.needsReceipt},timestamp:Date.now(),hypothesisId:'B,C'})}).catch(()=>{});
+            // #endregion
+            clearTimeout(this._autoAdvanceTimer);
+            this.currentItem.receiptResolution = null;
+            this.currentItem.matchedReceiptName = null;
+            this.currentItem.matchedReceiptInvoice = null;
+            this.currentItem.additionalReceipts = [];
+            this.currentItem.resolved = false;
+          }
+        },
+
+        togglePrivate() {
+          if (this.currentItem) {
+            this.currentItem.isPrivate = !this.currentItem.isPrivate;
+            if (this.currentItem.isPrivate) {
+              this.currentItem.receiptResolution = null;
+              this.tryAutoAdvance();
+            } else {
+              clearTimeout(this._autoAdvanceTimer);
+            }
+          }
+        },
+
+        tryAutoAdvance() {
+          clearTimeout(this._autoAdvanceTimer);
+          this._autoAdvanceTimer = setTimeout(() => {
+            if (this.canAdvance && this.currentItem) {
+              this.currentItem.resolved = true;
+              this.advanceToNext();
+            }
+          }, 500);
+        },
+
+        deferItem() {
+          if (!this.currentItem) return;
+          this.currentItem.deferred = true;
+          this.currentItem.blocked = false;
+          this.advanceToNext();
+        },
+
+        markWaitingOnOthers() {
+          this.filteredItems.forEach(i => {
+            if (i.deferred) { i.blocked = true; i.deferred = false; }
+          });
+          this.completionState = 'done';
+        },
+
+        removeAdditionalReceipt(idx) {
+          if (this.currentItem?.additionalReceipts) {
+            // #region agent log
+            fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'1a9cec'},body:JSON.stringify({sessionId:'1a9cec',location:'index.html:removeAdditionalReceipt',message:'Removing additional receipt',data:{idx,itemId:this.currentItem.id,receiptName:this.currentItem.additionalReceipts[idx]?.name,remainingAfter:this.currentItem.additionalReceipts.length-1},timestamp:Date.now(),hypothesisId:'C'})}).catch(()=>{});
+            // #endregion
+            this.currentItem.additionalReceipts.splice(idx, 1);
+          }
+        },
+
+        advanceToNext() {
+          const nextIdx = this.findNextActive(this.currentIndex + 1);
+          if (nextIdx !== -1) {
+            this.transitionTo(nextIdx);
+          } else {
+            const wrapIdx = this.findNextActive(0);
+            if (wrapIdx !== -1) {
+              this.transitionTo(wrapIdx);
+            } else {
+              if (this.deferredCount > 0) {
+                this.completionState = 'checkpoint';
+              } else {
+                this.completionState = 'done';
+              }
+            }
+          }
+        },
+
+        goBack() {
+          if (this.currentIndex > 0) {
+            this.transitionTo(this.currentIndex - 1);
+          }
+        },
+
+        goForward() {
+          if (this.currentIndex < this.filteredItems.length - 1) {
+            this.transitionTo(this.currentIndex + 1);
+          }
+        },
+
+        goToNextMonth() {
+          if (this.nextMonth) {
+            this.completionState = 'active';
+            this.setMonthFilter(this.nextMonth);
+          }
+        },
+
+        findNextActive(startIdx) {
+          const items = this.filteredItems;
+          for (let i = startIdx; i < items.length; i++) {
+            if (!items[i].resolved && !items[i].deferred && !items[i].blocked) return i;
+          }
+          return -1;
+        },
+
+        reviewDeferred() {
+          this.filteredItems.forEach(i => { if (i.deferred) i.deferred = false; });
+          this.completionState = 'active';
+          this.currentIndex = 0;
+          const first = this.findNextActive(0);
+          if (first !== -1) this.currentIndex = first;
+        },
+
+        transitionTo(newIdx) {
+          clearTimeout(this._autoAdvanceTimer);
+          this.showContent = false;
+          this.showCategoryBrowser = false;
+          this._previousCategory = null;
+          this.categorySearch = '';
+          this.receiptSearch = '';
+          this._categoryHighlight = -1;
+          setTimeout(() => {
+            this.currentIndex = newIdx;
+            this.showContent = true;
+          }, 160);
+        },
+
+        handleDrop(event) {
+          this.isDragging = false;
+          const files = event.dataTransfer?.files;
+          if (files?.length > 0 && this.currentItem) {
+            const fileName = files[0].name;
+            if (this.currentItem.receiptResolution) {
+              if (!this.currentItem.additionalReceipts) this.currentItem.additionalReceipts = [];
+              this.currentItem.additionalReceipts.push({ name: fileName, detail: this.formatAmount(this.currentItem.amount) });
+            } else {
+              this.currentItem.receiptResolution = 'uploaded';
+              this.currentItem.matchedReceiptName = fileName;
+              this.tryAutoAdvance();
+            }
+          }
+        },
+
+        setMonthFilter(value) {
+          this.monthFilter = value;
+          this.currentIndex = 0;
+          const first = this.findNextActive(0);
+          if (first !== -1) this.currentIndex = first;
+        },
+
+        handleCategoryKeydown(event) {
+          const list = this.categorySearch
+            ? this.categorySearchResults
+            : this.currentItem?.suggestions || [];
+
+          if (event.key === 'ArrowDown') {
+            event.preventDefault();
+            this._categoryHighlight = Math.min(this._categoryHighlight + 1, list.length - 1);
+            return;
+          }
+          if (event.key === 'ArrowUp') {
+            event.preventDefault();
+            this._categoryHighlight = Math.max(this._categoryHighlight - 1, 0);
+            return;
+          }
+          if ((event.key === '1' || event.key === '2' || event.key === '3') && this.categorySearch === '') {
+            event.preventDefault();
+            const idx = parseInt(event.key) - 1;
+            const suggestions = this.currentItem?.suggestions;
+            if (suggestions && suggestions[idx]) {
+              this.selectCategory(suggestions[idx].name);
+              event.target.blur();
+            }
+            return;
+          }
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            if (this._categoryHighlight >= 0 && list[this._categoryHighlight]) {
+              this.selectCategory(list[this._categoryHighlight].name);
+              event.target.blur();
+            } else if (this.categorySearch && this.categorySearchResults.length > 0) {
+              this.selectCategory(this.categorySearchResults[0].name);
+              this.categorySearch = '';
+              event.target.blur();
+            } else {
+              event.target.blur();
+            }
+            this._categoryHighlight = -1;
+            return;
+          }
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            if (this._previousCategory) {
+              this.revertCategory();
+            } else {
+              this.categorySearch = '';
+            }
+            this._categoryHighlight = -1;
+            event.target.blur();
+            return;
+          }
+          this._categoryHighlight = -1;
+        },
+
+        handleReceiptKeydown(event) {
+          if ((event.key === '1' || event.key === '2') && this.receiptSearch === '') {
+            event.preventDefault();
+            const idx = parseInt(event.key) - 1;
+            const sug = this.currentItem?.receiptSuggestions?.[idx];
+            if (sug) {
+              this.selectReceipt(sug);
+              event.target.blur();
+            }
+          }
+          if (event.key === 'Enter') {
+            event.preventDefault();
+            if (this.receiptSearch && this.receiptSearchResults.length > 0) {
+              this.selectReceipt(this.receiptSearchResults[0]);
+              this.receiptSearch = '';
+              event.target.blur();
+            } else {
+              event.target.blur();
+            }
+          }
+          if (event.key === 'Escape') {
+            event.preventDefault();
+            this.receiptSearch = '';
+            event.target.blur();
+          }
+        },
+
+        handleKeydown(event) {
+          if (this.completionState !== 'active') return;
+          const isInput = document.activeElement && document.activeElement.tagName === 'INPUT';
+          if (isInput) return;
+
+          if (event.key === 'b' || event.key === 'B') {
+            event.preventDefault();
+            this.goBack();
+          }
+          if (event.key === 'n' || event.key === 'N') {
+            event.preventDefault();
+            this.goForward();
+          }
+          if (event.key === 'c' || event.key === 'C') {
+            event.preventDefault();
+            this.focusCategory();
+          }
+          if (event.key === 'r' || event.key === 'R') {
+            event.preventDefault();
+            this.focusReceipt();
+          }
+          if (event.key === 'u' || event.key === 'U') {
+            event.preventDefault();
+            this.triggerUpload();
+          }
+          if (event.key === 'p' || event.key === 'P') {
+            event.preventDefault();
+            this.togglePrivate();
+          }
+          if (event.key === 'l' || event.key === 'L') {
+            event.preventDefault();
+            this.deferItem();
+          }
+          if (event.key === '1' || event.key === '2' || event.key === '3') {
+            event.preventDefault();
+            const idx = parseInt(event.key) - 1;
+            const item = this.currentItem;
+            if (!item) return;
+            if (!item.selectedCategory && item.suggestions?.[idx]) {
+              this.selectCategory(item.suggestions[idx].name);
+            } else if (item.selectedCategory && item.needsReceipt && !item.receiptResolution && item.receiptSuggestions?.[idx]) {
+              this.selectReceipt(item.receiptSuggestions[idx]);
+            }
+          }
+        },
+
+        formatAmount(amount) {
+          return '€' + amount.toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        },
+
+        formatDate(dateStr) {
+          const d = new Date(dateStr + 'T00:00:00');
+          return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        },
+      };
+    }
+  </script>
+
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>KPI Tracker — DXR</title>
+  <title>KPI Tracker (Edit Mode) — DXR</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
@@ -71,6 +71,7 @@
     .kg{border-collapse:separate;border-spacing:0;width:100%;table-layout:fixed;border-left:1px solid var(--color-g11);border-top:1px solid var(--color-g11)}
     .kg th,.kg td{border-right:1px solid var(--color-g11);border-bottom:1px solid var(--color-g11);padding:0 10px;text-align:center;vertical-align:middle;height:36px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .kg th{background:var(--color-g11);color:var(--color-g7);height:32px;position:sticky;top:49px;z-index:20}
+    body.em .kg th{top:82px}
     .kg td{background:var(--color-g12);color:var(--color-g3)}
     .kg td:first-child,.kg th:first-child{text-align:left;overflow:visible}
     .kg td.st-cell{overflow:visible}
@@ -108,24 +109,48 @@
     .kg input.ei:focus{cursor:text;background:var(--color-g11);border-radius:2px}
     .source-badge{display:inline-flex;align-items:center;gap:4px;cursor:pointer;transition:all 120ms;border-radius:4px;padding:2px 6px;margin:-2px -6px}
     .source-badge:hover{background:var(--color-g11)}
-    .star-btn{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:2px;cursor:pointer;transition:all 120ms;flex-shrink:0;opacity:0}
-    .star-btn.on{opacity:1;color:var(--color-y9)}
-    tr:hover .star-btn{opacity:1}
-    .star-btn:not(.on){color:var(--color-g8)}
-    .star-btn:hover{color:var(--color-y8)!important}
 
-    /* Tree editor */
-    .tr{display:flex;align-items:center;cursor:pointer;transition:background 80ms;user-select:none}
-    .tr:hover{background:var(--color-g3)}
-    .tr.sel{background:var(--color-a3)}
-    .tr .act{opacity:0;transition:opacity 80ms}
-    .tr:hover .act{opacity:1}
-    .tr .tag{display:inline-flex;align-items:center;gap:2px;padding:1px 5px;border-radius:999px;font-size:10px;font-weight:500;line-height:14px;white-space:nowrap}
     .seg{display:flex;border-radius:var(--radius-6);background:var(--color-g2);padding:2px;gap:2px}
     .seg button{flex:1;border-radius:var(--radius-4);padding:4px 8px;font-size:12px;line-height:15px;font-weight:450;transition:all 120ms;white-space:nowrap;color:var(--color-g9)}
     .seg button:hover{color:var(--color-g11)}
     .seg button.on{background:var(--color-p1);color:var(--color-g12);font-weight:500;box-shadow:var(--shadow-xs)}
-    .kbd{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:20px;padding:0 5px;border-radius:4px;background:var(--color-g2);border:1px solid var(--color-g4);font-size:11px;font-weight:500;color:var(--color-g10);font-family:inherit}
+
+    /* Edit mode */
+    .edit-bar{background:var(--color-a2);border-bottom:1px solid var(--color-a5);padding:6px 24px;display:flex;align-items:center;gap:12px;position:fixed;top:49px;left:0;right:0;z-index:29}
+    .edit-bar .edit-pill{display:inline-flex;align-items:center;gap:5px;padding:2px 10px;border-radius:999px;background:var(--color-a9);color:white;font-size:11px;font-weight:500;letter-spacing:.3px}
+    .edit-bar .edit-hint{font-size:12px;color:var(--color-a11)}
+    .em-row{position:relative}
+    .em-row .em-acts{position:absolute;right:8px;top:50%;transform:translateY(-50%);display:flex;gap:2px;opacity:0;transition:opacity 80ms;z-index:5}
+    .em-row:hover .em-acts{opacity:1}
+    .em-btn{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:var(--radius-4);cursor:pointer;transition:all 80ms;border:none;background:transparent;position:relative}
+    .em-btn.add{color:var(--color-a9)}
+    .em-btn.add:hover{background:var(--color-a3)}
+    .em-btn.cfg{color:var(--color-g7)}
+    .em-btn.cfg:hover{background:var(--color-g11);color:var(--color-g3)}
+    .em-btn.del{color:var(--color-d9)}
+    .em-btn.del:hover{background:var(--color-d3)}
+    .em-btn[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:var(--color-g12);color:var(--color-g3);padding:3px 8px;border-radius:4px;font-size:11px;font-weight:400;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 80ms;z-index:40;box-shadow:var(--shadow-md)}
+    .em-btn[data-tip]::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:4px solid transparent;border-top-color:var(--color-g12);pointer-events:none;opacity:0;transition:opacity 80ms;z-index:40}
+    .em-btn[data-tip]:hover::after,.em-btn[data-tip]:hover::before{opacity:1}
+
+    /* Add KPI popover */
+    .add-pop{position:fixed;z-index:60;width:280px;background:var(--color-p1);border:1px solid var(--color-g4);border-radius:var(--radius-8);box-shadow:var(--shadow-lg);overflow:hidden}
+    .add-pop-item{display:flex;align-items:center;gap:8px;padding:8px 12px;font-size:13px;cursor:pointer;transition:background 80ms;color:var(--color-g11)}
+    .add-pop-item:hover{background:var(--color-g2)}
+    .add-pop-item .api{display:flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:var(--radius-4);flex-shrink:0}
+    .add-pop-sep{height:1px;background:var(--color-g4);margin:0}
+    .add-pop-search{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--color-g4)}
+    .add-pop-search input{flex:1;border:none;background:transparent;font:inherit;font-size:13px;color:var(--color-g12);outline:none}
+    .add-pop-search input::placeholder{color:var(--color-g9)}
+    .add-pop-list{max-height:200px;overflow-y:auto}
+    .add-pop-empty{padding:12px;text-align:center;font-size:12px;color:var(--color-g9)}
+    .em-name{background:transparent;border:none;font:inherit;color:inherit;padding:0;margin:0;width:100%;outline:none;cursor:text}
+    .em-name:focus{background:var(--color-g11);border-radius:2px;padding:0 4px;margin:0 -4px}
+    .em-name::placeholder{color:var(--color-g8)}
+    .em-dim td:not(:first-child){opacity:.35;pointer-events:none}
+    .em-dim td:first-child{pointer-events:auto}
+    .kg .em-add-row td{background:transparent;border-color:transparent;height:40px}
+    .kg .em-add-row:hover td{background:var(--color-g12)!important}
 
     /* Source modal preview */
     .editable-cell{cursor:pointer;position:relative}
@@ -164,10 +189,10 @@
     .dtl-search{border-top:1px solid var(--color-g4);background:var(--color-g2)}
   </style>
 </head>
-<body class="bg-p0 font-sans antialiased" x-data="app()" @keydown.window="handleKey($event)" x-cloak>
+<body class="bg-p0 font-sans antialiased" x-data="app()" @keydown.window="handleKey($event)" :class="editMode?'em':''" x-cloak>
 
   <!-- ═══════════ TRACKER HEADER ═══════════ -->
-  <header x-show="view==='tracker'" class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
+  <header class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
     <div class="flex items-center gap-3">
       <div class="flex h-7 w-7 items-center justify-center rounded-6 bg-a9 text-mini-medium text-white">D</div>
       <span class="text-regular-medium text-g12">DXR KPIs</span>
@@ -183,49 +208,23 @@
         <span class="min-w-24 text-center text-sm-medium text-g11" x-text="MN[cM]+' '+cY"></span>
         <button class="rounded-4 p-1 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="cM===11?(cM=0,cY++):cM++"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
       </div>
-      <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="view='settings'" title="KPI Structure">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.431.992a7 7 0 010 .255c-.007.378.138.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a7 7 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a7 7 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.991a7 7 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"/><circle cx="12" cy="12" r="3"/></svg>
+      <button x-show="canEdit()&&!editMode" class="rounded-6 p-1.5 text-g9 hover:bg-a3 hover:text-a11 transition-colors" @click="editMode=true" title="Edit KPI Structure">
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10"/></svg>
       </button>
+      <button x-show="editMode" class="rounded-6 bg-a9 px-3 py-1 text-mini-medium text-white shadow-xs hover:bg-a10 transition-colors" @click="editMode=false">Done editing</button>
     </div>
   </header>
 
-  <!-- ═══════════ SETTINGS HEADER ═══════════ -->
-  <header x-show="view==='settings'" class="fixed top-0 left-0 right-0 z-30 flex items-center justify-between border-b border-g4 bg-p1 px-6 py-2.5">
-    <div class="flex items-center gap-3">
-      <button class="rounded-6 p-1.5 text-g9 hover:bg-g3 hover:text-g11 transition-colors" @click="view='tracker'">
-        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>
-      </button>
-      <span class="text-regular-medium text-g12">KPI Structure</span>
-    </div>
-    <div class="flex items-center gap-2">
-      <span class="text-micro text-g8" x-text="stats.groups+' groups · '+stats.kpis+' KPIs'"></span>
-      <button class="rounded-6 px-2.5 py-1 text-mini text-g9 hover:bg-a3 hover:text-a11 transition-colors" @click="exportTree()">Export tree</button>
-      <button class="rounded-6 px-2.5 py-1 text-mini text-g9 hover:bg-d3 hover:text-d11 transition-colors" @click="if(confirm('Reset KPI structure to defaults? This cannot be undone.'))resetTree()">Reset</button>
-      <div class="relative">
-        <button class="rounded-6 px-2.5 py-1 text-mini text-g9 hover:bg-g3 hover:text-g11 transition-colors flex items-center gap-1" @click="showHelp=!showHelp">
-          <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3"/><circle cx="12" cy="17" r=".5" fill="currentColor"/></svg>
-          Shortcuts
-        </button>
-        <div x-show="showHelp" @click.away="showHelp=false" x-transition class="absolute right-0 top-full mt-2 w-72 rounded-8 bg-p1 shadow-md border border-g4 p-4 z-40">
-          <p class="text-sm-medium text-g12 mb-3">Keyboard shortcuts</p>
-          <div class="space-y-2 text-mini text-g11">
-            <div class="flex items-center justify-between"><span>Navigate</span><div class="flex gap-1"><span class="kbd">↑</span><span class="kbd">↓</span></div></div>
-            <div class="flex items-center justify-between"><span>Expand / Collapse</span><div class="flex gap-1"><span class="kbd">→</span><span class="kbd">←</span></div></div>
-            <div class="flex items-center justify-between"><span>Indent</span><span class="kbd">Tab</span></div>
-            <div class="flex items-center justify-between"><span>Outdent</span><div class="flex gap-1"><span class="kbd">⇧</span><span class="kbd">Tab</span></div></div>
-            <div class="flex items-center justify-between"><span>Reorder</span><div class="flex gap-1"><span class="kbd">⌘</span><span class="kbd">↑↓</span></div></div>
-            <div class="flex items-center justify-between"><span>Add sibling</span><span class="kbd">Enter</span></div>
-            <div class="flex items-center justify-between"><span>Delete</span><span class="kbd">⌫</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
+  <!-- Edit mode bar -->
+  <div x-show="editMode" x-transition class="edit-bar" :style="'top:49px'">
+    <span class="edit-pill"><svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/></svg>Editing</span>
+    <span class="edit-hint">Click names to rename · Hover rows for actions · Click a KPI to configure</span>
+  </div>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- ═══════════ TRACKER VIEW ═══════════════════════ -->
   <!-- ═══════════════════════════════════════════════════ -->
-  <main x-show="view==='tracker'" class="mx-auto px-6 pb-5" style="max-width:1500px;padding-top:69px" @click="openSt=null;openOwn=null;closeCellPop()" @scroll.window="if(cellPop.open)closeCellPop();if(openOwn&&_ownTrigger){let r=_ownTrigger.getBoundingClientRect();ownPos={x:r.left,y:r.bottom}}">
+  <main class="mx-auto px-6 pb-5" style="max-width:1500px" :style="editMode?'padding-top:102px':'padding-top:69px'" @click="openSt=null;openOwn=null;closeCellPop()" @scroll.window="if(cellPop.open)closeCellPop();if(openOwn&&_ownTrigger){let r=_ownTrigger.getBoundingClientRect();ownPos={x:r.left,y:r.bottom}}">
 
     <nav class="mb-3 flex items-center gap-1.5 text-sm text-g9 stick-l" x-show="bc.length>1">
       <template x-for="(c,i) in bc" :key="i"><div class="flex items-center gap-1.5">
@@ -266,10 +265,32 @@
               </tr></thead>
               <tbody>
                 <template x-for="row in allDeptRows" :key="row._k">
-                    <tr :class="row._tr">
-                      <td class="sc" :class="row._t==='kpi'?'kpi-name':''" :style="row._t==='kpi'?'background:var(--color-g12)':''" @click="row._click?.()">
-                        <template x-if="row._t==='dept'"><div class="flex items-center gap-1.5"><span x-text="row.name"></span><svg class="h-3 w-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></template>
-                        <template x-if="row._t==='kpi'"><div><span class="text-g3" x-text="row._n.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(row._n.agg)"></span></div></template>
+                    <tr :class="row._tr+(editMode?' em-row':'')+(editMode&&row._t==='kpi'?' em-dim':'')" :style="row._isChild?'':''" >
+                      <td class="sc" :class="row._t==='kpi'&&!editMode&&!row._isChild?'kpi-name':''" :style="(row._t==='kpi'?'background:var(--color-g12)':'')+(row._isChild?';padding-left:32px':'')" @click="editMode?(row._t==='kpi'&&!row._isChild?openSourceModal(row._n):null):(!row._isChild?row._click?.():null)">
+                        <template x-if="row._t==='dept'&&!editMode"><div class="flex items-center gap-1.5"><span x-text="row.name"></span><svg class="h-3 w-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></template>
+                        <template x-if="row._t==='kpi'&&!editMode"><div class="flex items-center">
+                          <span :class="row._isChild?'text-g6 text-mini':'text-g3'" x-text="row._n.name"></span>
+                          <span class="text-micro text-g8 ml-1" x-text="aggLabel(row._n.agg)"></span>
+                          <button x-show="row._n?._hasChildren&&!row._isChild" class="exp-btn ml-auto" @click.stop="row._n.exp=!row._n.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="row._n?.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+                        </div></template>
+                        <template x-if="row._t==='dept'&&editMode"><div class="flex items-center gap-1.5 pr-16" @click.stop>
+                          <input class="em-name" style="color:white;font-weight:600;letter-spacing:.3px" :value="row._dept.name" @input="row._dept.name=$event.target.value;_v++">
+                          <div class="em-acts" style="right:2px">
+                            <button class="em-btn add" @click.stop="openAddPop($event, row._dept.id, 'dept')" data-tip="Add KPI"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                            <button class="em-btn add" @click.stop="addGroupToDept(row._dept)" data-tip="Add group"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/></svg></button>
+                            <button class="em-btn del" @click.stop="if(confirm('Delete '+row._dept.name+'?'))deleteNode(row._dept.id)" data-tip="Delete"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                          </div>
+                        </div></template>
+                        <template x-if="row._t==='kpi'&&editMode"><div class="flex items-center gap-1.5 pr-20" @click.stop>
+                          <input class="em-name" :class="row._isChild?'text-g6':'text-g3'" :value="row._n.name" @input="row._n.name=$event.target.value;_v++">
+                          <span class="text-micro text-g8 shrink-0" x-text="aggLabel(row._n.agg)"></span>
+                          <button x-show="row._n?._hasChildren&&!row._isChild" class="exp-btn shrink-0" @click.stop="row._n.exp=!row._n.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="row._n?.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+                          <div class="em-acts" style="right:2px">
+                            <button x-show="!row._isChild" class="em-btn cfg" @click.stop="openSourceModal(row._n)" data-tip="Configure"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></button>
+                            <button x-show="!row._isChild" class="em-btn add" @click.stop="openAddPop($event, row._n.id, 'child')" data-tip="Add child"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                            <button class="em-btn del" @click.stop="deleteNode(row._n.id)" data-tip="Delete"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                          </div>
+                        </div></template>
                       </td>
                       <td class="tabular-nums text-g5"><template x-if="row._t==='kpi'"><input class="ei" type="text" :value="F(row._n.target,row._n.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row._n.target||''}" @blur="row._n.target=+$el.value||row._n.target;reCalc(row._n);$el.value=F(row._n.target,row._n.fmt)" @keydown.enter="$el.blur()"></template></td>
                       <td class="tabular-nums font-medium text-g2" :class="row._t==='kpi'&&(row._n?.db||row._n?.source)?'cell-conn':''" @click.stop="if(row._t==='kpi'&&(row._n.db||row._n.source))openCellPop(row._n,null,$event.currentTarget)"><template x-if="row._t==='kpi'"><input class="ei font-medium" type="text" :value="F(row._n.actual,row._n.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=row._n.actual||'';setTimeout(()=>$el.select())}" @blur="row._n.actual=+$el.value||row._n.actual;reCalc(row._n);$el.value=F(row._n.actual,row._n.fmt)" @keydown.enter="$el.blur()"></template></td>
@@ -302,6 +323,14 @@
                     </tr>
                 </template>
               </tbody>
+              <tbody x-show="editMode">
+                <tr class="em-add-row"><td :colspan="sw?8+WK.length:8" class="sc" style="background:transparent!important;border:none!important">
+                  <button class="flex items-center gap-2 text-sm text-a11 hover:text-a9 transition-colors py-1" @click="addRoot()">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                    Add department
+                  </button>
+                </td></tr>
+              </tbody>
             </table>
             </div>
           </div>
@@ -332,8 +361,20 @@
                 </tr></thead>
                 <tbody>
                   <template x-for="k in deptKpiRows(activeDept)" :key="k.id">
-                    <tr :class="k._isChild?'kpi-child':''">
-                      <td class="sc" :class="!k._isChild?'kpi-name':''" style="background:var(--color-g12)" :style="k._isChild?'padding-left:32px':''"><div class="flex items-center"><span :class="k._isChild?'text-g6':'text-g3'" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span><button x-show="k._hasChildren" class="exp-btn ml-auto" @click.stop="k.exp=!k.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="k.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></td>
+                    <tr :class="(k._isChild?'kpi-child':'')+(editMode?' em-row em-dim':'')">
+                      <td class="sc" :class="!k._isChild&&!editMode?'kpi-name':''" style="background:var(--color-g12)" :style="k._isChild?'padding-left:32px':''">
+                        <template x-if="!editMode"><div class="flex items-center"><span :class="k._isChild?'text-g6':'text-g3'" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span><button x-show="k._hasChildren" class="exp-btn ml-auto" @click.stop="k.exp=!k.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="k.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></template>
+                        <template x-if="editMode"><div class="flex items-center gap-1.5 pr-20" @click.stop>
+                          <input class="em-name" :class="k._isChild?'text-g6':'text-g3'" :value="k.name" @input="k.name=$event.target.value;_v++">
+                          <span class="text-micro text-g8 shrink-0" x-text="aggLabel(k.agg)"></span>
+                          <button x-show="k._hasChildren" class="exp-btn shrink-0" @click.stop="k.exp=!k.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="k.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+                          <div class="em-acts" style="right:2px">
+                            <button class="em-btn cfg" @click.stop="openSourceModal(k)" data-tip="Configure"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></button>
+                            <button class="em-btn add" @click.stop="openAddPop($event, k.id, 'child')" data-tip="Add child"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                            <button class="em-btn del" @click.stop="deleteNode(k.id)" data-tip="Delete"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                          </div>
+                        </div></template>
+                      </td>
                       <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
                       <td class="tabular-nums font-medium text-g2" :class="(k.db||k.source)?'cell-conn':''" @click.stop="if(k.db||k.source)openCellPop(k,null,$event.currentTarget)"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.actual||'';setTimeout(()=>$el.select())}" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
                       <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
@@ -355,20 +396,48 @@
                       </div></td>
                     </tr>
                   </template>
+                  <template x-if="editMode">
+                    <tr class="em-add-row"><td :colspan="sw?8+WK.length:8" class="sc" style="background:transparent!important;border:none!important">
+                      <button class="flex items-center gap-2 text-sm text-a11 hover:text-a9 transition-colors py-1" @click="openAddPop($event, activeDept.id, 'dept')">
+                        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                        Add KPI
+                      </button>
+                    </td></tr>
+                  </template>
                 </tbody>
               </table>
               <template x-for="ch in deptChannels(activeDept)" :key="ch.id">
                 <table class="kg text-sm" style="margin-top:12px">
                   <tbody>
-                    <tr class="ch">
-                      <td style="width:260px" class="sc cursor-pointer" @click="drillCh(ch)"><div class="flex items-center gap-1.5"><span x-text="ch.name"></span><svg class="h-3 w-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></td>
+                    <tr class="ch" :class="editMode?'em-row':''">
+                      <td style="width:260px" class="sc" :class="editMode?'':'cursor-pointer'" @click="editMode?null:drillCh(ch)">
+                        <template x-if="!editMode"><div class="flex items-center gap-1.5"><span x-text="ch.name"></span><svg class="h-3 w-3 opacity-60" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></div></template>
+                        <template x-if="editMode"><div class="flex items-center gap-1.5 pr-16" @click.stop>
+                          <input class="em-name" style="color:var(--color-a5);font-weight:500" :value="ch.name" @input="ch.name=$event.target.value;_v++">
+                          <div class="em-acts" style="right:2px">
+                            <button class="em-btn add" @click.stop="openAddPop($event, ch.id, 'group')" data-tip="Add KPI"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                            <button class="em-btn del" @click.stop="if(confirm('Delete '+ch.name+'?'))deleteNode(ch.id)" data-tip="Delete"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                          </div>
+                        </div></template>
+                      </td>
                       <td style="width:120px"></td><td style="width:120px"></td><td style="width:130px"></td><td style="width:160px"></td>
                       <template x-if="sw"><template x-for="(w,wi) in WK" :key="w"><td style="width:100px" :style="wi===0?'border-left:2px solid var(--color-a8)':''"></td></template></template>
                       <td style="width:130px" :style="sw?'border-left:2px solid var(--color-a8)':''"></td><td style="width:130px"></td>
                     </tr>
-                    <template x-for="k in ch.children.filter(c=>!c.refId&&c.starred)" :key="k.id">
-                      <tr>
-                        <td class="sc kpi-name" style="background:var(--color-g12)" @click="drillCh(ch)"><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span></td>
+                    <template x-for="k in editMode?ch.children.filter(c=>!c.refId):ch.children.filter(c=>!c.refId).slice(0,3)" :key="k.id">
+                      <tr :class="editMode?'em-row em-dim':''">
+                        <td class="sc" :class="editMode?'':'kpi-name'" style="background:var(--color-g12)" @click="editMode?null:drillCh(ch)">
+                          <template x-if="!editMode"><div><span class="text-g3" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span></div></template>
+                          <template x-if="editMode"><div class="flex items-center gap-1.5 pr-20" @click.stop>
+                            <input class="em-name text-g3" :value="k.name" @input="k.name=$event.target.value;_v++">
+                            <span class="text-micro text-g8 shrink-0" x-text="aggLabel(k.agg)"></span>
+                            <div class="em-acts" style="right:2px">
+                              <button class="em-btn cfg" @click.stop="openSourceModal(k)" data-tip="Configure"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></button>
+                              <button class="em-btn add" @click.stop="openAddPop($event, k.id, 'child')" data-tip="Add child"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                              <button class="em-btn del" @click.stop="deleteNode(k.id)" data-tip="Delete"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                            </div>
+                          </div></template>
+                        </td>
                         <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
                         <td class="tabular-nums font-medium text-g2" :class="(k.db||k.source)?'cell-conn':''" @click.stop="if(k.db||k.source)openCellPop(k,null,$event.currentTarget)"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.actual||'';setTimeout(()=>$el.select())}" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
                         <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
@@ -422,8 +491,20 @@
               </tr></thead>
               <tbody>
                 <template x-for="k in chKpis(activeCh)" :key="k.id">
-                  <tr :class="k._isChild?'kpi-child':''">
-                    <td class="sc" :class="!k._isChild?'kpi-name':''" style="background:var(--color-g12)" :style="k._isChild?'padding-left:32px':''"><div class="flex items-center"><button x-show="!k._isChild" class="star-btn mr-1" :class="k.starred?'on':''" @click.stop="k.starred=!k.starred;_v++" :title="k.starred?'Remove from group overview':'Show in group overview'"><svg class="h-3 w-3" :fill="k.starred?'currentColor':'none'" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg></button><span :class="k._isChild?'text-g6':'text-g3'" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span><button x-show="k._hasChildren" class="exp-btn ml-auto" @click.stop="k.exp=!k.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="k.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></td>
+                  <tr :class="(k._isChild?'kpi-child':'')+(editMode?' em-row em-dim':'')">
+                    <td class="sc" :class="!k._isChild&&!editMode?'kpi-name':''" style="background:var(--color-g12)" :style="k._isChild?'padding-left:32px':''">
+                      <template x-if="!editMode"><div class="flex items-center"><span :class="k._isChild?'text-g6':'text-g3'" x-text="k.name"></span><span class="text-micro text-g8 ml-1" x-text="aggLabel(k.agg)"></span><button x-show="k._hasChildren" class="exp-btn ml-auto" @click.stop="k.exp=!k.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="k.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button></div></template>
+                      <template x-if="editMode"><div class="flex items-center gap-1.5 pr-20" @click.stop>
+                        <input class="em-name" :class="k._isChild?'text-g6':'text-g3'" :value="k.name" @input="k.name=$event.target.value;_v++">
+                        <span class="text-micro text-g8 shrink-0" x-text="aggLabel(k.agg)"></span>
+                        <button x-show="k._hasChildren" class="exp-btn shrink-0" @click.stop="k.exp=!k.exp;_v++"><svg class="h-2.5 w-2.5 transition-transform duration-fast" :class="k.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg></button>
+                        <div class="em-acts" style="right:2px">
+                          <button class="em-btn cfg" @click.stop="openSourceModal(k)" data-tip="Configure"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/></svg></button>
+                          <button class="em-btn add" @click.stop="openAddPop($event, k.id, 'child')" data-tip="Add child"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button>
+                          <button class="em-btn del" @click.stop="deleteNode(k.id)" data-tip="Delete"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        </div>
+                      </div></template>
+                    </td>
                     <td class="tabular-nums text-g5"><input class="ei" type="text" :value="F(k.target,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit())$el.value=k.target||''" @blur="k.target=+$el.value||k.target;reCalc(k);$el.value=F(k.target,k.fmt)" @keydown.enter="$el.blur()"></td>
                     <td class="tabular-nums font-medium text-g2" :class="(k.db||k.source)?'cell-conn':''" @click.stop="if(k.db||k.source)openCellPop(k,null,$event.currentTarget)"><input class="ei font-medium" type="text" :value="F(k.actual,k.fmt)" :readonly="!canEdit()" @focus="if(canEdit()){$el.value=k.actual||'';setTimeout(()=>$el.select())}" @blur="k.actual=+$el.value||k.actual;reCalc(k);$el.value=F(k.actual,k.fmt)" @keydown.enter="$el.blur()"></td>
                     <td class="tabular-nums font-medium pace-cell" :class="pcC(k.pr)"><span x-text="k.pv!==null?F(k.pv,k.fmt):''"></span><span class="pace-tip">Projected EOM at current pace</span></td>
@@ -444,6 +525,14 @@
                       <span class="text-mini" :class="(k.db||k.source)?'text-g3':'text-g8'" x-text="k.db||k.source||'+ config'"></span>
                     </div></td>
                   </tr>
+                </template>
+                <template x-if="editMode">
+                  <tr class="em-add-row"><td :colspan="sw?8+WK.length:8" class="sc" style="background:transparent!important;border:none!important">
+                    <button class="flex items-center gap-2 text-sm text-a11 hover:text-a9 transition-colors py-1" @click="openAddPop($event, activeCh.id, 'group')">
+                      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+                      Add KPI
+                    </button>
+                  </td></tr>
                 </template>
               </tbody>
             </table>
@@ -502,131 +591,6 @@
     </div>
   </main>
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- ═══════════ SETTINGS VIEW ═════════════════════ -->
-  <!-- ═══════════════════════════════════════════════════ -->
-  <main x-show="view==='settings'" class="flex" style="height:calc(100vh - 49px);margin-top:49px">
-
-    <!-- TREE PANEL -->
-    <div class="flex-1 shrink-0 border-r border-g4 bg-p1 flex flex-col" style="min-width:320px;max-width:480px">
-      <div class="px-4 py-3 border-b border-g4"><p class="text-mini-medium text-g10">Outline</p></div>
-      <div class="flex-1 overflow-y-auto py-1">
-        <template x-for="item in flat" :key="item.placed ? item.n.id+'_in_'+item.placedIn : item.n.id">
-          <div class="tr px-2 py-0.5" :class="selId===item.n.id?'sel':''" :style="'padding-left:'+(item.d*20+8)+'px'" :data-nid="item.placed?item.n.id+'_in_'+item.placedIn:item.n.id" @click="selectNode(item.n, item.placed?item.placedIn:null)">
-            <button x-show="item.hc" class="flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-g11 hover:bg-g3 transition-colors" @click.stop="item.n.exp=!item.n.exp;_v++">
-              <svg class="h-3 w-3 transition-transform duration-fast" :class="item.n.exp?'rotate-90':''" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <span x-show="!item.hc" class="w-5 shrink-0 flex items-center justify-center"><span class="w-1.5 h-1.5 rounded-full" :class="selId===item.n.id?'bg-a9':'bg-g6'"></span></span>
-            <span class="flex-1 truncate ml-1 text-sm" :class="item.hc?(item.d===0?'text-g12 font-semibold':'text-g12 font-medium'):'text-g11'" x-text="item.n.refId?refName(item.n.refId):item.n.name"></span>
-            
-            <button class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-a11 hover:bg-a3 transition-colors ml-1" @click.stop="addChildOf(item.n.id)" title="Add child" x-show="!item.n.refId && !item.placed">
-              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
-            </button>
-            <button x-show="!item.placed" class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" @click.stop="deleteNode(item.n.id)" title="Delete">
-              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-            <button x-show="item.placed" class="act flex items-center justify-center w-5 h-5 shrink-0 rounded-4 text-g8 hover:text-d11 hover:bg-d3 transition-colors" @click.stop="item.n.visibleIn=item.n.visibleIn.filter(v=>v!==item.placedIn);_v++" title="Remove from view">
-              <svg class="h-3 w-3" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
-            </button>
-          </div>
-        </template>
-      </div>
-      <div class="px-4 py-3 border-t border-g4">
-        <button class="w-full rounded-6 px-3 py-1.5 text-sm text-a11 hover:bg-a3 transition-colors text-left" @click="addRoot()">+ Add department</button>
-      </div>
-    </div>
-
-    <!-- PROPERTIES PANEL -->
-    <div class="flex-1 overflow-y-auto bg-p0" style="min-width:0">
-      <div x-show="!selNode" class="flex flex-col items-center justify-center py-20 text-center">
-        <div class="w-10 h-10 rounded-8 bg-g2 flex items-center justify-center mb-3"><svg class="h-5 w-5 text-g8" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6z"/><path d="M3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25z"/><path d="M13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6z"/><path d="M13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25a2.25 2.25 0 01-2.25-2.25v-2.25z"/></svg></div>
-        <p class="text-sm text-g10">Select a node to edit its properties</p>
-        <p class="text-mini text-g9 mt-1">Use arrow keys to navigate, Tab to indent</p>
-      </div>
-
-      <!-- Reference node -->
-      <template x-if="selNode && selNode.refId">
-        <div class="max-w-lg mx-auto px-8 py-6">
-          <div class="flex items-center gap-2 mb-5"><svg class="h-4 w-4 text-a9 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg><h2 class="text-regular-medium text-g12" x-text="refName(selNode.refId)"></h2></div>
-          <div class="rounded-8 bg-a3 px-4 py-3 mb-5"><p class="text-sm text-a11">This is a Focus KPI reference. It mirrors a KPI that lives in its native department.</p></div>
-          <button class="rounded-6 bg-a9 px-3 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="selId=selNode.refId">Go to original KPI</button>
-          <div class="border-t border-g4 pt-5 mt-5"><button class="rounded-6 px-3 py-1.5 text-sm text-d11 hover:bg-d3 transition-colors" @click="removeFocusRef(selNode.id)">Remove from Focus KPIs</button></div>
-        </div>
-      </template>
-
-      <!-- Leaf KPI properties -->
-      <template x-if="selNode && selIsLeaf && !selNode.refId">
-        <div class="max-w-lg mx-auto px-8 py-6">
-          <h2 class="text-regular-medium text-g12 mb-5" x-text="selNode.name"></h2>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Name</label><input data-name-input type="text" class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="selNode?.name" @input="if(selNode){selNode.name=$event.target.value;_v++}" placeholder="KPI name..."></div>
-
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Internal Name</label><input type="text" class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="selNode?.internalName||''" @input="if(selNode){selNode.internalName=$event.target.value;_v++}" placeholder="e.g. finance_revenue_total"></div>
-
-          <div class="mb-5">
-            <label class="block text-mini-medium text-g10 mb-1.5">Shown in</label>
-            <div class="relative" x-data="{open:false}">
-              <button class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm shadow-xs transition-colors hover:bg-g2" @click="open=!open">
-                <span class="text-g11 truncate" x-text="(() => { const home = kpiHomeView(selNode.id); const all = [...new Set([...(home ? [home] : []), ...(selNode.visibleIn||[]), ...(selNode.focusKpi ? ['fk'] : [])])]; return all.length ? all.map(v=>viewLabel(v)).join(', ') : 'Select views...'; })()"></span>
-                <svg class="h-4 w-4 text-g8 shrink-0 ml-2 transition-transform" :class="open?'rotate-180':''" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
-              </button>
-              <div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-lg border border-g4 z-30 overflow-hidden">
-                <div class="max-h-64 overflow-y-auto p-1">
-                  <template x-for="v in availableViews()" :key="v.id">
-                    <button class="w-full text-left rounded-6 px-3 py-2 text-sm transition-colors flex items-center gap-3 hover:bg-g3"
-                      :class="v.id===kpiHomeView(selNode.id) ? 'opacity-60 cursor-default' : 'cursor-pointer'"
-                      @click="if(v.id!==kpiHomeView(selNode.id))toggleView(v.id)"
-                    >
-                      <div class="flex h-4 w-4 shrink-0 items-center justify-center rounded-4 border transition-colors"
-                        :class="isInView(v.id)||v.id===kpiHomeView(selNode.id) ? 'bg-a9 border-a9' : 'border-g6'">
-                        <svg x-show="isInView(v.id)||v.id===kpiHomeView(selNode.id)" class="h-3 w-3 text-white" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24"><path d="M20 6L9 17l-5-5"/></svg>
-                      </div>
-                      <div class="flex items-center gap-1.5 min-w-0">
-                        <svg x-show="v.id===kpiHomeView(selNode.id)" class="h-3.5 w-3.5 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-4 0a1 1 0 01-1-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 01-1 1"/></svg>
-                        <span class="truncate" :class="isInView(v.id)||v.id===kpiHomeView(selNode.id)?'text-g12':'text-g11'" x-text="v.path"></span>
-                      </div>
-                    </button>
-                  </template>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Owner</label><div class="relative" x-data="{op:false}"><button @click="op=!op" class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm shadow-xs transition-colors hover:bg-g2 cursor-pointer" :class="selNode.ownerId?'text-g12':'text-g9'"><span class="flex items-center gap-2"><template x-if="selNode.ownerId && ownerUser(selNode.ownerId)"><span class="flex items-center gap-2"><span x-text="ownerName(selNode.ownerId)"></span><span class="inline-flex rounded-full px-2 py-0.5 text-micro-medium" :class="deptChipClass(ownerUser(selNode.ownerId).dept)" x-text="ownerUser(selNode.ownerId).role"></span></span></template><template x-if="!selNode.ownerId"><span>No owner</span></template></span><svg class="h-4 w-4 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg></button><div x-show="op" @click.away="op=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1 max-h-64 overflow-y-auto"><button class="w-full text-left rounded-6 px-3 py-2 text-sm text-g9 hover:bg-g3 transition-colors" @click="selNode.ownerId='';_v++;op=false">No owner</button><template x-for="g in grpUsers()" :key="g.dept"><div><div class="px-3 pt-2.5 pb-1 text-micro-medium text-g9 uppercase tracking-wider" x-text="g.dept"></div><template x-for="u in g.users" :key="u.id"><button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors flex items-center gap-2" @click="selNode.ownerId=u.id;_v++;op=false"><span x-text="u.name"></span><span class="inline-flex rounded-full px-2 py-0.5 text-micro-medium" :class="deptChipClass(u.dept)" x-text="u.role"></span></button></template></div></template></div></div></div>
-
-          <div class="border-t border-g4 pt-5 mb-5">
-            <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">KPI Definition</p>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Format</label><div class="seg"><button :class="selNode.fmt==='number'?'on':''" @click="selNode.fmt='number';_v++">Number</button><button :class="selNode.fmt==='currency'?'on':''" @click="selNode.fmt='currency';_v++">Currency</button><button :class="selNode.fmt==='percentage'?'on':''" @click="selNode.fmt='percentage';_v++">Percentage (%)</button></div></div>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Aggregation</label><div class="seg"><button :class="selNode.agg==='total'?'on':''" @click="selNode.agg='total';_v++">Total</button><button :class="selNode.agg==='average'?'on':''" @click="selNode.agg='average';_v++">Average</button><button :class="selNode.agg==='max'?'on':''" @click="selNode.agg='max';_v++">Max</button><button :class="selNode.agg==='manual'?'on':''" @click="selNode.agg='manual';_v++">Manual</button></div></div>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Period behavior</label><div class="seg"><button :class="selNode.period==='resets'?'on':''" @click="selNode.period='resets';_v++">Resets monthly</button><button :class="selNode.period==='carries_over'?'on':''" @click="selNode.period='carries_over';_v++">Carries over</button></div><p class="text-micro text-g8 mt-1.5" x-text="selNode.period==='resets'?'Starts at 0 each month (e.g. Bookings, Adspend)':'Starts from last month\'s end value (e.g. Followers, Cash Position)'"></p></div>
-          </div>
-
-          <div class="border-t border-g4 pt-5 mb-5">
-            <p class="text-micro-medium text-g9 uppercase tracking-wide mb-4">Source Configuration</p>
-            <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Source mode</label><div class="seg"><button :class="selNode.sourceMode==='manual'?'on':''" @click="selNode.sourceMode='manual';_v++">Manual</button><button :class="selNode.sourceMode!=='manual'?'on':''" @click="if(selNode.sourceMode==='manual')selNode.sourceMode='review';_v++">Connected</button></div></div>
-            <div x-show="selNode.sourceMode==='manual'" class="rounded-8 bg-g2 px-4 py-3 mb-4"><p class="text-sm text-g11">Value is entered manually each period by the KPI owner.</p></div>
-            <div x-show="selNode.sourceMode!=='manual'" class="mb-4"><label class="block text-mini-medium text-g10 mb-1.5">Database</label><div class="relative" x-data="{open:false}"><button class="w-full flex items-center justify-between rounded-6 bg-p1 px-3 py-2 text-sm shadow-xs transition-colors hover:bg-g2" :class="selNode.db?'text-g12':'text-g9'" @click="open=!open" x-text="selNode.db||'Select database...'"></button><div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-full rounded-8 bg-p1 shadow-md border border-g4 z-10 p-1"><template x-for="db in databases" :key="db"><button class="w-full text-left rounded-6 px-3 py-2 text-sm text-g11 hover:bg-g3 transition-colors" @click="selNode.db=db;_v++;open=false" x-text="db"></button></template></div></div></div>
-            <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4"><label class="block text-mini-medium text-g10 mb-1.5">Filter conditions</label><div class="space-y-2"><template x-for="(f,fi) in selNode.filters" :key="fi"><div class="flex items-center gap-1.5"><span class="text-mini text-g9 w-10 text-right shrink-0" x-text="fi===0?'Where':'AND'"></span><div class="relative w-28 shrink-0" x-data="{open:false}"><button class="w-full text-left rounded-6 bg-p1 px-2.5 py-1.5 text-sm shadow-xs hover:bg-g2 transition-colors truncate" :class="f.field?'text-g12':'text-g9'" @click="open=!open" x-text="f.field||'Field...'"></button><div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-44 rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1"><template x-for="fd in fieldDefs" :key="fd.name"><button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors" @click="f.field=fd.name;f.operator='is';f.value='';_v++;open=false" x-text="fd.name"></button></template></div></div><div class="relative w-24 shrink-0" x-data="{open:false}"><button class="w-full text-left rounded-6 bg-p1 px-2.5 py-1.5 text-sm text-g11 shadow-xs hover:bg-g2 transition-colors truncate" @click="open=!open" x-text="opLabel(f.operator)"></button><div x-show="open" @click.away="open=false" x-transition class="absolute top-full left-0 mt-1 w-36 rounded-8 bg-p1 shadow-md border border-g4 z-20 p-1"><template x-for="op in opsFor(f.field)" :key="op.id"><button class="w-full text-left rounded-6 px-3 py-1.5 text-sm text-g11 hover:bg-g3 transition-colors" @click="f.operator=op.id;_v++;open=false" x-text="op.label"></button></template></div></div><template x-if="f.operator!=='is_empty'&&f.operator!=='is_not_empty'"><input type="text" class="flex-1 min-w-0 rounded-6 bg-p1 px-2.5 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="f.value" @input="f.value=$event.target.value;_v++" placeholder="Value..."></template><template x-if="f.operator==='is_empty'||f.operator==='is_not_empty'"><div class="flex-1"></div></template><button class="rounded-6 p-1 text-g8 hover:bg-g3 hover:text-g11 transition-colors shrink-0" @click="selNode.filters.splice(fi,1);if(!selNode.filters.length)selNode.filters.push({field:'',operator:'is',value:''});_v++"><svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg></button></div></template></div><button class="mt-2 rounded-6 px-3 py-1.5 text-mini text-a11 hover:bg-a3 transition-colors" @click="selNode.filters.push({field:'',operator:'is',value:''});_v++">+ Add condition</button></div>
-            <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4"><label class="block text-mini-medium text-g10 mb-1.5">Date scope</label><div class="flex items-center gap-2"><span class="text-sm text-g11">Filled Day falls within</span><div class="flex rounded-6 bg-g2 p-0.5 gap-0.5"><button class="rounded-4 px-2.5 py-1 text-mini transition-colors" :class="selNode.dateScope==='week'?'bg-p1 text-g12 shadow-xs font-medium':'text-g9 hover:text-g11'" @click="selNode.dateScope='week';_v++">Current week</button><button class="rounded-4 px-2.5 py-1 text-mini transition-colors" :class="selNode.dateScope==='month'?'bg-p1 text-g12 shadow-xs font-medium':'text-g9 hover:text-g11'" @click="selNode.dateScope='month';_v++">Current month</button></div></div></div>
-            <div x-show="selNode.sourceMode!=='manual' && selNode.db" class="mb-4"><label class="block text-mini-medium text-g10 mb-2">Data entry</label><div class="space-y-2"><label class="flex items-start gap-3 rounded-8 border px-4 py-3 cursor-pointer transition-colors" :class="selNode.sourceMode==='review'?'bg-a3 border-a5':'border-g4 hover:bg-g2'" @click="selNode.sourceMode='review';_v++"><div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors" :class="selNode.sourceMode==='review'?'border-a9':'border-g6'"><div class="h-2 w-2 rounded-full transition-colors" :class="selNode.sourceMode==='review'?'bg-a9':''"></div></div><div><p class="text-sm-medium text-g12">Prefill for review</p><p class="text-mini text-g9 mt-0.5">Value is prefilled. A person reviews each period.</p></div></label><label class="flex items-start gap-3 rounded-8 border px-4 py-3 cursor-pointer transition-colors" :class="selNode.sourceMode==='auto'?'bg-a3 border-a5':'border-g4 hover:bg-g2'" @click="selNode.sourceMode='auto';_v++"><div class="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-2 transition-colors" :class="selNode.sourceMode==='auto'?'border-a9':'border-g6'"><div class="h-2 w-2 rounded-full transition-colors" :class="selNode.sourceMode==='auto'?'bg-a9':''"></div></div><div><p class="text-sm-medium text-g12">Auto-fill</p><p class="text-mini text-g9 mt-0.5">Value is written automatically. No review needed.</p></div></label></div></div>
-          </div>
-
-          <div class="border-t border-g4 pt-5"><button class="rounded-6 px-3 py-1.5 text-sm text-d11 hover:bg-d3 transition-colors" @click="deleteNode(selId)">Delete this KPI</button></div>
-        </div>
-      </template>
-
-      <!-- Group properties -->
-      <template x-if="selNode && !selIsLeaf && !selNode.refId">
-        <div class="max-w-lg mx-auto px-8 py-6">
-          <div class="flex items-center justify-between mb-5"><h2 class="text-regular-medium text-g12" x-text="selNode.name"></h2><span class="tag bg-g3 text-g10" x-text="'Group · '+selNode.children.length+' items'"></span></div>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Name</label><input data-name-input type="text" class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="selNode?.name" @input="if(selNode){selNode.name=$event.target.value;_v++}" placeholder="Group name..."></div>
-          <div class="mb-5"><label class="block text-mini-medium text-g10 mb-1.5">Internal Name</label><input type="text" class="w-full rounded-6 bg-p1 px-3 py-1.5 text-sm text-g12 shadow-xs outline-none placeholder:text-g9 focus:ring-2 focus:ring-a9" :value="selNode?.internalName||''" @input="if(selNode){selNode.internalName=$event.target.value;_v++}" placeholder="e.g. finance_revenue"></div>
-          <div class="rounded-8 bg-g2 px-4 py-3 mb-5"><p class="text-sm text-g11">This group contains <span class="font-medium text-g12" x-text="selNode.children.length"></span> items. Expand it in the tree to see its contents.</p></div>
-          <button class="rounded-6 bg-a9 px-3 py-1.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" @click="addChild()">+ Add KPI</button>
-          <div class="border-t border-g4 pt-5 mt-5"><button class="rounded-6 px-3 py-1.5 text-sm text-d11 hover:bg-d3 transition-colors" @click="deleteNode(selId)">Delete group<span x-show="selNode.children.length"> and <span x-text="countAll(selNode)"></span> items</span></button></div>
-        </div>
-      </template>
-    </div>
-  </main>
 
   <!-- ═══════════════════════════════════════════════════ -->
   <!-- ═══════════ SOURCE CONFIG MODAL ════════════════ -->
@@ -900,6 +864,32 @@
     </div>
   </div>
 
+  <!-- Add KPI popover -->
+  <div x-show="addPop.open" x-transition:enter="transition ease-out duration-fast" x-transition:enter-start="opacity-0 scale-95" x-transition:enter-end="opacity-100 scale-100" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="add-pop" :style="'top:'+addPop.y+'px;left:'+addPop.x+'px'" @click.stop @click.away="addPop.open=false">
+    <button class="add-pop-item font-medium" @click="createInPop()">
+      <span class="api bg-a3 text-a9"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span>
+      Create new KPI
+    </button>
+    <div class="add-pop-sep"></div>
+    <div class="add-pop-search">
+      <svg class="h-4 w-4 text-g8 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+      <input type="text" x-model="addPopQ" placeholder="Search existing KPIs..." x-ref="addPopInput" @keydown.escape.stop="addPop.open=false">
+    </div>
+    <div class="add-pop-list">
+      <template x-for="kpi in addPopResults" :key="kpi.id">
+        <button class="add-pop-item w-full text-left" @click="linkInPop(kpi)">
+          <span class="api bg-g2 text-g10"><svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></span>
+          <div class="min-w-0">
+            <div class="truncate text-g12" x-text="kpi.name"></div>
+            <div class="text-micro text-g9 truncate" x-text="kpi._path"></div>
+          </div>
+        </button>
+      </template>
+      <div x-show="addPopQ.length>0&&addPopResults.length===0" class="add-pop-empty">No matching KPIs found</div>
+      <div x-show="addPopQ.length===0&&addPopResults.length===0" class="add-pop-empty">Type to search existing KPIs</div>
+    </div>
+  </div>
+
   <div x-show="toast" x-transition:enter="transition ease-out duration-normal" x-transition:enter-start="opacity-0 translate-y-2" x-transition:enter-end="opacity-100 translate-y-0" x-transition:leave="transition ease-in duration-fast" x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 rounded-full bg-g12 text-p1 px-4 py-2 text-sm shadow-lg" x-text="toast"></div>
 
   <!-- ═══════════════════════════════════════════════════ -->
@@ -944,7 +934,7 @@
 
     let _nid=200;
     function N(id,nm,ch,p){
-      const n={id,name:nm,exp:true,children:ch||[],fmt:'number',agg:'total',period:'resets',ownerId:'',sourceMode:'manual',db:'',filters:[],dateScope:'week',companyDashboard:false,focusKpi:false,refId:'',visibleIn:[],viewOrder:null,target:null,actual:null,status:null,weekly:{},source:'',pv:null,pr:0,starred:false,...p};
+      const n={id,name:nm,exp:true,children:ch||[],fmt:'number',agg:'total',period:'resets',ownerId:'',sourceMode:'manual',db:'',filters:[],dateScope:'week',companyDashboard:false,focusKpi:false,refId:'',visibleIn:[],viewOrder:null,target:null,actual:null,status:null,weekly:{},source:'',pv:null,pr:0,...p};
       if(n.actual&&n.target){const pc=n.actual/DE*DM;n.pv=n.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);n.pr=pc/n.target;}
       return n;
     }
@@ -967,9 +957,9 @@
             N('mov1d','AI-Setting',[],{ownerId:'u2',target:8,actual:2,status:'yellow',weekly:{9:1,10:1}}),
             N('mov1e','Organic',[],{ownerId:'u2',target:5,actual:1,status:'yellow',weekly:{9:0,10:1}}),
             N('mov1f','Other',[],{ownerId:'u2',target:4,actual:1,status:'yellow',weekly:{9:1,10:0}}),
-          ],{ownerId:'u2',target:55,actual:15,status:'yellow',companyDashboard:true,visibleIn:['company'],focusKpi:true,weekly:{9:7,10:8},exp:false,starred:true}),
+          ],{ownerId:'u2',target:55,actual:15,status:'yellow',companyDashboard:true,visibleIn:['company'],focusKpi:true,weekly:{9:7,10:8},exp:false}),
           N('mov2','Cost per Qualified Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',target:500,actual:565,status:'yellow',companyDashboard:true,visibleIn:['company']}),
-          N('mov3','CAC',[],{fmt:'currency',agg:'average',ownerId:'u2',target:2000,actual:2380,status:'yellow',companyDashboard:true,visibleIn:['company'],starred:true}),
+          N('mov3','CAC',[],{fmt:'currency',agg:'average',ownerId:'u2',target:2000,actual:2380,status:'yellow',companyDashboard:true,visibleIn:['company']}),
           N('mov4','FE-ROI',[],{fmt:'number',agg:'average',ownerId:'u2',target:3.5,actual:2.8,status:'yellow',companyDashboard:true,visibleIn:['company']}),
         ],{exp:false}),
 
@@ -983,8 +973,8 @@
             N('mpa2a','CPM',[],{fmt:'currency',agg:'average',ownerId:'u2',target:83,actual:97,status:'red',weekly:{9:105,10:89}}),
             N('mpa2b','Clicks',[],{ownerId:'u2',target:8500,actual:2880,status:'yellow',weekly:{9:1300,10:1580}}),
             N('mpa2c','CPC',[],{fmt:'currency',agg:'average',ownerId:'u2',target:2.00,actual:1.82,status:'green',weekly:{9:1.95,10:1.69}}),
-          ],{fmt:'currency',ownerId:'u2',target:25000,actual:8470,status:'green',sourceMode:'auto',db:'Marketing Tracking',weekly:{9:4120,10:4350},exp:false,starred:true}),
-          N('mpa3','Leads',[],{ownerId:'u2',target:200,actual:68,status:'green',weekly:{9:32,10:36},starred:true}),
+          ],{fmt:'currency',ownerId:'u2',target:25000,actual:8470,status:'green',sourceMode:'auto',db:'Marketing Tracking',weekly:{9:4120,10:4350},exp:false}),
+          N('mpa3','Leads',[],{ownerId:'u2',target:200,actual:68,status:'green',weekly:{9:32,10:36}}),
           N('mpa4','Cost per Lead',[],{fmt:'currency',agg:'average',ownerId:'u2',target:125,actual:125,status:'green'}),
           N('mpa5','Qualified Bookings',[
             N('mpa5a','Direct Bookings (VSL)',[],{ownerId:'u2',target:18,actual:5,status:'yellow',weekly:{9:2,10:3}}),
@@ -1002,7 +992,7 @@
             N('mpa7d','FE Cash Closed',[],{fmt:'currency',ownerId:'u2',target:48000,actual:13200,status:'yellow',weekly:{9:6400,10:6800}}),
             N('mpa7e','FE DV-ROAS',[],{fmt:'number',agg:'average',ownerId:'u2',target:3.8,actual:3.2,status:'yellow'}),
             N('mpa7f','FE Cash-ROAS',[],{fmt:'number',agg:'average',ownerId:'u2',target:1.9,actual:1.6,status:'yellow'}),
-          ],{fmt:'number',agg:'average',ownerId:'u2',target:3.0,actual:2.5,status:'yellow',exp:false,starred:true}),
+          ],{fmt:'number',agg:'average',ownerId:'u2',target:3.0,actual:2.5,status:'yellow',exp:false}),
         ],{exp:false}),
 
         N('mfu','Funnel',[
@@ -1014,13 +1004,13 @@
             N('mfu3c','VSL Completion Rate',[],{fmt:'percentage',agg:'average',ownerId:'u2',target:30,actual:28,status:'yellow'}),
             N('mfu3d','Visit to Booking Start',[],{fmt:'percentage',agg:'average',ownerId:'u2',target:0.8,actual:0.65,status:'yellow'}),
             N('mfu3e','Visit to Booking Complete',[],{fmt:'percentage',agg:'average',ownerId:'u2',target:0.35,actual:0.31,status:'yellow'}),
-          ],{ownerId:'u2',target:200,actual:68,status:'green',weekly:{9:32,10:36},exp:false,starred:true}),
+          ],{ownerId:'u2',target:200,actual:68,status:'green',weekly:{9:32,10:36},exp:false}),
           N('mfu4','CPL',[],{fmt:'currency',agg:'average',ownerId:'u2',target:125,actual:125,status:'green'}),
           N('mfu5','Bookings',[
             N('mfu5a','Direct Bookings',[],{ownerId:'u2',target:25,actual:7,status:'yellow',weekly:{9:3,10:4}}),
             N('mfu5b','AI-Setter Bookings',[],{ownerId:'u2',target:15,actual:4,status:'yellow',weekly:{9:2,10:2}}),
             N('mfu5c','Human Setter Bookings',[],{ownerId:'u2',target:10,actual:3,status:'yellow',weekly:{9:1,10:2}}),
-          ],{ownerId:'u2',target:50,actual:14,status:'yellow',weekly:{9:6,10:8},exp:false,starred:true}),
+          ],{ownerId:'u2',target:50,actual:14,status:'yellow',weekly:{9:6,10:8},exp:false}),
           N('mfu6','Cost per Qualified Booking',[
             N('mfu6a','Cost per Direct Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',target:400,actual:474,status:'yellow'}),
           ],{fmt:'currency',agg:'average',ownerId:'u2',target:500,actual:605,status:'yellow',exp:false}),
@@ -1037,7 +1027,7 @@
         N('mob','Outbound Mail',[
           N('mob1','Emails Sent',[
             N('mob1a','Open-Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:55,actual:48,status:'yellow',source:'Instantly'}),
-          ],{ownerId:'u1',target:5000,actual:1750,status:'green',source:'Instantly',weekly:{9:900,10:850},exp:false,starred:true}),
+          ],{ownerId:'u1',target:5000,actual:1750,status:'green',source:'Instantly',weekly:{9:900,10:850},exp:false}),
           N('mob2','Positive Reply Rate',[
             N('mob2a','Negative Replies',[],{ownerId:'u1',target:null,actual:28,status:null,source:'Instantly',weekly:{9:14,10:14}}),
             N('mob2b','Positive Replies',[],{ownerId:'u1',target:40,actual:12,status:'yellow',source:'Instantly',weekly:{9:5,10:7}}),
@@ -1046,7 +1036,7 @@
             N('mob3a','Direct Bookings',[],{ownerId:'u1',target:6,actual:2,status:'yellow',source:'Instantly',weekly:{9:1,10:1}}),
             N('mob3b','Human Setting',[],{ownerId:'u1',target:4,actual:1,status:'red',source:'Instantly',weekly:{9:0,10:1}}),
             N('mob3c','Cost per Qualif. Booking',[],{fmt:'currency',agg:'average',ownerId:'u1',target:350,actual:420,status:'yellow'}),
-          ],{ownerId:'u1',target:10,actual:3,status:'yellow',source:'Instantly',weekly:{9:1,10:2},exp:false,starred:true}),
+          ],{ownerId:'u1',target:10,actual:3,status:'yellow',source:'Instantly',weekly:{9:1,10:2},exp:false}),
           N('mob4','Booking Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:2.5,actual:1.7,status:'red',source:'Instantly'}),
           N('mob5','Cost per Qualified Booking',[],{fmt:'currency',agg:'average',ownerId:'u1',target:400,actual:525,status:'red'}),
           N('mob6','FE-ROI',[
@@ -1060,12 +1050,12 @@
         ],{exp:false}),
 
         N('mor','Organic',[
-          N('mor1','Follower',[],{period:'carries_over',ownerId:'u2',target:5000,actual:4620,status:'yellow',source:'YouTube',weekly:{9:4540,10:4620},starred:true}),
+          N('mor1','Follower',[],{period:'carries_over',ownerId:'u2',target:5000,actual:4620,status:'yellow',source:'YouTube',weekly:{9:4540,10:4620}}),
           N('mor2','Videos Published',[
             N('mor2a','Videos Produced',[],{ownerId:'u2',target:8,actual:3,status:'yellow',source:'YouTube',weekly:{9:2,10:1}}),
           ],{ownerId:'u2',target:6,actual:2,status:'yellow',source:'YouTube',weekly:{9:1,10:1},exp:false}),
           N('mor3','Total YouTube Watchtime',[],{ownerId:'u2',target:250,actual:80,status:'red',source:'YouTube',weekly:{9:33,10:47}}),
-          N('mor4','Qualified Bookings',[],{ownerId:'u2',target:5,actual:2,status:'yellow',source:'YouTube',weekly:{9:1,10:1},starred:true}),
+          N('mor4','Qualified Bookings',[],{ownerId:'u2',target:5,actual:2,status:'yellow',source:'YouTube',weekly:{9:1,10:1}}),
           N('mor5','Cost per Booking',[],{fmt:'currency',agg:'average',ownerId:'u2',target:200,actual:180,status:'green'}),
           N('mor6','FE-ROI',[
             N('mor6a','CAC',[],{fmt:'currency',agg:'average',ownerId:'u2',target:800,actual:720,status:'green'}),
@@ -1086,14 +1076,14 @@
         ],{ownerId:'u1',target:35,actual:22,status:'red',companyDashboard:true,visibleIn:['company'],focusKpi:true,source:'Plecto',weekly:{9:6,10:2,11:4,12:10},exp:false}),
         N('s3','Set Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:2,actual:0.6,status:'red',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{9:1.0,10:0.5,11:0.5,12:0.8}}),
         N('hc','Human Calling',[
-          N('hc1','Dials',[],{ownerId:'u3',target:3500,actual:2800,status:'yellow',source:'Aircall',weekly:{9:580,10:620,11:560,12:600,13:440},starred:true}),
+          N('hc1','Dials',[],{ownerId:'u3',target:3500,actual:2800,status:'yellow',source:'Aircall',weekly:{9:580,10:620,11:560,12:600,13:440}}),
           N('hc2','Connect Rate',[],{fmt:'percentage',agg:'average',ownerId:'u3',target:20,actual:18,status:'yellow',source:'Aircall',weekly:{9:16,10:19,11:17,12:20,13:18}}),
-          N('hc3','Sets from Calls',[],{ownerId:'u3',target:25,actual:16,status:'red',source:'Plecto',weekly:{9:4,10:2,11:3,12:5,13:2},starred:true}),
+          N('hc3','Sets from Calls',[],{ownerId:'u3',target:25,actual:16,status:'red',source:'Plecto',weekly:{9:4,10:2,11:3,12:5,13:2}}),
         ],{exp:false}),
         N('ai','AI Setting',[
-          N('ai1','Conversations',[],{ownerId:'u2',target:1500,actual:1200,status:'yellow',source:'AI Tool',weekly:{9:250,10:280,11:240,12:260,13:170},starred:true}),
+          N('ai1','Conversations',[],{ownerId:'u2',target:1500,actual:1200,status:'yellow',source:'AI Tool',weekly:{9:250,10:280,11:240,12:260,13:170}}),
           N('ai2','Qualified Leads',[],{ownerId:'u2',target:60,actual:45,status:'yellow',source:'AI Tool',weekly:{9:10,10:12,11:9,12:8,13:6}}),
-          N('ai3','Sets from AI',[],{ownerId:'u2',target:8,actual:5,status:'red',source:'AI Tool',weekly:{9:1,10:0,11:1,12:1,13:2},starred:true}),
+          N('ai3','Sets from AI',[],{ownerId:'u2',target:8,actual:5,status:'red',source:'AI Tool',weekly:{9:1,10:0,11:1,12:1,13:2}}),
         ],{exp:false}),
       ]),
       N('cls','CLOSING',[
@@ -1107,15 +1097,15 @@
         N('d2','Retention Rate',[],{fmt:'percentage',agg:'average',ownerId:'u1',target:45,actual:33,status:'yellow',companyDashboard:true,visibleIn:['company'],source:'Plecto',weekly:{11:50}}),
         N('d3','KPI-Collection Rate',[],{fmt:'percentage',agg:'max',ownerId:'u1',target:80,actual:58,status:'red',companyDashboard:true,visibleIn:['company'],weekly:{10:0,11:58}}),
         N('dse','DSE',[
-          N('dse1','Time-to-First-Milestone',[],{agg:'average',ownerId:'u1',target:7,actual:5,status:'green',starred:true}),
+          N('dse1','Time-to-First-Milestone',[],{agg:'average',ownerId:'u1',target:7,actual:5,status:'green'}),
           N('dse2','Projekt Timing (Gesamt)',[],{agg:'average',ownerId:'u1',target:30,actual:28,status:'green'}),
         ],{exp:false}),
         N('am','Account Management',[
-          N('am1','Portfolio Umsatz (LM)',[],{fmt:'currency',ownerId:'u1',target:80000,actual:72000,status:'yellow',starred:true}),
+          N('am1','Portfolio Umsatz (LM)',[],{fmt:'currency',ownerId:'u1',target:80000,actual:72000,status:'yellow'}),
           N('am2','Rekordmonate (LM)',[],{ownerId:'u1',target:5,actual:3,status:'yellow'}),
         ],{exp:false}),
         N('cs','Client Success',[
-          N('cs1','Testimonials',[],{ownerId:'u1',target:3,actual:2,status:'yellow',starred:true}),
+          N('cs1','Testimonials',[],{ownerId:'u1',target:3,actual:2,status:'yellow'}),
           N('cs2','NPS Score',[],{agg:'average',period:'carries_over',ownerId:'u1',target:70,actual:66,status:'yellow'}),
         ],{exp:false}),
       ]),
@@ -1123,9 +1113,9 @@
         N('p1','eNPS',[],{agg:'average',period:'carries_over',ownerId:'u5',target:50,actual:42,status:'yellow',companyDashboard:true,visibleIn:['company'],source:'Personio',weekly:{9:40,10:44}}),
         N('p2','Open Positions Filled',[],{ownerId:'u5',target:4,actual:2,status:'red',companyDashboard:true,visibleIn:['company'],source:'Personio',weekly:{9:1,10:1}}),
         N('hf','Hiring Funnel',[
-          N('hf1','Loom Videos',[],{ownerId:'u5',target:20,actual:12,status:'yellow',source:'Personio',starred:true}),
+          N('hf1','Loom Videos',[],{ownerId:'u5',target:20,actual:12,status:'yellow',source:'Personio'}),
           N('hf2','Gruppeninterviews',[],{ownerId:'u5',target:8,actual:5,status:'yellow',source:'Personio'}),
-          N('hf3','Einstellungen',[],{ownerId:'u5',target:4,actual:2,status:'red',source:'Personio',starred:true}),
+          N('hf3','Einstellungen',[],{ownerId:'u5',target:4,actual:2,status:'red',source:'Personio'}),
         ],{exp:false}),
       ]),
       N('fin','FINANCE',[
@@ -1198,24 +1188,25 @@
     function ownerU(id){return users.find(u=>u.id===id)||null;}
 
     return{
-      view:'tracker',
+      editMode:false,
       role:'ceo',cM:2,cY:2026,MN,WK,CW,WR,STS,
       sw:false,openSt:null,openOwn:null,ownPos:{x:0,y:0},_ownTrigger:null,
       bc:[{l:'Company KPIs'}],
       activeDept:null,activeCh:null,
       icD,icS:false,
       tree,users,databases,fieldDefs,
-      selId:null,selPlacedIn:null,showHelp:false,_v:0,toast:'',
+      _v:0,toast:'',
+      addPop:{open:false,parentId:null,type:'child',x:0,y:0},addPopQ:'',
       modal:{open:false,kpi:null,editing:false,editName:'',editFmt:'number',editAgg:'total',editPeriod:'resets',editOwner:'',editMode:'manual',editDb:'',editFilters:[],editDateScope:'week',editConfidence:'review',viewCW:10,editCW:10,viewExpanded:false,editExpanded:false},
       cellPop:{open:false,kpi:null,week:null,pos:{x:0,y:0}},
       dtl:{open:false,kpi:null,week:null},dtlData:[],dtlSearch:false,dtlSt:null,dtlStPos:{x:0,y:0},dtlStRec:null,dtlStCol:null,
 
       init(){
-        const saved=localStorage.getItem('aren-kpi-tree');
-        if(saved){try{this.tree=JSON.parse(saved);this.tree.forEach(function recalcTree(n){if(!n.children)n.children=[];if(!n.weekly)n.weekly={};if(!n.filters)n.filters=[];if(n.starred===undefined)n.starred=false;if(!n.visibleIn){n.visibleIn=[];if(n.companyDashboard)n.visibleIn.push('company');}if(n.actual&&n.target){const pc=n.actual/DE*DM;n.pv=n.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);n.pr=pc/n.target;}n.children.forEach(recalcTree);});}catch(e){this.tree=JSON.parse(JSON.stringify(defaultTree));}}
-        this.$watch('_v',()=>{clearTimeout(this._saveTimer);this._saveTimer=setTimeout(()=>{localStorage.setItem('aren-kpi-tree',JSON.stringify(this.tree));},500);});
+        const saved=localStorage.getItem('aren-kpi-tree-em');
+        if(saved){try{this.tree=JSON.parse(saved);this.tree.forEach(function recalcTree(n){if(!n.children)n.children=[];if(!n.weekly)n.weekly={};if(!n.filters)n.filters=[];if(!n.visibleIn){n.visibleIn=[];if(n.companyDashboard)n.visibleIn.push('company');}if(n.actual&&n.target){const pc=n.actual/DE*DM;n.pv=n.fmt==='percentage'?Math.round(pc*10)/10:Math.round(pc);n.pr=pc/n.target;}n.children.forEach(recalcTree);});}catch(e){this.tree=JSON.parse(JSON.stringify(defaultTree));}}
+        this.$watch('_v',()=>{clearTimeout(this._saveTimer);this._saveTimer=setTimeout(()=>{localStorage.setItem('aren-kpi-tree-em',JSON.stringify(this.tree));},500);});
       },
-      resetTree(){localStorage.removeItem('aren-kpi-tree');this.tree=JSON.parse(JSON.stringify(defaultTree));this._v++;this.toast='Reset to defaults';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);},
+      resetTree(){localStorage.removeItem('aren-kpi-tree-em');this.tree=JSON.parse(JSON.stringify(defaultTree));this._v++;this.toast='Reset to defaults';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);},
       exportTree(){const json=JSON.stringify(this.tree,null,2);navigator.clipboard.writeText(json).then(()=>{this.toast='Tree JSON copied to clipboard';}).catch(()=>{const blob=new Blob([json],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='kpi-tree.json';a.click();URL.revokeObjectURL(url);this.toast='Tree JSON downloaded';});clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},3000);},
 
       availableViews(){
@@ -1372,17 +1363,23 @@
       get allDeptRows(){
         this._v;const self=this;const result=[];
         const deptsArr=this.role==='lead'?[this.leadDept].filter(Boolean):this.depts;
-        
+
         for(const dept of deptsArr){
           result.push({_k:dept.id+'_h',_t:'dept',_tr:'dh',name:dept.name,_dept:dept,_click:()=>self.drillDept(dept)});
-          (function collect(nodes){for(const k of nodes){if(k.refId){const resolved=findNode(k.refId,self.tree);if(resolved)result.push({_k:dept.id+'_'+resolved.id,_t:'kpi',_tr:'',_dept:dept,_click:()=>self.drillDept(dept),_n:resolved});continue;}if(k.children.length>0&&k.target===null){collect(k.children);continue;}if(k.companyDashboard){result.push({_k:dept.id+'_'+k.id,_t:'kpi',_tr:'',_dept:dept,_click:()=>self.drillDept(dept),_n:k});}}})(dept.children);
+          (function collect(nodes){for(const k of nodes){
+            if(k.refId){const resolved=findNode(k.refId,self.tree);if(resolved){resolved._hasChildren=resolved.children&&resolved.children.length>0;result.push({_k:dept.id+'_'+resolved.id,_t:'kpi',_tr:'',_dept:dept,_click:()=>self.drillDept(dept),_n:resolved});if(resolved._hasChildren&&resolved.exp){for(const ch of resolved.children){const cn=ch.refId?findNode(ch.refId,self.tree):ch;if(cn)result.push({_k:dept.id+'_'+cn.id+'_c',_t:'kpi',_tr:'kpi-child',_dept:dept,_click:()=>self.drillDept(dept),_n:cn,_isChild:true});}}}continue;}
+            if(k.children.length>0&&k.target===null){collect(k.children);continue;}
+            if(k.companyDashboard){k._hasChildren=k.children&&k.children.length>0;result.push({_k:dept.id+'_'+k.id,_t:'kpi',_tr:'',_dept:dept,_click:()=>self.drillDept(dept),_n:k});
+              if(k._hasChildren&&k.exp){for(const ch of k.children){const cn=ch.refId?findNode(ch.refId,self.tree):ch;if(cn)result.push({_k:dept.id+'_'+cn.id+'_c',_t:'kpi',_tr:'kpi-child',_dept:dept,_click:()=>self.drillDept(dept),_n:cn,_isChild:true});}}
+            }
+          }})(dept.children);
         }
-        
+
         return result;
       },
 
       toggleW(e){const expanding=!this.sw;this.sw=!this.sw;this.$nextTick(()=>{setTimeout(()=>{if(expanding){const tbl=e.target.closest('table')||document.querySelector('.kg');if(!tbl)return;const ths=tbl.querySelectorAll('thead th');const lastWeekTh=ths.length>=3?ths[ths.length-3]:null;if(lastWeekTh){const r=lastWeekTh.getBoundingClientRect();window.scrollTo({left:window.scrollX+r.right-window.innerWidth,behavior:'smooth'});}}else{window.scrollTo({left:0,behavior:'smooth'});}},30);});},
-      switchRole(r){this.role=r;this.bc=[{l:r==='ceo'?'Company KPIs':r==='lead'?this.leadDeptName:'My KPIs'}];this.activeDept=null;this.activeCh=null;this.icS=false;this.openSt=null;},
+      switchRole(r){this.role=r;this.bc=[{l:r==='ceo'?'Company KPIs':r==='lead'?this.leadDeptName:'My KPIs'}];this.activeDept=null;this.activeCh=null;this.icS=false;this.openSt=null;this.editMode=false;},
       drillDept(dept){this.activeDept=dept;this.activeCh=null;this.bc=[{l:this.role==='ceo'?'Company KPIs':this.leadDeptName},{l:dept.name}];this.openSt=null;},
       drillCh(ch){this.activeCh=ch;this.bc=[...this.bc.slice(0,2),{l:ch.name}];this.openSt=null;},
       navTo(i){this.bc=this.bc.slice(0,i+1);if(i===0){this.activeDept=null;this.activeCh=null;}if(i===1)this.activeCh=null;this.openSt=null;},
@@ -1396,85 +1393,107 @@
         k.as=k.pr>=1?'green':k.pr>=0.8?'yellow':'red';this.icS=false;
       },
 
-      // Settings: tree editor
       opLabel(op){return{is:'is',is_not:'is not',contains:'contains',gt:'>',lt:'<',is_empty:'is empty',is_not_empty:'is not empty'}[op]||'is';},
       opsFor(fn){const d=fieldDefs.find(f=>f.name===fn);return ops[d?.type||'text'];},
       countAll(node){return countDescendants(node);},
-      selIdx(){return this.flat.findIndex(f=>f.n.id===this.selId&&(this.selPlacedIn===(f.placed?f.placedIn:null)));},
       refName(refId){const orig=findNode(refId,this.tree);return orig?orig.name:'Unknown KPI';},
 
-      // #region agent log
-      selectNode(node, placedIn){
-        fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'b8c053'},body:JSON.stringify({sessionId:'b8c053',location:'index.html:selectNode',message:'selectNode called',data:{nodeId:node.id,nodeName:node.name,placedIn:placedIn,callerStack:new Error().stack?.split('\n').slice(1,4).join(' | ')},timestamp:Date.now(),hypothesisId:'H3'})}).catch(()=>{});
-        if(node.refId){this.selId=node.refId;this.selPlacedIn=null;this.toast='Jumped to original KPI — this is a Focus reference';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2500);}
-        else{this.selId=node.id;this.selPlacedIn=placedIn||null;}
+      addRoot(){const nn=N('n'+(++_nid),'NEW DEPARTMENT',[]);this.tree.push(nn);this._v++;this.toast='Department added';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);},
+
+      openAddPop(e,parentId,type){
+        const r=e.currentTarget.getBoundingClientRect();
+        const pw=280;const x=Math.min(r.left,window.innerWidth-pw-16);
+        this.addPop={open:true,parentId,type,x,y:r.bottom+6};
+        this.addPopQ='';
+        this.$nextTick(()=>{this.$refs.addPopInput?.focus();});
       },
-      // #endregion
-      toggleFocus(){
-        if(!this.selNode)return;const fk=findNode('fk',this.tree);if(!fk)return;
-        if(this.selNode.focusKpi){const ri=fk.children.findIndex(c=>c.refId===this.selId);if(ri>=0)fk.children.splice(ri,1);this.selNode.focusKpi=false;}
-        else{const ref=N('fkr'+(++_nid),'',[],{refId:this.selId});fk.children.push(ref);fk.exp=true;this.selNode.focusKpi=true;this.selNode.companyDashboard=true;if(!this.selNode.visibleIn)this.selNode.visibleIn=[];if(!this.selNode.visibleIn.includes('company'))this.selNode.visibleIn.push('company');}
-        this._v++;
+
+      get addPopResults(){
+        this._v;
+        const q=this.addPopQ.toLowerCase().trim();
+        if(!q)return[];
+        const parentId=this.addPop.parentId;
+        const parent=findNode(parentId,this.tree);
+        const existingIds=new Set();
+        if(parent)(function ids(n){existingIds.add(n.id);(n.children||[]).forEach(ids);})(parent);
+        const results=[];
+        (function walk(nodes,path){for(const n of nodes){
+          const p=path?path+' › '+n.name:n.name;
+          if(!existingIds.has(n.id)&&n.name.toLowerCase().includes(q)&&!n.refId){
+            results.push({...n,_path:path||'Root'});
+          }
+          if(n.children)walk(n.children,p);
+        }})(this.tree,'');
+        return results.slice(0,8);
       },
-      removeFocusRef(refNodeId){const refNode=findNode(refNodeId,this.tree);if(refNode&&refNode.refId){const orig=findNode(refNode.refId,this.tree);if(orig)orig.focusKpi=false;}removeFromTree(refNodeId,this.tree);this.selId=null;this._v++;},
-      nav(dir){const fl=this.flat;const ni=this.selIdx()+dir;if(ni>=0&&ni<fl.length){const item=fl[ni];this.selId=item.n.id;this.selPlacedIn=item.placed?item.placedIn:null;const nid=item.placed?item.n.id+'_in_'+item.placedIn:item.n.id;this.$nextTick(()=>{document.querySelector('[data-nid="'+nid+'"]')?.scrollIntoView({block:'nearest'});});}},
-      indent(){if(this.selPlacedIn)return;const node=this.selNode;if(!node)return;const parent=findParent(this.selId,this.tree,null);const siblings=parent?parent.children:this.tree;const idx=siblings.indexOf(node);if(idx<=0)return;const prev=siblings[idx-1];siblings.splice(idx,1);prev.children.push(node);prev.exp=true;this._v++;},
-      outdent(){if(this.selPlacedIn)return;const node=this.selNode;if(!node)return;const parent=findParent(this.selId,this.tree,null);if(!parent)return;const gp=findParent(parent.id,this.tree,null);const gpChildren=gp?gp.children:this.tree;const pidx=gpChildren.indexOf(parent);parent.children.splice(parent.children.indexOf(node),1);gpChildren.splice(pidx+1,0,node);this._v++;},
-      ensureViewOrder(group){
-        if(group.viewOrder)return;
-        const extras=this.extraKpisForView(group.id);
-        const isChannel=group.children.every(c=>!c.children.length||c.target!==null);
-        const ownKpis=isChannel?group.children.filter(c=>!c.children.length):group.children.filter(c=>!c.refId&&!(c.children.length>0&&c.target===null));
-        group.viewOrder=[...extras.map(x=>x.id),...ownKpis.map(c=>c.id)];
-      },
-      moveUp(){const node=this.selNode;if(!node)return;
-        if(this.selPlacedIn){const group=findNode(this.selPlacedIn,this.tree);if(!group)return;this.ensureViewOrder(group);const vo=group.viewOrder;const idx=vo.indexOf(this.selId);if(idx<=0)return;[vo[idx-1],vo[idx]]=[vo[idx],vo[idx-1]];this._v++;return;}
-        const parent=findParent(this.selId,this.tree,null);if(parent&&parent.viewOrder){const vo=parent.viewOrder;const idx=vo.indexOf(this.selId);if(idx>0){[vo[idx-1],vo[idx]]=[vo[idx],vo[idx-1]];}}
-        const siblings=parent?parent.children:this.tree;const idx=siblings.indexOf(node);if(idx<=0)return;[siblings[idx-1],siblings[idx]]=[siblings[idx],siblings[idx-1]];this._v++;},
-      moveDown(){const node=this.selNode;if(!node)return;
-        if(this.selPlacedIn){const group=findNode(this.selPlacedIn,this.tree);if(!group)return;this.ensureViewOrder(group);const vo=group.viewOrder;const idx=vo.indexOf(this.selId);if(idx<0||idx>=vo.length-1)return;[vo[idx],vo[idx+1]]=[vo[idx+1],vo[idx]];this._v++;return;}
-        const parent=findParent(this.selId,this.tree,null);if(parent&&parent.viewOrder){const vo=parent.viewOrder;const idx=vo.indexOf(this.selId);if(idx>=0&&idx<vo.length-1){[vo[idx],vo[idx+1]]=[vo[idx+1],vo[idx]];}}
-        const siblings=parent?parent.children:this.tree;const idx=siblings.indexOf(node);if(idx>=siblings.length-1)return;[siblings[idx],siblings[idx+1]]=[siblings[idx+1],siblings[idx]];this._v++;},
-      addSibling(){const nn=N('n'+(++_nid),'New KPI',[]);if(!this.selId){this.tree.push(nn);this.selId=nn.id;this._v++;return;}const parent=findParent(this.selId,this.tree,null);const siblings=parent?parent.children:this.tree;siblings.splice(siblings.findIndex(n=>n.id===this.selId)+1,0,nn);this.selId=nn.id;this._v++;this.$nextTick(()=>{document.querySelector('[data-name-input]')?.focus();document.querySelector('[data-name-input]')?.select();});},
-      addChild(){if(!this.selNode)return;const nn=N('n'+(++_nid),'New KPI',[]);this.selNode.children.push(nn);this.selNode.exp=true;this.selId=nn.id;this._v++;this.$nextTick(()=>{document.querySelector('[data-name-input]')?.focus();document.querySelector('[data-name-input]')?.select();});},
-      // #region agent log
-      addChildOf(id){fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'b8c053'},body:JSON.stringify({sessionId:'b8c053',location:'index.html:addChildOf',message:'addChildOf called',data:{parentId:id,selIdBefore:this.selId},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});const parent=findNode(id,this.tree);if(!parent)return;const nn=N('n'+(++_nid),'New KPI',[]);parent.children.push(nn);parent.exp=true;this.selId=nn.id;this._v++;fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'b8c053'},body:JSON.stringify({sessionId:'b8c053',location:'index.html:addChildOf:after',message:'addChildOf completed',data:{parentId:id,newChildId:nn.id,selIdAfter:this.selId,parentExpanded:parent.exp},timestamp:Date.now(),hypothesisId:'H2'})}).catch(()=>{});this.$nextTick(()=>{document.querySelector('[data-name-input]')?.focus();document.querySelector('[data-name-input]')?.select();});},
-      // #endregion
-      addRoot(){const nn=N('n'+(++_nid),'NEW DEPARTMENT',[]);this.tree.push(nn);this.selId=nn.id;this._v++;this.$nextTick(()=>{document.querySelector('[data-name-input]')?.focus();document.querySelector('[data-name-input]')?.select();});},
-      deleteNode(id){
-        if(!id)return;
-        if(this.selPlacedIn){const node=findNode(id,this.tree);if(node){node.visibleIn=(node.visibleIn||[]).filter(v=>v!==this.selPlacedIn);const group=findNode(this.selPlacedIn,this.tree);if(group&&group.viewOrder)group.viewOrder=group.viewOrder.filter(x=>x!==id);}this.selPlacedIn=null;this.selId=null;this._v++;return;}
-        const node=findNode(id,this.tree);
-        if(node&&node.focusKpi){const fk=findNode('fk',this.tree);if(fk){const ri=fk.children.findIndex(c=>c.refId===id);if(ri>=0)fk.children.splice(ri,1);}}
-        if(node&&node.refId){const orig=findNode(node.refId,this.tree);if(orig)orig.focusKpi=false;}
-        const fl=this.flat;const ci=fl.findIndex(f=>f.n.id===id);
-        removeFromTree(id,this.tree);
-        if(this.selId===id){if(ci<fl.length-1)this.selId=fl[ci+1]?.n.id||null;else if(ci>0)this.selId=fl[ci-1]?.n.id||null;else this.selId=null;}
-        this._v++;
-      },
-      // #region agent log
-      handleKey(e){
-        if(this.view!=='settings'||this.modal.open)return;
-        if(['INPUT','SELECT','TEXTAREA'].includes(e.target.tagName)){fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'b8c053'},body:JSON.stringify({sessionId:'b8c053',location:'index.html:handleKey',message:'key blocked by input focus',data:{key:e.key,tagName:e.target.tagName,meta:e.metaKey,ctrl:e.ctrlKey,activeElId:document.activeElement?.id||document.activeElement?.getAttribute('data-name-input')!==null?'name-input':'other'},timestamp:Date.now(),hypothesisId:'H4'})}).catch(()=>{});if(e.key==='Escape')e.target.blur();return;}
-        const m=e.metaKey||e.ctrlKey;
-        fetch('http://127.0.0.1:7511/ingest/6a1497ae-c0bf-421b-96e8-dfd921a0caff',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'b8c053'},body:JSON.stringify({sessionId:'b8c053',location:'index.html:handleKey:processing',message:'handleKey processing',data:{key:e.key,meta:m,selId:this.selId},timestamp:Date.now(),hypothesisId:'H4'})}).catch(()=>{});
-      // #endregion
-        switch(true){
-          case e.key==='ArrowUp'&&!m:e.preventDefault();this.nav(-1);break;
-          case e.key==='ArrowDown'&&!m:e.preventDefault();this.nav(1);break;
-          case e.key==='ArrowRight':{const n=this.selNode;if(n&&n.children.length&&!n.exp){n.exp=true;this._v++;e.preventDefault();}break;}
-          case e.key==='ArrowLeft':{const n=this.selNode;if(n&&n.children.length&&n.exp){n.exp=false;this._v++;e.preventDefault();}else if(n){const p=findParent(this.selId,this.tree,null);if(p)this.selId=p.id;e.preventDefault();}break;}
-          case e.key==='Tab'&&!e.shiftKey:e.preventDefault();this.indent();break;
-          case e.key==='Tab'&&e.shiftKey:e.preventDefault();this.outdent();break;
-          case e.key==='ArrowUp'&&m:e.preventDefault();this.moveUp();break;
-          case e.key==='ArrowDown'&&m:e.preventDefault();this.moveDown();break;
-          case e.key==='Enter':e.preventDefault();this.addSibling();break;
-          case e.key==='Backspace'||e.key==='Delete':e.preventDefault();this.deleteNode(this.selId);break;
+
+      createInPop(){
+        const parentId=this.addPop.parentId;const type=this.addPop.type;
+        this.addPop.open=false;
+        const parent=findNode(parentId,this.tree);
+        if(!parent)return;
+        if(type==='dept'){
+          const nn=N('n'+(++_nid),'New KPI',[],{companyDashboard:true,visibleIn:[parent.id==='sc'?'company':parent.id]});
+          parent.children.push(nn);parent.exp=true;this._v++;
+          this.$nextTick(()=>{this.openSourceModal(nn,true);});
+        }else if(type==='group'){
+          const nn=N('n'+(++_nid),'New KPI',[]);
+          parent.children.push(nn);parent.exp=true;this._v++;
+          this.$nextTick(()=>{this.openSourceModal(nn,true);});
+        }else{
+          const nn=N('n'+(++_nid),'New KPI',[]);
+          parent.children.push(nn);parent.exp=true;this._v++;
+          this.$nextTick(()=>{this.openSourceModal(nn,true);});
         }
       },
 
+      linkInPop(kpi){
+        const parentId=this.addPop.parentId;const type=this.addPop.type;
+        this.addPop.open=false;
+        const parent=findNode(parentId,this.tree);
+        if(!parent)return;
+        if(type==='child'){
+          const ref=N('n'+(++_nid),'',[],{refId:kpi.id});
+          parent.children.push(ref);parent.exp=true;
+        }else{
+          if(!kpi.visibleIn)kpi.visibleIn=[];
+          if(!kpi.visibleIn.includes(parentId))kpi.visibleIn.push(parentId);
+          if(parentId==='sc'||type==='dept')kpi.companyDashboard=true;
+        }
+        this._v++;
+        this.toast='Linked: '+kpi.name;clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);
+      },
+
+      _findDeptOf(nodeId){
+        for(const dept of this.tree){
+          if(dept.id===nodeId)return dept;
+          if(findNode(nodeId,dept.children))return dept;
+        }
+        return null;
+      },
+
+      addGroupToDept(dept){
+        const nn=N('n'+(++_nid),'New Group',[N('n'+(++_nid),'New KPI',[])]);
+        nn.target=null;
+        dept.children.push(nn);dept.exp=true;this._v++;
+        this.toast='Group added — drill into '+dept.name+' to see it';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},3000);
+      },
+
+      deleteNode(id){
+        if(!id)return;
+        const node=findNode(id,this.tree);
+        if(node&&node.focusKpi){const fk=findNode('fk',this.tree);if(fk){const ri=fk.children.findIndex(c=>c.refId===id);if(ri>=0)fk.children.splice(ri,1);}}
+        if(node&&node.refId){const orig=findNode(node.refId,this.tree);if(orig)orig.focusKpi=false;}
+        removeFromTree(id,this.tree);
+        this._v++;this.toast='Deleted';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);
+      },
+
+      handleKey(e){
+        if(e.key==='Escape'&&this.editMode){this.editMode=false;e.preventDefault();return;}
+      },
+
       // Source config modal
-      openSourceModal(kpi){this.modal.kpi=kpi;this.modal.editing=false;this.modal.viewCW=CW;this.modal.editCW=CW;this.modal.viewExpanded=false;this.modal.editExpanded=false;this.modal.open=true;this.prepareSourceEdit(kpi);},
+      openSourceModal(kpi,startEditing){this.modal.kpi=kpi;this.modal.editing=!!startEditing;this.modal.viewCW=CW;this.modal.editCW=CW;this.modal.viewExpanded=false;this.modal.editExpanded=false;this.modal.open=true;this.prepareSourceEdit(kpi);},
       closeSourceModal(){this.modal.open=false;},
 
       isConn(k){return !!(k.db||k.source);},
