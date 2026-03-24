@@ -1349,7 +1349,7 @@
       scC(s){return{green:'sc-g',yellow:'sc-y',red:'sc-r'}[s]||'';},
       scL(s){return{green:'On-Track',yellow:'Behind',red:'Off Track'}[s]||'—';},
       canEdit(){return this.role==='ceo'||this.role==='lead';},
-      reCalc(k){if(!k.actual||!k.target){k.pv=null;k.pr=0;this._v++;return;}const p=k.actual/DE*DM;k.pv=k.fmt==='percentage'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;this._v++;},
+      reCalc(k){if(k.actual==null||k.target==null||k.target===0){k.pv=null;k.pr=0;this._v++;return;}const p=k.actual/DE*DM;k.pv=k.fmt==='percentage'?Math.round(p*10)/10:Math.round(p);k.pr=p/k.target;this._v++;},
 
       deptLeafKpis(dept){return dept.children.filter(c=>(!c.children.length||c.target!==null)&&!c.refId);},
       deptKpiRows(dept){this._v;const extras=this.extraKpisForView(dept.id);const ownKpis=dept.children.filter(c=>!c.refId&&!(c.children.length>0&&c.target===null));
@@ -1522,8 +1522,7 @@
           this.reCalc(k);this._v++;
         } else if(k&&w===null){
           const inc=this.dtlData.filter(r=>r._included).length;
-          const wks=Object.values(k.weekly||{});const origTotal=wks.reduce((a,b)=>a+(b||0),0);
-          const diff=origTotal-inc;k.actual=Math.max(0,(k.actual||0)-diff);
+          k.actual=inc;
           this.reCalc(k);this._v++;
         }
         this.toast='KPI updated';clearTimeout(this._toastTimer);this._toastTimer=setTimeout(()=>{this.toast='';},2000);
@@ -1595,7 +1594,7 @@
       saveSourceEdit(){
         const k=this.modal.kpi;k.name=this.modal.editName;k.fmt=this.modal.editFmt;k.agg=this.modal.editAgg;k.period=this.modal.editPeriod;k.ownerId=this.modal.editOwner;
         if(this.modal.editMode==='manual'){k.sourceMode='manual';k.source='';k.db='';}
-        else{k.sourceMode=this.modal.editConfidence;k.source=this.modal.editDb;k.db=this.modal.editDb;}
+        else{k.sourceMode=this.modal.editConfidence;k.db=this.modal.editDb;}
         k.filters=this.modal.editFilters.filter(f=>f.field&&(f.value||this.isUnaryOp(f.operator))).map(f=>({...f}));
         k.dateScope=this.modal.editDateScope;
         this.reCalc(k);this._v++;this.modal.editing=false;

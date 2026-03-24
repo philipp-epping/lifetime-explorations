@@ -142,6 +142,14 @@
       --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
     }
     [x-cloak] { display: none !important; }
+    .circle-hidden, .circle-animate { stroke-dasharray: 176; stroke-dashoffset: 176; }
+    .check-hidden, .check-animate { stroke-dasharray: 37; stroke-dashoffset: 37; }
+    @keyframes draw-circle { to { stroke-dashoffset: 0; } }
+    @keyframes draw-check { to { stroke-dashoffset: 0; } }
+    @keyframes breathe-scale { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    .circle-animate { animation: draw-circle 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    .check-animate { animation: draw-check 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.6s forwards; }
+    .breathing { animation: breathe-scale 4s ease-in-out infinite; }
   </style>
 </head>
 <body class="bg-p0 font-sans antialiased">
@@ -152,7 +160,11 @@
     <input type="file" data-file-input class="hidden" accept=".pdf,.png,.jpg,.jpeg" @change="handleFileUpload($event)">
 
     <!-- ===== CHECKPOINT: deferred items ===== -->
-    <div x-show="completionState === 'checkpoint'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center">
+    <div x-show="completionState === 'checkpoint'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center relative">
+      <button class="absolute top-4 right-5 flex items-center gap-1.5 text-sm text-g9 hover:text-g11 transition-colors">
+        <span>Exit</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
       <div class="text-center max-w-sm">
         <div class="w-16 h-16 rounded-full bg-y3 mx-auto mb-5 flex items-center justify-center">
           <svg class="w-8 h-8 text-y11" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
@@ -182,89 +194,57 @@
         </div>
 
         <div class="flex flex-col items-center gap-2 mt-6 w-full">
-          <button @click="reviewDeferred()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Finish the last ' + deferredCount"></button>
-          <button @click="markWaitingOnOthers()" class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Waiting on others</button>
-          <p class="text-mini text-g9 -mt-0.5">We'll remind you when documents arrive</p>
-          <button @click="skipToComplete()" class="text-sm text-g9 hover:text-g11 transition-colors mt-1">Skip for now</button>
+          <button x-show="nextMonth" @click="goToNextMonth()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Continue to ' + nextMonthShort"></button>
+          <button x-show="!nextMonth" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">View Dashboard</button>
+          <button @click="reviewDeferred()" class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors" x-text="'Review last ' + deferredCount"></button>
         </div>
       </div>
     </div>
 
     <!-- ===== COMPLETION: done ===== -->
-    <div x-show="completionState === 'done'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center">
-      <!-- Full completion: everything resolved -->
-      <div x-show="isFullyComplete" class="text-center max-w-sm w-full">
-        <div x-show="_revealStep >= 1"
-             x-transition:enter="transition ease-out duration-700"
-             x-transition:enter-start="opacity-0 scale-90"
-             x-transition:enter-end="opacity-100 scale-100"
-             class="w-16 h-16 rounded-full bg-s3 mx-auto mb-5 flex items-center justify-center">
-          <svg class="w-8 h-8 text-s9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+    <div x-show="completionState === 'done'" x-transition.opacity.duration.300ms class="flex-1 flex items-center justify-center relative">
+      <button :class="_revealStep >= 4 ? 'opacity-100' : 'opacity-0 pointer-events-none'"
+              class="absolute top-4 right-5 flex items-center gap-1.5 text-sm text-g9 hover:text-g11 transition-all duration-300">
+        <span>Exit</span>
+        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+      <div class="text-center max-w-sm w-full">
+        <!-- Animated circle draws closed, checkmark draws in, then gentle breathing pulse -->
+        <div :class="{'breathing': _revealStep === 3, 'opacity-100': _revealStep >= 1, 'opacity-0': _revealStep < 1}"
+             class="w-20 h-20 mx-auto mb-6 transition-opacity duration-700 ease-out">
+          <svg viewBox="0 0 80 80" fill="none" class="w-full h-full">
+            <circle cx="40" cy="40" r="36" class="fill-s2" />
+            <circle cx="40" cy="40" r="28" stroke-width="2" stroke-linecap="round"
+                    :class="_revealStep >= 1 ? 'stroke-s7 circle-animate' : 'stroke-s7 circle-hidden'" />
+            <path d="M27 42l8 8 18-18" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"
+                  :class="_revealStep >= 1 ? 'stroke-s9 check-animate' : 'stroke-s9 check-hidden'" />
+          </svg>
         </div>
-        <h1 x-show="_revealStep >= 2"
-            x-transition:enter="transition ease-out duration-500"
-            x-transition:enter-start="opacity-0 translate-y-1"
-            x-transition:enter-end="opacity-100 translate-y-0"
-            class="text-lg font-semibold text-g12 tracking-tight"
-            x-text="completionHeadline"></h1>
-        <p x-show="_revealStep >= 2"
-           x-transition:enter="transition ease-out duration-500"
-           x-transition:enter-start="opacity-0"
-           x-transition:enter-end="opacity-100"
-           class="text-sm text-g9 mt-2">
-          <span class="text-g11 font-medium" x-text="resolvedCount"></span> items categorized and matched.
-        </p>
-        <p x-show="_revealStep === 3"
-           x-transition:enter="transition ease-out duration-700"
-           x-transition:enter-start="opacity-0"
-           x-transition:enter-end="opacity-100"
-           x-transition:leave="transition ease-in duration-500"
-           x-transition:leave-start="opacity-100"
-           x-transition:leave-end="opacity-0"
-           class="text-sm text-g9 mt-8"
-           x-text="breathingText"></p>
-        <div x-show="_revealStep >= 4"
-             x-transition:enter="transition ease-out duration-500"
-             x-transition:enter-start="opacity-0 translate-y-2"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             class="flex flex-col items-center gap-2 mt-6 w-full">
-          <button class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">View Dashboard</button>
-          <div class="flex items-center gap-2 w-full">
-            <button class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Export to Tax Advisor</button>
-            <button x-show="nextMonth" @click="goToNextMonth()" class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors" x-text="'Continue to ' + nextMonth"></button>
+
+        <!-- Headline + subline (opacity only — no layout shift) -->
+        <div :class="_revealStep >= 2 ? 'opacity-100' : 'opacity-0'"
+             class="transition-opacity duration-500 ease-out">
+          <h1 class="text-xl font-semibold text-g12 tracking-tight" x-text="completionHeadline"></h1>
+          <p class="text-sm text-g9 mt-2">
+            <span class="text-g11 font-medium" x-text="resolvedCount"></span> items categorized and matched.
+          </p>
+        </div>
+
+        <!-- Breathing prompt + buttons share this space -->
+        <div class="relative mt-8">
+          <p :class="_revealStep === 3 ? 'opacity-100' : 'opacity-0'"
+             class="transition-opacity duration-700 ease-out absolute inset-x-0 top-0 text-center text-sm text-g9 pointer-events-none"
+             x-text="nextMonth ? 'Take a deep breath before you move on.' : 'Take a deep breath.'">
+          </p>
+          <div :class="_revealStep >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'"
+               class="transition-all duration-500 ease-out flex flex-col items-center gap-2 w-full">
+            <button x-show="nextMonth" @click="goToNextMonth()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Continue to ' + nextMonthShort"></button>
+            <button x-show="!nextMonth" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors">View Dashboard</button>
+            <div class="flex items-center gap-2 w-full">
+              <button x-show="nextMonth" class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">View Dashboard</button>
+              <button class="flex-1 rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Export</button>
+            </div>
           </div>
-        </div>
-      </div>
-      <!-- Partial: good progress, some items on hold -->
-      <div x-show="!isFullyComplete" class="text-center max-w-sm w-full">
-        <div x-show="_revealStep >= 1"
-             x-transition:enter="transition ease-out duration-700"
-             x-transition:enter-start="opacity-0 scale-90"
-             x-transition:enter-end="opacity-100 scale-100"
-             class="w-16 h-16 rounded-full bg-a3 mx-auto mb-5 flex items-center justify-center">
-          <svg class="w-8 h-8 text-a9" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-        </div>
-        <h1 x-show="_revealStep >= 2"
-            x-transition:enter="transition ease-out duration-500"
-            x-transition:enter-start="opacity-0 translate-y-1"
-            x-transition:enter-end="opacity-100 translate-y-0"
-            class="text-lg font-semibold text-g12 tracking-tight">Nice progress</h1>
-        <p x-show="_revealStep >= 2"
-           x-transition:enter="transition ease-out duration-500"
-           x-transition:enter-start="opacity-0"
-           x-transition:enter-end="opacity-100"
-           class="text-sm text-g9 mt-2">
-          <span class="text-g11 font-medium" x-text="resolvedCount"></span> of <span x-text="filteredItems.length"></span> items reviewed.
-          <span x-show="blockedCount > 0" x-text="blockedCount + ' waiting on others.'"></span>
-          <span x-show="blockedCount === 0 && deferredCount > 0" x-text="deferredCount + ' on hold.'"></span>
-        </p>
-        <div x-show="_revealStep >= 4"
-             x-transition:enter="transition ease-out duration-500"
-             x-transition:enter-start="opacity-0 translate-y-2"
-             x-transition:enter-end="opacity-100 translate-y-0"
-             class="flex flex-col items-center gap-2 mt-6 w-full">
-          <button x-show="nextMonth" @click="goToNextMonth()" class="w-full rounded-6 bg-a9 px-4 py-2.5 text-sm text-white shadow-xs hover:bg-a10 transition-colors" x-text="'Continue to ' + nextMonth"></button>
-          <button class="w-full rounded-6 bg-p1 px-4 py-2.5 text-sm text-g11 shadow-xs hover:bg-g3 transition-colors">Exit</button>
         </div>
       </div>
     </div>
@@ -926,15 +906,13 @@
         },
 
         get completionHeadline() {
-          if (this.monthFilter !== 'all') return 'Finished with ' + this.monthFilter;
+          if (this.monthFilter !== 'all') return this.monthFilter.split(' ')[0] + ' is off your plate';
           return 'All finished';
         },
 
-        get breathingText() {
-          if (this.monthFilter !== 'all') {
-            return 'Take a breath \u2014 ' + this.monthFilter.split(' ')[0] + ' is off your plate.';
-          }
-          return 'Take a breath \u2014 everything\u2019s handled.';
+        get nextMonthShort() {
+          if (!this.nextMonth) return '';
+          return this.nextMonth.split(' ')[0];
         },
 
         get isFullyComplete() {
@@ -1176,15 +1154,10 @@
 
         startCompletionReveal() {
           this._revealStep = 0;
-          const full = this.isFullyComplete;
           setTimeout(() => { this._revealStep = 1; }, 100);
-          setTimeout(() => { this._revealStep = 2; }, 600);
-          if (full) {
-            setTimeout(() => { this._revealStep = 3; }, 1200);
-            setTimeout(() => { this._revealStep = 4; }, 3500);
-          } else {
-            setTimeout(() => { this._revealStep = 4; }, 1800);
-          }
+          setTimeout(() => { this._revealStep = 2; }, 1200);
+          setTimeout(() => { this._revealStep = 3; }, 2000);
+          setTimeout(() => { this._revealStep = 4; }, 5500);
         },
 
         removeAdditionalReceipt(idx) {
