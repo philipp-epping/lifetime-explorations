@@ -429,8 +429,11 @@
                        x-transition:enter-end="opacity-100 translate-y-0"
                        class="border-t border-g4 pt-4 mt-4">
                     <div class="flex items-center gap-2 mb-3">
-                      <div x-show="receiptDone" class="w-4 h-4 rounded-full bg-s9 flex items-center justify-center">
+                      <div x-show="receiptDone && currentItem.taxExtracted !== false" class="w-4 h-4 rounded-full bg-s9 flex items-center justify-center">
                         <svg class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+                      </div>
+                      <div x-show="receiptDone && currentItem.taxExtracted === false" class="w-4 h-4 rounded-full bg-y9 flex items-center justify-center">
+                        <svg class="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4m0 4h.01"/></svg>
                       </div>
                       <div x-show="!receiptDone" class="w-4 h-4 rounded-full border-2 border-g5"></div>
                       <h3 class="text-sm-medium" :class="receiptDone ? 'text-g12' : 'text-g11'">Receipt</h3>
@@ -507,6 +510,63 @@
                         <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg>
                         Add another receipt
                       </button>
+
+                      <!-- Tax details -->
+                      <div x-show="currentItem.taxExtracted !== null" class="mt-3 pt-3 border-t border-g4">
+
+                        <!-- Read-only: extraction succeeded -->
+                        <div x-show="currentItem.taxExtracted === true && !currentItem._taxEditing"
+                             @click="currentItem._taxEditing = true; clearTimeout(_autoAdvanceTimer)"
+                             class="flex items-center gap-1.5 text-mini text-g9 cursor-pointer rounded-6 px-2 py-1.5 -mx-2 hover:bg-g2 transition-colors group">
+                          <span x-text="'VAT ' + currentItem.vatRate + '%'"></span>
+                          <span>·</span>
+                          <span x-text="'Net ' + formatAmount(currentItem.netAmount)"></span>
+                          <span>·</span>
+                          <span x-text="'VAT ' + formatAmount(currentItem.vatAmount)"></span>
+                          <svg class="w-3 h-3 text-g8 opacity-0 group-hover:opacity-100 transition-opacity ml-auto shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg>
+                        </div>
+
+                        <!-- Editable: extraction failed or user editing -->
+                        <div x-show="currentItem.taxExtracted === false || currentItem._taxEditing">
+                          <div x-show="currentItem.taxExtracted === false" class="flex items-center gap-2 mb-2.5 rounded-6 bg-y2 px-2.5 py-2">
+                            <svg class="w-3.5 h-3.5 text-y11 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+                            <span class="text-mini text-y12">Couldn't read tax details from this receipt</span>
+                          </div>
+                          <div class="flex items-center gap-2">
+                            <div class="flex-1">
+                              <label class="text-micro text-g9 mb-1 block">VAT rate</label>
+                              <select @change="let v=$event.target.value; currentItem.vatRate=v===''?null:+v; if(currentItem.vatRate!==null){currentItem.netAmount=Math.round((currentItem.amount/(1+currentItem.vatRate/100))*100)/100;currentItem.vatAmount=Math.round((currentItem.amount-currentItem.netAmount)*100)/100}"
+                                      class="w-full rounded-6 border border-g4 bg-p1 px-2 py-1.5 text-sm text-g12 outline-none focus:border-a9 cursor-pointer">
+                                <option value="" :selected="currentItem.vatRate===null" disabled>—</option>
+                                <option value="0" :selected="currentItem.vatRate===0">0%</option>
+                                <option value="7" :selected="currentItem.vatRate===7">7%</option>
+                                <option value="19" :selected="currentItem.vatRate===19">19%</option>
+                              </select>
+                            </div>
+                            <div class="flex-1">
+                              <label class="text-micro text-g9 mb-1 block">Net amount</label>
+                              <div class="rounded-6 border border-g4 bg-g2 px-2 py-1.5 text-sm text-g11 tabular-nums"
+                                   x-text="currentItem.netAmount !== null ? formatAmount(currentItem.netAmount) : '—'"></div>
+                            </div>
+                            <div class="flex-1">
+                              <label class="text-micro text-g9 mb-1 block">VAT amount</label>
+                              <div class="rounded-6 border border-g4 bg-g2 px-2 py-1.5 text-sm text-g11 tabular-nums"
+                                   x-text="currentItem.vatAmount !== null ? formatAmount(currentItem.vatAmount) : '—'"></div>
+                            </div>
+                          </div>
+                          <div class="flex items-center gap-3 mt-2.5">
+                            <button x-show="currentItem.vatRate !== null"
+                                    @click="saveTaxDetails(currentItem)"
+                                    class="text-mini-medium text-a11 hover:text-a12 transition-colors">Confirm</button>
+                            <button x-show="currentItem._taxEditing"
+                                    @click="currentItem._taxEditing = false; tryAutoAdvance()"
+                                    class="text-mini text-g9 hover:text-g11 transition-colors">Cancel</button>
+                            <button x-show="currentItem.taxExtracted === false"
+                                    @click="clearReceipt()"
+                                    class="text-mini text-d11 hover:text-d9 transition-colors ml-auto">Remove receipt</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
 
                     <!-- Needs action: receipt search + suggestions + upload -->
@@ -804,6 +864,16 @@
         { name: 'Deutsche Bahn Ticket', amount: 89.90, invoiceNumber: 'DB-ICE-794' },
       ];
 
+      const taxDataByItem = {
+        1: { extracted: true, vatRate: 19, netAmount: 8.39, vatAmount: 1.60 },
+        2: { extracted: true, vatRate: 19, netAmount: 208.26, vatAmount: 39.57 },
+        3: { extracted: true, vatRate: 7, netAmount: 84.02, vatAmount: 5.88 },
+        4: { extracted: false, vatRate: null, netAmount: null, vatAmount: null },
+        5: { extracted: true, vatRate: 0, netAmount: 79.99, vatAmount: 0.00 },
+        6: { extracted: true, vatRate: 19, netAmount: 35.29, vatAmount: 6.71 },
+        7: { extracted: true, vatRate: 19, netAmount: 100.83, vatAmount: 19.16 },
+      };
+
       const items = [
         { id: 1, date: '2026-01-15', counterparty: 'Spotify B.V.', description: 'Premium subscription — monthly', amount: 9.99, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: true }, { name: 'Marketing & Advertising', path: 'Sales & Marketing', ai: false }, { name: 'Team Entertainment', path: 'Personnel', ai: false }], selectedCategory: 'Software & Subscriptions', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'Spotify Invoice', matchedReceiptInvoice: 'INV-SP-2026-0115', isPrivate: false, deferred: false, resolved: false },
         { id: 2, date: '2026-01-18', counterparty: 'Amazon Web Services EMEA', description: 'AWS hosting services — invoice #938271', amount: 247.83, type: 'Direct debit', accountName: 'Business Account', month: 'January 2026', needsCategory: true, needsReceipt: false, aiConfidence: 'high', suggestions: [{ name: 'Cloud & Hosting', path: 'Operative Expenditures', ai: true }, { name: 'Software & Subscriptions', path: 'Operative Expenditures', ai: false }, { name: 'Research & Development', path: 'Operative Expenditures', ai: false }], selectedCategory: 'Cloud & Hosting', existingCategory: null, receiptResolution: 'matched', matchedReceiptName: 'AWS Invoice #938271', matchedReceiptInvoice: 'INV-AWS-938271', isPrivate: false, deferred: false, resolved: false },
@@ -839,6 +909,12 @@
             i.blocked = false;
             i.additionalReceipts = [];
             i.matchedReceiptInvoice = null;
+            const td = taxDataByItem[i.id];
+            i.taxExtracted = td ? td.extracted : null;
+            i.vatRate = td ? td.vatRate : null;
+            i.netAmount = td ? td.netAmount : null;
+            i.vatAmount = td ? td.vatAmount : null;
+            i._taxEditing = false;
           });
           const months = [...new Set(this.items.map(i => i.month))].sort((a, b) => {
             const da = new Date('1 ' + a), db = new Date('1 ' + b);
@@ -929,7 +1005,8 @@
           if (!item) return false;
           const catOk = !!item.selectedCategory;
           const recOk = !item.needsReceipt || item.receiptResolution || item.isPrivate;
-          return catOk && recOk;
+          const taxOk = item.taxExtracted !== false;
+          return catOk && recOk && taxOk;
         },
 
         get showReceiptSection() {
@@ -1067,6 +1144,19 @@
             this.currentItem.matchedReceiptInvoice = doc.invoiceNumber || null;
             this.receiptSearch = '';
             this.previewDoc = null;
+            const unreadable = ['OD GmbH Receipt', 'Restaurant Receipt', 'Express Delivery Invoice'];
+            if (unreadable.includes(doc.name)) {
+              this.currentItem.taxExtracted = false;
+              this.currentItem.vatRate = null;
+              this.currentItem.netAmount = null;
+              this.currentItem.vatAmount = null;
+            } else {
+              this.currentItem.taxExtracted = true;
+              this.currentItem.vatRate = 19;
+              this.currentItem.netAmount = Math.round((this.currentItem.amount / 1.19) * 100) / 100;
+              this.currentItem.vatAmount = Math.round((this.currentItem.amount - this.currentItem.amount / 1.19) * 100) / 100;
+            }
+            this.currentItem._taxEditing = false;
             this.tryAutoAdvance();
           }
         },
@@ -1085,6 +1175,11 @@
             } else {
               this.currentItem.receiptResolution = 'uploaded';
               this.currentItem.matchedReceiptName = fileName;
+              this.currentItem.taxExtracted = false;
+              this.currentItem.vatRate = null;
+              this.currentItem.netAmount = null;
+              this.currentItem.vatAmount = null;
+              this.currentItem._taxEditing = false;
               this.tryAutoAdvance();
             }
             event.target.value = '';
@@ -1106,6 +1201,11 @@
             this.currentItem.matchedReceiptName = null;
             this.currentItem.matchedReceiptInvoice = null;
             this.currentItem.additionalReceipts = [];
+            this.currentItem.taxExtracted = null;
+            this.currentItem.vatRate = null;
+            this.currentItem.netAmount = null;
+            this.currentItem.vatAmount = null;
+            this.currentItem._taxEditing = false;
             this.currentItem.resolved = false;
           }
         },
@@ -1248,6 +1348,11 @@
             } else {
               this.currentItem.receiptResolution = 'uploaded';
               this.currentItem.matchedReceiptName = fileName;
+              this.currentItem.taxExtracted = false;
+              this.currentItem.vatRate = null;
+              this.currentItem.netAmount = null;
+              this.currentItem.vatAmount = null;
+              this.currentItem._taxEditing = false;
               this.tryAutoAdvance();
             }
           }
@@ -1394,6 +1499,16 @@
         formatDate(dateStr) {
           const d = new Date(dateStr + 'T00:00:00');
           return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        },
+
+        saveTaxDetails(item) {
+          if (item.vatRate !== null && item.vatRate !== undefined) {
+            item.netAmount = Math.round((item.amount / (1 + item.vatRate / 100)) * 100) / 100;
+            item.vatAmount = Math.round((item.amount - item.netAmount) * 100) / 100;
+            item.taxExtracted = true;
+            item._taxEditing = false;
+            this.tryAutoAdvance();
+          }
         },
       };
     }

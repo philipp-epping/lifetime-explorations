@@ -50,7 +50,14 @@ The user sees one item at a time. For each item they must:
      - **No receipt** — flags the transaction for export ("receipt missing")
    - Receipt resolution is mandatory — the user must pick one path
 
-3. **Submit** — confirms all decisions, item leaves the queue, next item appears
+3. **Verify tax details** (contextual, non-blocking)
+   - When a receipt is matched or uploaded, the system extracts VAT rate, net amount, and VAT amount
+   - **Happy path** (extraction succeeded): a quiet read-only line appears below the receipt card — e.g. "VAT 19% · Net €200.00 · VAT €38.00". Clickable to edit if needed.
+   - **Exception** (extraction failed / receipt unreadable): a yellow warning appears with editable fields — VAT rate dropdown (0%, 7%, 19%), auto-calculated net and VAT amounts. User picks the rate and confirms.
+   - Tax details do **not** block auto-advance — the item can be resolved without fixing them. Unresolved tax exceptions remain flagged.
+   - "Remove receipt" action available in the exception state to revert to normal receipt resolution flow.
+
+4. **Submit** — confirms all decisions, item leaves the queue, next item appears
 
 ### Navigation
 
@@ -148,6 +155,7 @@ No items need attention. "Nothing to review — you're all set." Quick link back
 | Transition between items | Slide animation, fast, reinforces momentum |
 | Keyboard shortcuts | Visually hinted on buttons, not core to prototype |
 | Urgency indicators | None — clean, neutral, trust the user |
+| Tax details | Shown below receipt card; read-only when extracted, editable when extraction fails; never blocks progress |
 | Completion state | Breathing moment → staggered reveal → then actions. "Finished with [Month]" not "done!" |
 | Completion emotion | Relief and quiet pride, not gamified celebration |
 | Checkpoint framing | Educational: name the consequence of unresolved items (dashboard accuracy / tax export) |
